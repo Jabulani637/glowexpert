@@ -857,29 +857,52 @@ footer {
 .reveal-delay-3 { transition-delay: 0.34s; }
 .reveal-delay-4 { transition-delay: 0.46s; }
 
-/* ── MOBILE RESPONSIVE ── */
-@media (max-width: 1024px) {
+/* ── MOBILE RESPONSIVE (mobile-first scaling) ── */
+/* Base: phones */
+@media (max-width: 480px) {
+  nav { padding: 0 16px; height: 68px; }
+  section { padding: 72px 16px; }
+  .hero { min-height: 640px; }
+  .hero-content { padding: 0 16px; }
+
+  .products-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .categories-grid { grid-template-columns: 1fr; height: auto; }
+  .cat-card { height: 260px; }
+  .cat-card:first-child { grid-column: span 1; }
+
+  .promise { padding: 60px 16px; }
+  .quiz-cta { padding: 70px 16px; }
+
+  footer { padding: 60px 16px 28px; }
+  .footer-top { grid-template-columns: 1fr; gap: 24px; }
+}
+
+/* Tablets */
+@media (min-width: 481px) and (max-width: 1024px) {
   nav { padding: 0 32px; }
-  section { padding: 80px 40px; }
-  .hero-content { padding: 0 40px; }
+  section { padding: 90px 32px; }
+  .hero-content { padding: 0 32px; }
   .hero-image-panel { width: 40%; }
+
   .categories-grid { grid-template-columns: 1fr 1fr; height: auto; }
-  .cat-card:first-child { grid-column: span 2; height: 320px; }
-  .cat-card { height: 280px; }
+  .cat-card:first-child { grid-column: span 2; height: 340px; }
+  .cat-card { height: 300px; }
+
   .products-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
   .promise { grid-template-columns: 1fr; gap: 60px; }
   .promise-visual { height: 380px; }
   .footer-top { grid-template-columns: 1fr 1fr; gap: 40px; }
 }
-@media (max-width: 768px) {
-  .nav-links { display: none; }
-  .hero-image-panel { display: none; }
-  .hero-content { max-width: 100%; }
-  .categories-grid { grid-template-columns: 1fr; height: auto; }
-  .cat-card:first-child { grid-column: span 1; height: 280px; }
-  .quiz-cta { grid-template-columns: 1fr; gap: 32px; }
-  .footer-top { grid-template-columns: 1fr; gap: 32px; }
-  .promise { padding: 60px 40px; }
-  .newsletter { padding: 80px 32px; }
+
+/* Small laptops */
+@media (min-width: 1025px) and (max-width: 1200px) {
+  section { padding-left: 56px; padding-right: 56px; }
+  .products-grid { gap: 22px; }
 }
+
+/* Desktop */
+@media (min-width: 1201px) {
+  section { padding-left: 80px; padding-right: 80px; }
+}
+
 

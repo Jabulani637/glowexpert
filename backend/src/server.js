@@ -26,11 +26,19 @@ const { ensureReviewSchema } = require('./models/Review');
 const adminInfluencerRoutes = require('./routes/adminInfluencerRoutes');
 
 
-// Create uploads directory if it doesn't exist
+// Create uploads directory if it doesn't exist.
+// On some platforms (e.g., Vercel), the filesystem may be read-only or disallow writes.
 const uploadsDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
+try {
+  if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+  }
+} catch (err) {
+  // Do not crash the app on startup if we cannot create the uploads directory.
+  console.warn('! Could not create uploads directory:', uploadsDir);
+  console.warn('  ', err.message);
 }
+
 
 const app = express();
 
