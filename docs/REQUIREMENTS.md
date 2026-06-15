@@ -33,7 +33,18 @@ From `docker-compose.yml` and code usage.
 - `JWT_EXPIRES_IN` (default: `7d`)
 - `CORS_ALLOWED_ORIGINS` (optional)
   - Comma-separated list of origins allowed in production.
-  - Local dev always allows `http://localhost*` and `http://127.0.0 .1*`.
+  - Local dev always allows `http://localhost*` and `http://127.0.0.1*`.
+
+## Render (Postgres) config
+When using Render Postgres, set the following environment variables from your Render credentials:
+- `DB_HOST` = Render **Hostname**
+- `DB_PORT` = Render **Port** (usually `5432`)
+- `DB_NAME` = Render **Database**
+- `DB_USER` = Render **Username**
+- `DB_PASSWORD` = Render **Password**
+- `DB_SSL` = `true`
+  - Render Postgres typically requires SSL.
+
 
 ## Database Bootstrap
 - `backend/setup_db.sql` is used for initial database/user setup (see deployment docs).
