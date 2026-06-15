@@ -48,7 +48,8 @@
 
 
   <script>
-    const API_BASE = 'http://localhost:8081';
+    const API_BASE = window.__API_BASE__ || process.env.API_BASE || 'https://glowexpert-1.onrender.com';
+
     const errorEl = document.getElementById('errorMessage');
 
     if (localStorage.getItem('admin_token')) {

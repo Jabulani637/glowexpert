@@ -224,8 +224,10 @@
   </section>
 
   <script>
-    // Configurable API base URL - defaults to localhost for development
-    const API_BASE = window.__API_BASE__ || process.env.API_BASE || 'http://localhost:8081';
+    // API base URL (set via window.__API_BASE__ or injected at build time). 
+    // Default to Render backend in production.
+    const API_BASE = window.__API_BASE__ || process.env.API_BASE || 'https://glowexpert-1.onrender.com';
+
     const CART_KEY = 'glowexpert_cart';
     const $ = (id) => document.getElementById(id);
     let products = [];
