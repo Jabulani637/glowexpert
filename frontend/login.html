@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GlowExpert Admin Login</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <style>
+    body { background:#faf7f3; color:#0a0908; }
+    .login-wrap { max-width:420px; margin:100px auto; padding:32px; background:rgba(255,255,255,.95); border:1px solid rgba(201,168,76,0.25); border-radius:24px; box-shadow:0 30px 80px rgba(10,9,8,.08); }
+    .login-wrap h1 { font-size:2rem; margin-bottom:10px; letter-spacing:.08em; }
+    .login-wrap p { margin-bottom:24px; color:rgba(10,9,8,.6); line-height:1.7; }
+    label { display:block; margin:18px 0 6px; font-size:.85rem; letter-spacing:.06em; }
+    input { width:100%; padding:14px 16px; border-radius:12px; border:1px solid rgba(10,9,8,0.12); background:#fff; font-family:inherit; font-size:1rem; }
+    .btn { width:100%; margin-top:24px; padding:14px 18px; border-radius:14px; border:none; background:#c9a84c; color:#0a0908; font-weight:700; letter-spacing:.08em; text-transform:uppercase; cursor:pointer; }
+    .muted { color:rgba(10,9,8,0.6); font-size:.95rem; margin-top:12px; }
+    .error { color:#b00020; margin-top:12px; font-weight:600; }
+    .nav-line { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
+    .nav-line a { color:#0a0908; text-decoration:none; font-size:.9rem; }
+  </style>
+</head>
+<body>
+  <div class="login-wrap">
+    <div class="nav-line">
+      <div>
+        <strong>GlowExpert</strong>
+      </div>
+      <a href="index.html">Return Home</a>
+    </div>
+    <h1>Admin Login</h1>
+    <p>Enter the assigned cellphone number and password to access the admin dashboard.</p>
+    <label for="cellphone">Cellphone</label>
+    <input id="cellphone" type="text" placeholder="+44 7836 618293" autocomplete="tel" />
+    <label for="password">Password</label>
+    <input id="password" type="password" placeholder="Your password" autocomplete="current-password" />
+    <button class="btn" id="loginBtn" type="button">Sign In</button>
+
+    <div class="error" id="errorMessage"></div>
+    <div class="muted">Only the single assigned admin account may sign in.</div>
+
+    <div id="otpWrap" style="display:none; margin-top:20px;">
+      <label for="otp">One-Time Password (OTP)</label>
+      <input id="otp" type="text" inputmode="numeric" placeholder="Enter 6-digit OTP" autocomplete="one-time-code" />
+      <div class="muted" id="otpHint" style="margin-top:10px;"></div>
+      <button class="btn" id="verifyOtpBtn" type="button" style="margin-top:16px;">Verify OTP</button>
+    </div>
+  </div>
+
+
+  <script>
+    const API_BASE = 'http://localhost:8081';
+    const errorEl = document.getElementById('errorMessage');
+
+    if (localStorage.getItem('admin_token')) {
+      window.location.href = 'admin.html';
+    }
+
+    // Admin login supports either Email or Cellphone in the "cellphone" field.
+    // Backend will look up by cellphone; if not found it will also try email.
+
+
+    async function api(path, options = {}) {
+      const res = await fetch(API_BASE + path, options);
+      const text = await res.text();
+      const json = text ? (() => { try { return JSON.parse(text); } catch { return { message: text }; } })() : {};
+      if (!res.ok) {
+        throw new Error(json?.message || 'Request failed');
+      }
+      return json;
+    }
+
+    const loginBtn = document.getElementById('loginBtn');
+
+    // UI steps: password -> OTP -> admin
+    const otpWrap = document.getElementById('otpWrap');
+    const otpInput = document.getElementById('otp');
+    const verifyBtn = document.getElementById('verifyOtpBtn');
+
+    loginBtn.addEventListener('click', async () => {
+      errorEl.textContent = '';
+      const cellphone = document.getElementById('cellphone').value.trim();
+      const password = document.getElementById('password').value;
+
+      if (!cellphone || !password) {
+        errorEl.textContent = 'Please enter both email/cellphone and password.';
+        return;
+      }
+
+      try {
+        const result = await api('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ cellphone, password })
+        });
+
+        // If OTP required (admin), show OTP step
+        if (result.otp_required) {
+          localStorage.setItem('admin_otp_cellphone', cellphone);
+          // show OTP in UI for demo
+          document.getElementById('otpHint').textContent = `Your OTP is: ${result.otp}`;
+          otpWrap.style.display = 'block';
+          errorEl.textContent = '';
+          otpInput.value = '';
+          otpInput.focus();
+          return;
+        }
+
+        // Fallback: if access token returned
+        localStorage.setItem('admin_token', result.access_token);
+        localStorage.setItem('admin_user', JSON.stringify(result.user || null));
+        window.location.href = 'admin.html';
+      } catch (error) {
+        errorEl.textContent = error.message;
+      }
+    });
+
+    verifyBtn.addEventListener('click', async () => {
+      errorEl.textContent = '';
+      const cellphone = localStorage.getItem('admin_otp_cellphone') || document.getElementById('cellphone').value.trim();
+      const otp = otpInput.value.trim();
+
+      if (!cellphone || !otp) {
+        errorEl.textContent = 'Enter OTP to continue.';
+        return;
+      }
+
+      try {
+        const result = await api('/api/auth/login/verify-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ cellphone, otp })
+        });
+
+        localStorage.setItem('admin_token', result.access_token);
+        localStorage.setItem('admin_user', JSON.stringify(result.user || null));
+        window.location.href = 'admin.html';
+      } catch (error) {
+        errorEl.textContent = error.message;
+      }
+    });
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: glowexpert-db
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER:-glowexpert}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-glowexpert}
+      POSTGRES_DB: ${DB_NAME:-glowexpert}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-glowexpert} -d ${DB_NAME:-glowexpert}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  backend:
+    build: ./backend
+    container_name: glowexpert-backend
+    restart: always
+    environment:
+      - NODE_ENV=development
+      - PORT=8081
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=${DB_USER:-glowexpert}
+      - DB_PASSWORD=${DB_PASSWORD:-glowexpert}
+      - DB_NAME=${DB_NAME:-glowexpert}
+      - DB_SSL=false
+      - JWT_SECRET=${JWT_SECRET:-change_me_super_secret}
+      - JWT_EXPIRES_IN=7d
+    ports:
+      - "8081:8081"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
+      - ./frontend:/usr/src/frontend
+
+volumes:
+  pgdata:

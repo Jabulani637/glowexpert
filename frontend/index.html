@@ -1,0 +1,695 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GlowExpert</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+  <style>
+    :root {
+      --luxury-black: #0a0908;
+      --luxury-gold: #c9a84c;
+      --luxury-white: #faf8f5;
+      --luxury-sand: #f4ede3;
+      --luxury-rose: #dfc8cf;
+    }
+    body { background: var(--luxury-white); color: var(--luxury-black); }
+    .hero-video { position: relative; min-height: 92vh; overflow: hidden; background: #111; }
+    .hero-video video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .62; }
+    .hero-overlay { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(10,9,8,.82), rgba(10,9,8,.32)); }
+    .hero-content-luxury { position: relative; z-index: 1; max-width: 780px; margin: 0 auto; padding: 180px 20px 120px; text-align: center; color: var(--luxury-white); }
+    .hero-title-luxury { font-family: 'Cormorant Garamond', serif; font-size: clamp(3rem, 8vw, 6rem); font-weight: 400; line-height: 1; margin-bottom: 1rem; }
+    .hero-subtitle-luxury { font-family: 'Raleway', sans-serif; max-width: 620px; margin: 0 auto 2rem; line-height: 1.8; }
+    .btn-luxury { display: inline-flex; align-items: center; justify-content: center; padding: 1rem 2rem; border: 1px solid var(--luxury-gold); color: var(--luxury-gold); text-decoration: none; letter-spacing: .12em; text-transform: uppercase; font: 600 .75rem 'Raleway', sans-serif; transition: .25s ease; background: transparent; cursor: pointer; }
+    .btn-luxury:hover { background: var(--luxury-gold); color: var(--luxury-black); }
+    .featured-section, .collection-section, .newsletter-panel { padding: 88px 20px; }
+    .section-shell { max-width: 1200px; margin: 0 auto; }
+    .section-title-luxury { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.1rem, 5vw, 4rem); margin-bottom: 1rem; }
+    .section-copy { font-family: 'Raleway', sans-serif; max-width: 640px; line-height: 1.8; color: rgba(10,9,8,.7); }
+    .video-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; margin-top: 2.5rem; }
+    .video-card { position: relative; min-height: 320px; overflow: hidden; border-radius: 18px; background: #111; }
+    .video-card video { width: 100%; height: 100%; object-fit: cover; }
+    .video-overlay { position: absolute; inset: auto 0 0 0; padding: 24px; background: linear-gradient(180deg, transparent, rgba(10,9,8,.82)); color: #fff; }
+    .video-title { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; color: var(--luxury-gold); margin-bottom: .5rem; }
+    .collection-section { background: linear-gradient(180deg, var(--luxury-white), var(--luxury-sand)); }
+    .collection-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 22px; margin-top: 2.5rem; }
+    .product-card { position: relative; background: #111; border-radius: 20px; overflow: hidden; min-height: 420px; display: flex; flex-direction: column; }
+    .product-image { height: 240px; background: linear-gradient(135deg, #2b2521, #111); overflow: hidden; }
+    .product-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .product-info { padding: 24px; display: flex; flex-direction: column; flex: 1; }
+    .product-name { font-family: 'Cormorant Garamond', serif; font-size: 2rem; color: #fff; margin-bottom: 12px; }
+    .product-description { color: rgba(255,255,255,.78); font-family: 'Raleway', sans-serif; line-height: 1.7; font-size: .94rem; flex: 1; }
+    .product-details { color: rgba(201,168,76,.88); font-family: 'Raleway', sans-serif; letter-spacing: .14em; text-transform: uppercase; font-size: .72rem; margin: 18px 0; }
+    .product-meta { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; }
+    .product-price { font-family: 'Cormorant Garamond', serif; color: var(--luxury-gold); font-size: 2rem; line-height: 1; }
+    .product-subprice { color: rgba(255,255,255,.55); font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; margin-top: .35rem; }
+    .product-button { border: 1px solid var(--luxury-gold); background: transparent; color: var(--luxury-gold); padding: .9rem 1.2rem; border-radius: 999px; cursor: pointer; text-transform: uppercase; letter-spacing: .1em; font-size: .7rem; font-weight: 700; }
+    .product-button:hover { background: var(--luxury-gold); color: var(--luxury-black); }
+    .stats-section { padding: 70px 20px; background: #111; color: #fff; }
+    .stats-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+    .stat-item { padding: 24px; border-radius: 18px; background: linear-gradient(180deg, rgba(201,168,76,.15), rgba(255,255,255,.03)); border: 1px solid rgba(201,168,76,.12); }
+    .stat-number { font-family: 'Cormorant Garamond', serif; font-size: 2.8rem; color: var(--luxury-gold); }
+    .stat-label { margin-top: 8px; letter-spacing: .12em; text-transform: uppercase; font-size: .8rem; color: rgba(255,255,255,.72); }
+    .newsletter-panel { background: linear-gradient(135deg, #1a1411, #0f0d0c); color: #fff; }
+    .newsletter-box { max-width: 760px; margin: 0 auto; text-align: center; }
+    .newsletter-form { display: grid; grid-template-columns: 1fr 1fr auto; gap: 12px; margin-top: 2rem; }
+    .newsletter-form input, .checkout-form input { width: 100%; border-radius: 14px; border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.06); color: #fff; padding: 14px 16px; font: inherit; }
+    .newsletter-message, .checkout-message { margin-top: 14px; min-height: 20px; }
+    .cart-panel {
+      position: fixed;
+      top: 0;
+      right: -460px;
+      width: min(92vw, 420px);
+      height: 100vh;
+      background: #fff;
+      z-index: 30;
+      box-shadow: -20px 0 50px rgba(10,9,8,.18);
+      padding: 24px;
+      transition: right .3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .cart-panel.open { right: 0; }
+    .cart-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(10,9,8,.42);
+      z-index: 29;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s ease;
+    }
+    .cart-backdrop.open { opacity: 1; pointer-events: auto; }
+    .cart-list { flex: 1; overflow: auto; margin: 20px 0; }
+    .cart-item { display: grid; grid-template-columns: 1fr auto; gap: 10px; padding: 14px 0; border-bottom: 1px solid rgba(10,9,8,.08); }
+    .cart-item h4 { margin-bottom: 6px; }
+    .qty-controls { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+    .qty-controls button, .close-cart {
+      border: 1px solid rgba(10,9,8,.12);
+      background: #fff;
+      border-radius: 999px;
+      cursor: pointer;
+      padding: 8px 12px;
+    }
+    .checkout-form { display: grid; gap: 12px; margin-top: 20px; }
+    .checkout-form input { color: #0a0908; background: #fff; border: 1px solid rgba(10,9,8,.12); }
+    .empty-state { color: rgba(10,9,8,.56); }
+    @media (max-width: 900px) {
+      .video-grid, .newsletter-form, .stats-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="cursor" id="cursor" aria-hidden="true"></div>
+  <div class="cart-backdrop" id="cartBackdrop"></div>
+  <aside class="cart-panel" id="cartPanel" aria-label="Shopping cart">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+      <div>
+        <span class="section-label">Customer Cart</span>
+        <h2 class="section-title" style="margin:6px 0 0;">Checkout</h2>
+      </div>
+      <button class="close-cart" id="closeCartBtn" type="button">Close</button>
+    </div>
+    <div class="cart-list" id="cartList"></div>
+    <div>
+      <div style="display:flex;justify-content:space-between;align-items:center;font-weight:700;margin-bottom:10px;">
+        <span>Total</span>
+        <span id="cartTotal">ZAR 0.00</span>
+      </div>
+      <form class="checkout-form" id="checkoutForm">
+        <input id="checkoutName" type="text" placeholder="Full name" required />
+        <input id="checkoutEmail" type="email" placeholder="Email address" required />
+        <input id="checkoutPhone" type="text" placeholder="Phone number" required />
+        <input id="checkoutReferral" type="text" placeholder="Referral code (optional)" />
+        <button class="btn-luxury" type="submit" style="width:100%; color:#0a0908; background:var(--luxury-gold);">Place Order</button>
+      </form>
+      <div class="checkout-message" id="checkoutMessage"></div>
+    </div>
+  </aside>
+
+  <nav id="navbar">
+    <a href="#" class="nav-logo" id="brandName">Glow<span>Expert</span></a>
+    <ul class="nav-links">
+      <li><a href="#featured">Featured</a></li>
+      <li><a href="#collections">Collections</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="#newsletter">Newsletter</a></li>
+    </ul>
+    <div class="nav-actions">
+      <span class="cart-badge" data-count="0">
+        <button class="nav-icon" id="cartBtn" title="Cart" aria-label="Cart">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+        </button>
+      </span>
+    </div>
+  </nav>
+
+  <section class="hero-video">
+    <video autoplay muted loop playsinline id="heroVideo">
+      <source src="" type="video/mp4" id="heroVideoSource" />
+    </video>
+    <div class="hero-overlay"></div>
+    <div class="hero-content-luxury">
+      <h1 class="hero-title-luxury" id="heroTitle">GlowExpert</h1>
+      <p class="hero-subtitle-luxury" id="heroSubtitle"></p>
+      <a href="#collections" class="btn-luxury" id="heroCta">Explore Collection</a>
+    </div>
+  </section>
+
+  <section id="featured" class="featured-section">
+    <div class="section-shell">
+      <h2 class="section-title-luxury">Featured Collections</h2>
+      <p class="section-copy">A luxury storefront that now reflects real admin-managed products, content, and customer checkout activity.</p>
+      <div class="video-grid">
+        <div class="video-card">
+          <video autoplay muted loop playsinline id="featuredVideoOne">
+            <source src="" type="video/mp4" id="featuredVideoOneSource" />
+          </video>
+          <div class="video-overlay">
+            <h3 class="video-title" id="featuredVideoOneTitle"></h3>
+            <p id="featuredVideoOneDescription"></p>
+          </div>
+        </div>
+        <div class="video-card">
+          <video autoplay muted loop playsinline id="featuredVideoTwo">
+            <source src="" type="video/mp4" id="featuredVideoTwoSource" />
+          </video>
+          <div class="video-overlay">
+            <h3 class="video-title" id="featuredVideoTwoTitle"></h3>
+            <p id="featuredVideoTwoDescription"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="collections" class="collection-section">
+    <div class="section-shell">
+      <span class="section-label">Collections</span>
+      <h2 class="section-title-luxury">Shop The Luxury Shelf</h2>
+      <p class="section-copy">Products below are now loaded from the backend, and each listing can be created, edited, or removed from the admin dashboard.</p>
+      <div class="collection-grid" id="productsGrid"></div>
+    </div>
+  </section>
+
+  <section class="stats-section">
+    <div class="stats-grid">
+      <div class="stat-item"><div class="stat-number" id="statProducts">0</div><div class="stat-label">Live Products</div></div>
+      <div class="stat-item"><div class="stat-number">100%</div><div class="stat-label">Human Hair</div></div>
+      <div class="stat-item"><div class="stat-number">24/7</div><div class="stat-label">Support</div></div>
+      <div class="stat-item"><div class="stat-number" id="statStock">0</div><div class="stat-label">Units In Stock</div></div>
+    </div>
+  </section>
+
+  <section id="newsletter" class="newsletter-panel">
+    <div class="newsletter-box">
+      <span class="section-label">Newsletter</span>
+      <h2 class="section-title-luxury" id="newsletterHeading">Join The Glow List</h2>
+      <p class="section-copy" id="newsletterCopy" style="margin: 0 auto; color: rgba(255,255,255,.74);"></p>
+      <form class="newsletter-form" id="newsletterForm">
+        <input id="subscriberName" type="text" placeholder="Your name" />
+        <input id="subscriberEmail" type="email" placeholder="Your email address" required />
+        <button class="btn-luxury" type="submit">Subscribe</button>
+      </form>
+      <div class="newsletter-message" id="newsletterMessage"></div>
+      <p style="margin-top:20px;color:rgba(255,255,255,.48);">Support: <span id="supportEmail"></span> | <span id="supportPhone"></span></p>
+    </div>
+  </section>
+
+  <script>
+    // Configurable API base URL - defaults to localhost for development
+    const API_BASE = window.__API_BASE__ || process.env.API_BASE || 'http://localhost:8081';
+    const CART_KEY = 'glowexpert_cart';
+    const $ = (id) => document.getElementById(id);
+    let products = [];
+    let cart = [];
+    let cartAnimationTimeout = null;
+
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replaceAll('&', '&')
+        .replaceAll('<', '<')
+        .replaceAll('>', '>')
+        .replaceAll('"', '"')
+        .replaceAll("'", '&#39;');
+    }
+
+    function money(value, currency = 'ZAR') {
+      return `${currency} ${Number(value || 0).toFixed(2)}`;
+    }
+
+    async function api(path, options = {}) {
+      const res = await fetch(API_BASE + path, options);
+      const text = await res.text();
+      const json = text ? (() => { try { return JSON.parse(text); } catch { return { message: text }; } })() : {};
+      if (!res.ok) throw new Error(json.message || 'Request failed');
+      return json;
+    }
+
+    function normalizeAsset(url) {
+      if (!url) return '';
+      return url.startsWith('/uploads/') ? `${API_BASE}${url}` : url;
+    }
+
+    function loadCart() {
+      try {
+        cart = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+      } catch {
+        cart = [];
+      }
+      syncCartWithProducts();
+      renderCart();
+    }
+
+    function saveCart() {
+      localStorage.setItem(CART_KEY, JSON.stringify(cart));
+      renderCart();
+    }
+
+    function syncCartWithProducts() {
+      const byId = new Map(products.map((item) => [item.id, item]));
+      cart = cart
+        .map((item) => {
+          const product = byId.get(item.product_id);
+          if (!product) return null;
+          return {
+            ...item,
+            name: product.name,
+            price: Number(product.price),
+            currency: product.currency || 'ZAR',
+            image_url: product.image_url,
+            stock: Number(product.stock || 0)
+          };
+        })
+        .filter(Boolean)
+        .filter((item) => item.quantity > 0 && item.stock > 0)
+        .map((item) => ({ ...item, quantity: Math.min(item.quantity, item.stock) }));
+    }
+
+    function cartCount() {
+      return cart.reduce((sum, item) => sum + item.quantity, 0);
+    }
+
+    function cartTotal() {
+      return cart.reduce((sum, item) => sum + (Number(item.price) * item.quantity), 0);
+    }
+
+    function updateCartBadge() {
+      const badge = document.querySelector('.cart-badge');
+      const count = cartCount();
+      badge.setAttribute('data-count', String(count));
+      // Add animation class when count changes
+      badge.classList.add('badge-bounce');
+      clearTimeout(cartAnimationTimeout);
+      cartAnimationTimeout = setTimeout(() => {
+        badge.classList.remove('badge-bounce');
+      }, 500);
+    }
+
+    function renderProducts(items) {
+      $('statProducts').textContent = String(items.length);
+      $('statStock').textContent = String(items.reduce((sum, item) => sum + Number(item.stock || 0), 0));
+      const grid = $('productsGrid');
+      if (!items.length) {
+        grid.innerHTML = '<p class="empty-state">No products available yet.</p>';
+        return;
+      }
+      grid.innerHTML = items.map((product) => {
+        const isInCart = cart.some(item => item.product_id === product.id);
+        const cartQty = isInCart ? cart.find(item => item.product_id === product.id).quantity : 0;
+        return `
+        <article class="product-card" data-product-id="${product.id}">
+          <div class="product-image">
+            ${product.image_url ? `<img src="${escapeHtml(normalizeAsset(product.image_url))}" alt="${escapeHtml(product.name)}" />` : ''}
+          </div>
+          <div class="product-info">
+            <h3 class="product-name">${escapeHtml(product.name)}</h3>
+            <p class="product-description">${escapeHtml(product.description || 'Luxury hair product')}</p>
+            <div class="product-details">Stock ${escapeHtml(product.stock)} | ${escapeHtml(product.currency || 'ZAR')}</div>
+            <div class="product-meta">
+              <div>
+                <div class="product-price">${escapeHtml(money(product.price, product.currency))}</div>
+                <div class="product-subprice">${Number(product.stock) > 0 ? 'Available now' : 'Out of stock'}</div>
+              </div>
+              <button class="product-button ${isInCart ? 'in-cart' : ''}" type="button" onclick="window.__addToCart('${product.id}')" ${Number(product.stock) > 0 ? '' : 'disabled'}>
+                ${isInCart ? `In Cart (${cartQty})` : 'Add To Cart'}
+              </button>
+            </div>
+          </div>
+        </article>
+      `}).join('');
+    }
+
+    function renderCart() {
+      updateCartBadge();
+      const list = $('cartList');
+      const totalEl = $('cartTotal');
+      if (!cart.length) {
+        list.innerHTML = '<p class="empty-state">Your cart is empty. Add a product to continue.</p>';
+        totalEl.textContent = 'ZAR 0.00';
+        return;
+      }
+      totalEl.textContent = money(cartTotal(), cart[0]?.currency || 'ZAR');
+      list.innerHTML = cart.map((item) => `
+        <div class="cart-item" data-cart-item="${item.product_id}">
+          <div>
+            <h4>${escapeHtml(item.name)}</h4>
+            <div class="muted">${escapeHtml(money(item.price, item.currency))}</div>
+            <div class="qty-controls">
+              <button type="button" onclick="window.__changeQty('${item.product_id}', -1)" aria-label="Decrease quantity">-</button>
+              <span class="qty-value">${escapeHtml(item.quantity)}</span>
+              <button type="button" onclick="window.__changeQty('${item.product_id}', 1)" aria-label="Increase quantity">+</button>
+              <button type="button" onclick="window.__removeFromCart('${item.product_id}')" class="remove-btn" aria-label="Remove item">Remove</button>
+            </div>
+          </div>
+          <strong class="cart-item-total">${escapeHtml(money(item.price * item.quantity, item.currency))}</strong>
+        </div>
+      `).join('');
+      // Update product cards to show cart status
+      renderProducts(products);
+    }
+
+    function openCart() {
+      $('cartPanel').classList.add('open');
+      $('cartBackdrop').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeCart() {
+      $('cartPanel').classList.remove('open');
+      $('cartBackdrop').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function addToCart(productId) {
+      const product = products.find((item) => item.id === productId);
+      if (!product || Number(product.stock) <= 0) {
+        showNotification('This product is out of stock', 'error');
+        return;
+      }
+      
+      const existing = cart.find((item) => item.product_id === productId);
+      if (existing) {
+        if (existing.quantity >= Number(product.stock)) {
+          showNotification('Maximum stock reached', 'error');
+          return;
+        }
+        existing.quantity = Math.min(existing.quantity + 1, Number(product.stock));
+      } else {
+        cart.push({
+          product_id: product.id,
+          quantity: 1,
+          name: product.name,
+          price: Number(product.price),
+          currency: product.currency || 'ZAR',
+          image_url: product.image_url,
+          stock: Number(product.stock || 0)
+        });
+      }
+      
+      saveCart();
+      showNotification(`${product.name} added to cart!`, 'success');
+      
+      // Auto-open cart on first add, otherwise just update
+      if (cart.length === 1) {
+        openCart();
+      }
+    }
+
+    function changeQty(productId, delta) {
+      const item = cart.find((entry) => entry.product_id === productId);
+      if (!item) return;
+      const next = item.quantity + delta;
+      if (next <= 0) {
+        cart = cart.filter((entry) => entry.product_id !== productId);
+        showNotification('Item removed from cart', 'info');
+      } else {
+        if (next > item.stock) {
+          showNotification('Maximum stock reached', 'error');
+          return;
+        }
+        item.quantity = next;
+      }
+      saveCart();
+    }
+
+    function removeFromCart(productId) {
+      const item = cart.find((entry) => entry.product_id === productId);
+      cart = cart.filter((entry) => entry.product_id !== productId);
+      saveCart();
+      if (item) {
+        showNotification(`${item.name} removed from cart`, 'info');
+      }
+    }
+
+    // Notification system for cart feedback
+    function showNotification(message, type = 'info') {
+      // Remove existing notification
+      const existing = document.querySelector('.cart-notification');
+      if (existing) existing.remove();
+
+      const notification = document.createElement('div');
+      notification.className = `cart-notification notification-${type}`;
+      notification.innerHTML = `
+        <span class="notification-icon">${type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ'}</span>
+        <span class="notification-text">${escapeHtml(message)}</span>
+      `;
+      
+      // Add styles dynamically if not already present
+      if (!document.querySelector('#notification-styles')) {
+        const style = document.createElement('style');
+        style.id = 'notification-styles';
+        style.textContent = `
+          .cart-notification {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            padding: 14px 24px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Raleway', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            z-index: 10000;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+          }
+          .cart-notification.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+          }
+          .notification-success {
+            background: #1a3a1a;
+            color: #90EE90;
+            border: 1px solid #2d5a2d;
+          }
+          .notification-error {
+            background: #3a1a1a;
+            color: #ffb4b4;
+            border: 1px solid #5a2d2d;
+          }
+          .notification-info {
+            background: #1a1a3a;
+            color: #b4b4ff;
+            border: 1px solid #2d2d5a;
+          }
+          .notification-icon {
+            font-size: 1.1rem;
+          }
+          .badge-bounce {
+            animation: badgeBounce 0.5s ease;
+          }
+          @keyframes badgeBounce {
+            0%, 100% { transform: scale(1); }
+            30% { transform: scale(1.3); }
+            60% { transform: scale(0.9); }
+          }
+          .product-button.in-cart {
+            background: var(--luxury-gold);
+            color: var(--luxury-black);
+          }
+          .product-button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+          }
+          .remove-btn {
+            color: #b00020;
+            border-color: rgba(176, 0, 32, 0.3) !important;
+          }
+          .remove-btn:hover {
+            background: #b00020 !important;
+            color: white !important;
+          }
+        `;
+        document.head.appendChild(style);
+      }
+      
+      document.body.appendChild(notification);
+      
+      // Trigger animation
+      requestAnimationFrame(() => {
+        notification.classList.add('show');
+      });
+      
+      // Auto-remove after 2.5 seconds
+      setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => notification.remove(), 300);
+      }, 2500);
+    }
+
+    async function submitNewsletter(event) {
+      event.preventDefault();
+      const messageEl = $('newsletterMessage');
+      try {
+        await api('/api/subscribers', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: $('subscriberName').value.trim() || null,
+            email: $('subscriberEmail').value.trim()
+          })
+        });
+        $('newsletterForm').reset();
+        messageEl.textContent = 'Subscribed successfully.';
+        messageEl.style.color = '#c9a84c';
+      } catch (error) {
+        messageEl.textContent = error.message;
+        messageEl.style.color = '#ffb4b4';
+      }
+    }
+
+    async function submitCheckout(event) {
+      event.preventDefault();
+      const messageEl = $('checkoutMessage');
+      if (!cart.length) {
+        messageEl.textContent = 'Add products to the cart before checkout.';
+        messageEl.style.color = '#b00020';
+        return;
+      }
+      try {
+        await api('/api/orders/checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              customer_name: $('checkoutName').value.trim(),
+              customer_email: $('checkoutEmail').value.trim(),
+              customer_phone: $('checkoutPhone').value.trim(),
+              referral_code: $('checkoutReferral').value.trim() || undefined,
+              items: cart.map((item) => ({ product_id: item.product_id, quantity: item.quantity }))
+            })
+        });
+        cart = [];
+        saveCart();
+        $('checkoutForm').reset();
+        messageEl.textContent = 'Order placed successfully.';
+        messageEl.style.color = '#2b7a0b';
+        await initializeStore();
+      } catch (error) {
+        messageEl.textContent = error.message;
+        messageEl.style.color = '#b00020';
+      }
+    }
+
+    function applySettings(settings) {
+      document.title = settings.brand_name || 'GlowExpert';
+      $('brandName').innerHTML = `${escapeHtml(settings.brand_name || 'Glow')}<span>Expert</span>`;
+      $('heroTitle').textContent = settings.hero_title || 'GlowExpert';
+      $('heroSubtitle').textContent = settings.hero_subtitle || '';
+      $('heroCta').textContent = settings.hero_cta_label || 'Explore Collection';
+      $('newsletterHeading').textContent = settings.newsletter_heading || 'Join The Glow List';
+      $('newsletterCopy').textContent = settings.newsletter_copy || '';
+      $('supportEmail').textContent = settings.support_email || '';
+      $('supportPhone').textContent = settings.support_phone || '';
+
+      // Check localStorage first for uploaded videos, then fall back to API settings
+      const localHeroVideo = localStorage.getItem('glowexpert_hero_video');
+      const localFeaturedVideoOne = localStorage.getItem('glowexpert_featured_video_one');
+      const localFeaturedVideoTwo = localStorage.getItem('glowexpert_featured_video_two');
+
+      const heroVideoUrl = localHeroVideo || normalizeAsset(settings.hero_video_url || '');
+      const featuredVideoOneUrl = localFeaturedVideoOne || normalizeAsset(settings.featured_video_one_url || '');
+      const featuredVideoTwoUrl = localFeaturedVideoTwo || normalizeAsset(settings.featured_video_two_url || '');
+
+      $('heroVideoSource').src = heroVideoUrl;
+      $('featuredVideoOneSource').src = featuredVideoOneUrl;
+      $('featuredVideoTwoSource').src = featuredVideoTwoUrl;
+      $('featuredVideoOneTitle').textContent = settings.featured_video_one_title || '';
+      $('featuredVideoOneDescription').textContent = settings.featured_video_one_description || '';
+      $('featuredVideoTwoTitle').textContent = settings.featured_video_two_title || '';
+      $('featuredVideoTwoDescription').textContent = settings.featured_video_two_description || '';
+      $('heroVideo').load();
+      $('featuredVideoOne').load();
+      $('featuredVideoTwo').load();
+    }
+
+    async function initializeStore() {
+      const [settingsRes, productsRes] = await Promise.all([
+        api('/api/settings'),
+        api('/api/products')
+      ]);
+      applySettings(settingsRes.data || {});
+      products = productsRes.data || [];
+      renderProducts(products);
+      loadCart();
+    }
+
+    window.__addToCart = addToCart;
+    window.__changeQty = changeQty;
+    window.__removeFromCart = removeFromCart;
+
+    $('cartBtn').addEventListener('click', openCart);
+    $('closeCartBtn').addEventListener('click', closeCart);
+    $('cartBackdrop').addEventListener('click', closeCart);
+    $('newsletterForm').addEventListener('submit', submitNewsletter);
+    $('checkoutForm').addEventListener('submit', submitCheckout);
+
+    initializeStore().catch((error) => {
+      $('productsGrid').innerHTML = `<p class="empty-state">${escapeHtml(error.message)}</p>`;
+    });
+   </script>
+   <footer>
+     <div class="footer-top">
+       <div class="footer-brand">
+         <a href="#" class="nav-logo" id="brandNameFooter">Glow<span>Expert</span></a>
+         <p class="footer-tagline">Luxurious beauty, delivered.</p>
+         <div class="footer-socials">
+           <a href="https://wa.me/1234567890" class="social-link" target="_blank" aria-label="WhatsApp">
+             <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.52 3.48A11.86 11.86 0 0012 0C5.37 0 .01 5.36.01 11.99c0 2.11.55 4.17 1.61 5.99L0 24l6.31-1.65c1.73 1 3.73 1.54 5.69 1.54h.01c6.62 0 11.98-5.36 11.98-11.99 0-3.19-1.24-6.19-3.48-8.42zM12 22c-1.86 0-3.69-.5-5.27-1.44l-.38-.22-3.74 1 1-3.64-.24-.39A9.98 9.98 0 012 11.99C2 6.48 6.48 2 12 2s10 4.48 10 9.99-4.48 9.99-10 9.99z"/></svg>
+           </a>
+           <a href="https://facebook.com/yourpage" class="social-link" target="_blank" aria-label="Facebook">
+             <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 5 3.66 9.12 8.44 9.88v-6.99H7.9v-2.89h2.54V9.41c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.23.2 2.23.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.87h2.78l-.44 2.89h-2.34v6.99C18.34 21.12 22 17 22 12z"/></svg>
+           </a>
+           <a href="https://twitter.com/yourhandle" class="social-link" target="_blank" aria-label="X (Twitter)">
+             <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M23.954 4.569c-.885.389-1.83.654-2.825.775 1.014-.608 1.794-1.574 2.163-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-2.722 0-4.928 2.206-4.928 4.928 0 .386.044.762.128 1.124-4.094-.205-7.725-2.166-10.158-5.144-.424.727-.666 1.571-.666 2.475 0 1.708.869 3.215 2.188 4.099-.807-.026-1.566-.247-2.229-.616v.062c0 2.386 1.697 4.374 3.946 4.825-.413.112-.848.171-1.296.171-.317 0-.626-.031-.928-.089.627 1.956 2.445 3.38 4.6 3.422-1.68 1.317-3.808 2.104-6.115 2.104-.398 0-.79-.023-1.175-.069 2.179 1.397 4.768 2.214 7.557 2.214 9.054 0 14-7.496 14-13.986 0-.213-.005-.425-.014-.637.962-.695 1.797-1.562 2.457-2.549z"/></svg>
+           </a>
+           <a href="https://instagram.com/yourhandle" class="social-link" target="_blank" aria-label="Instagram">
+             <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.17.054 1.97.24 2.43.415a4.92 4.92 0 011.68 1.09 4.92 4.92 0 011.09 1.68c.176.46.361 1.26.415 2.43.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.054 1.17-.24 1.97-.415 2.43a4.92 4.92 0 01-1.09 1.68 4.92 4.92 0 01-1.68 1.09c-.46.176-1.26.361-2.43.415-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.17-.054-1.97-.24-2.43-.415a4.92 4.92 0 01-1.68-1.09 4.92 4.92 0 01-1.09-1.68c-.176-.46-.361-1.26-.415-2.43-.058-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.054-1.17.24-1.97.415-2.43a4.92 4.92 0 011.09-1.68 4.92 4.92 0 011.68-1.09c.46-.176 1.26-.361 2.43-.415 1.266-.058 1.646-.07 4.85-.07zm0-2.163C8.755 0 8.332.012 7.052.07 5.777.127 4.825.352 4.032.692a7.082 7.082 0 00-2.58 1.684A7.082 7.082 0 00.692 4.952c-.34.793-.565 1.745-.622 3.02C.012 8.332 0 8.755 0 12c0 3.245.012 3.668.07 4.948.057 1.275.282 2.227.622 3.02a7.082 7.082 0 001.684 2.58 7.082 7.082 0 002.58 1.684c.793.34 1.745.565 3.02.622C8.332 23.988 8.755 24 12 24s3.668-.012 4.948-.07c1.275-.057 2.227-.282 3.02-.622a7.082 7.082 0 002.58-1.684 7.082 7.082 0 001.684-2.58c.34-.793.565-1.745.622-3.02.058-1.28.07-1.703.07-4.948s-.012-3.668-.07-4.948c-.057-1.275-.282-2.227-.622-3.02a7.082 7.082 0 00-1.684-2.58 7.082 7.082 0 00-2.58-1.684c-.793-.34-1.745-.565-3.02-.622C15.668.012 15.245 0 12 0z"/><path d="M12 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a3.999 3.999 0 110-7.998 3.999 3.999 0 010 7.998zM18.406 4.594a1.44 1.44 0 11-2.88 0 1.44 1.44 0 012.88 0z"/></svg>
+           </a>
+           <a href="https://tiktok.com/@yourhandle" class="social-link" target="_blank" aria-label="TikTok">
+             <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 0c-1.66 0-3 1.34-3 3v9c0 2.21 1.79 4 4 4h2c3.31 0 6-2.69 6-6V6c0-2.21-1.79-4-4-4h-5z"/></svg>
+           </a>
+         </div>
+       </div>
+     </div>
+     <div class="footer-bottom">
+       <span class="footer-copy">© 2026 GlowExpert. All rights reserved.</span>
+     </div>
+   </footer>
+   <a href="https://wa.me/1234567890" class="whatsapp-float" target="_blank" aria-label="WhatsApp Chat">
+     <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M20.52 3.48A11.86 11.86 0 0012 0C5.37 0 .01 5.36.01 11.99c0 2.11.55 4.17 1.61 5.99L0 24l6.31-1.65c1.73 1 3.73 1.54 5.69 1.54h.01c6.62 0 11.98-5.36 11.98-11.99 0-3.19-1.24-6.19-3.48-8.42zM12 22c-1.86 0-3.69-.5-5.27-1.44l-.38-.22-3.74 1 1-3.64-.24-.39A9.98 9.98 0 012 11.99C2 6.48 6.48 2 12 2s10 4.48 10 9.99-4.48 9.99-10 9.99z"/></svg>
+     <span class="whatsapp-tooltip">Chat on WhatsApp</span>
+   </a>
+</body>
+</html>

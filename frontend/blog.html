@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog - GlowExpert</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+  <style>
+    :root {
+      --luxury-black: #0a0908;
+      --luxury-gold: #c9a84c;
+      --luxury-white: #faf8f5;
+      --luxury-sand: #f4ede3;
+      --luxury-rose: #dfc8cf;
+    }
+    body { background: var(--luxury-white); color: var(--luxury-black); }
+    
+    .blog-hero {
+      padding: 160px 20px 80px;
+      text-align: center;
+      background: linear-gradient(135deg, #1a1411 0%, #0f0d0c 100%);
+      color: #fff;
+    }
+    .blog-hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 300;
+      margin-bottom: 1rem;
+      color: var(--luxury-gold);
+    }
+    .blog-hero p {
+      font-family: 'Raleway', sans-serif;
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.7);
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.8;
+    }
+
+    .blog-filters {
+      padding: 30px 20px;
+      background: var(--luxury-white);
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+      position: sticky;
+      top: 80px;
+      z-index: 50;
+    }
+    .filter-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      padding: 10px 24px;
+      border: 1px solid rgba(201,168,76,0.3);
+      background: transparent;
+      color: var(--luxury-black);
+      font-family: 'Raleway', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--luxury-gold);
+      border-color: var(--luxury-gold);
+      color: var(--luxury-black);
+    }
+
+    .blog-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 30px;
+    }
+    .blog-card {
+      background: #fff;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(10,9,8,0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+    .blog-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 60px rgba(10,9,8,0.15);
+    }
+    .blog-card-image {
+      height: 200px;
+      background: linear-gradient(135deg, #2b2521, #111);
+      overflow: hidden;
+      position: relative;
+    }
+    .blog-card-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .blog-card-badge {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      padding: 6px 14px;
+      background: var(--luxury-gold);
+      color: var(--luxury-black);
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border-radius: 20px;
+    }
+    .blog-card-badge.video {
+      background: #e53935;
+      color: #fff;
+    }
+    .blog-card-badge.tutorial {
+      background: #2e7d32;
+      color: #fff;
+    }
+    .blog-card-featured {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      padding: 6px 14px;
+      background: rgba(201,168,76,0.9);
+      color: var(--luxury-black);
+      font-size: 0.6rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border-radius: 20px;
+    }
+    .blog-card-content {
+      padding: 24px;
+    }
+    .blog-card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: var(--luxury-black);
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+    .blog-card-excerpt {
+      font-family: 'Raleway', sans-serif;
+      font-size: 0.9rem;
+      color: rgba(10,9,8,0.65);
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+    .blog-card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: rgba(10,9,8,0.45);
+    }
+    .blog-card-date {
+      font-family: 'Raleway', sans-serif;
+      letter-spacing: 0.05em;
+    }
+    .blog-card-views {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .blog-empty {
+      text-align: center;
+      padding: 80px 20px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .blog-empty h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      color: var(--luxury-black);
+      margin-bottom: 16px;
+    }
+    .blog-empty p {
+      color: rgba(10,9,8,0.55);
+      line-height: 1.7;
+    }
+
+    .load-more {
+      text-align: center;
+      padding: 40px 20px;
+    }
+    .load-more-btn {
+      padding: 14px 40px;
+      border: 1px solid var(--luxury-gold);
+      background: transparent;
+      color: var(--luxury-gold);
+      font-family: 'Raleway', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .load-more-btn:hover {
+      background: var(--luxury-gold);
+      color: var(--luxury-black);
+    }
+    .load-more-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    /* Blog post detail page styles */
+    .blog-post-detail {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 140px 20px 80px;
+    }
+    .blog-post-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .blog-post-type {
+      display: inline-block;
+      padding: 6px 16px;
+      background: var(--luxury-gold);
+      color: var(--luxury-black);
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      border-radius: 20px;
+      margin-bottom: 20px;
+    }
+    .blog-post-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 300;
+      color: var(--luxury-black);
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+    .blog-post-meta {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      font-size: 0.8rem;
+      color: rgba(10,9,8,0.5);
+    }
+    .blog-post-featured-image {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+      border-radius: 20px;
+      margin-bottom: 40px;
+    }
+    .blog-post-video {
+      width: 100%;
+      aspect-ratio: 16/9;
+      border-radius: 20px;
+      margin-bottom: 40px;
+    }
+    .blog-post-content {
+      font-family: 'Raleway', sans-serif;
+      font-size: 1.05rem;
+      line-height: 1.9;
+      color: rgba(10,9,8,0.8);
+    }
+    .blog-post-content h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      color: var(--luxury-black);
+      margin: 40px 0 20px;
+    }
+    .blog-post-content h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      color: var(--luxury-black);
+      margin: 30px 0 16px;
+    }
+    .blog-post-content p {
+      margin-bottom: 20px;
+    }
+    .blog-post-content ul, .blog-post-content ol {
+      margin-bottom: 20px;
+      padding-left: 24px;
+    }
+    .blog-post-content li {
+      margin-bottom: 8px;
+    }
+    .blog-post-content blockquote {
+      border-left: 3px solid var(--luxury-gold);
+      padding-left: 20px;
+      margin: 30px 0;
+      font-style: italic;
+      color: rgba(10,9,8,0.7);
+    }
+
+    .back-to-blog {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border: 1px solid rgba(201,168,76,0.3);
+      color: var(--luxury-black);
+      text-decoration: none;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      border-radius: 30px;
+      transition: all 0.3s ease;
+      margin-bottom: 30px;
+    }
+    .back-to-blog:hover {
+      background: var(--luxury-gold);
+      border-color: var(--luxury-gold);
+      color: var(--luxury-black);
+    }
+
+    @media (max-width: 768px) {
+      .blog-grid {
+        grid-template-columns: 1fr;
+      }
+      .blog-post-featured-image {
+        height: 250px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav id="navbar">
+    <a href="index.html" class="nav-logo">Glow<span>Expert</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="index.html#collections">Collections</a></li>
+      <li><a href="blog.html" class="active">Blog</a></li>
+      <li><a href="login.html">Admin</a></li>
+    </ul>
+    <div class="nav-actions">
+      <span class="cart-badge" data-count="0">
+        <a href="index.html#collections" class="nav-icon" title="Shop" aria-label="Shop">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+        </a>
+      </span>
+    </div>
+  </nav>
+
+  <div id="app">
+    <!-- Blog listing or post detail will be rendered here -->
+  </div>
+
+  <script>
+    const API_BASE = 'http://localhost:8081';
+    const $ = (id) => document.getElementById(id);
+
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replaceAll('&', '&')
+        .replaceAll('<', '<')
+        .replaceAll('>', '>')
+        .replaceAll('"', '"')
+        .replaceAll("'", '&#39;');
+    }
+
+    function formatDate(dateStr) {
+      return new Date(dateStr).toLocaleDateString('en-GB', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    }
+
+    function normalizeAsset(url) {
+      if (!url) return '';
+      return url.startsWith('/uploads/') ? `${API_BASE}${url}` : url;
+    }
+
+    async function api(path, options = {}) {
+      const res = await fetch(API_BASE + path, options);
+      const text = await res.text();
+      const json = text ? (() => { try { return JSON.parse(text); } catch { return { message: text }; } })() : {};
+      if (!res.ok) throw new Error(json.message || 'Request failed');
+      return json;
+    }
+
+    // Check if we're viewing a single post
+    const urlParams = new URLSearchParams(window.location.search);
+    const postSlug = urlParams.get('post');
+
+    if (postSlug) {
+      // Show single post
+      renderPostDetail(postSlug);
+    } else {
+      // Show blog listing
+      let currentFilter = 'all';
+      let offset = 0;
+      const limit = 9;
+      let allPosts = [];
+      let hasMore = true;
+      let isLoading = false;
+
+      renderBlogListing();
+    }
+
+    async function renderBlogListing() {
+      const app = $('app');
+      
+      app.innerHTML = `
+        <section class="blog-hero">
+          <h1>GlowExpert Blog</h1>
+          <p>Tutorials, tips, and insights about luxury hair care and styling from our experts</p>
+        </section>
+        <div class="blog-filters">
+          <div class="filter-container">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="article">Articles</button>
+            <button class="filter-btn" data-filter="tutorial">Tutorials</button>
+            <button class="filter-btn" data-filter="video">Videos</button>
+          </div>
+        </div>
+        <div class="blog-grid" id="blogGrid"></div>
+        <div class="load-more" id="loadMoreContainer">
+          <button class="load-more-btn" id="loadMoreBtn">Load More</button>
+        </div>
+      `;
+
+      // Add filter event listeners
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentFilter = btn.dataset.filter;
+          offset = 0;
+          allPosts = [];
+          hasMore = true;
+          loadPosts();
+        });
+      });
+
+      $('loadMoreBtn').addEventListener('click', () => {
+        if (!isLoading && hasMore) {
+          loadPosts();
+        }
+      });
+
+      await loadPosts();
+    }
+
+    async function loadPosts() {
+      if (isLoading || !hasMore) return;
+      isLoading = true;
+
+      try {
+        const contentType = currentFilter === 'all' ? null : currentFilter;
+        const url = new URL('/api/posts', API_BASE);
+        if (contentType) url.searchParams.set('contentType', contentType);
+        url.searchParams.set('limit', limit);
+        url.searchParams.set('offset', offset);
+
+        const result = await api(url.pathname + url.search);
+        
+        if (result.data.length === 0) {
+          hasMore = false;
+        } else {
+          allPosts = [...allPosts, ...result.data];
+          offset += result.data.length;
+          hasMore = result.pagination?.hasMore || false;
+        }
+
+        renderPostsGrid();
+      } catch (error) {
+        console.error('Error loading posts:', error);
+      } finally {
+        isLoading = false;
+      }
+    }
+
+    function renderPostsGrid() {
+      const grid = $('blogGrid');
+      const loadMoreContainer = $('loadMoreContainer');
+
+      if (allPosts.length === 0) {
+        grid.innerHTML = `
+          <div class="blog-empty">
+            <h2>No posts yet</h2>
+            <p>Check back soon for tutorials, articles, and video content about our luxury hair products.</p>
+          </div>
+        `;
+        loadMoreContainer.style.display = 'none';
+        return;
+      }
+
+      grid.innerHTML = allPosts.map(post => {
+        const typeLabel = post.content_type === 'video' ? 'Video' : post.content_type === 'tutorial' ? 'Tutorial' : 'Article';
+        const typeClass = post.content_type === 'video' ? 'video' : post.content_type === 'tutorial' ? 'tutorial' : '';
+        
+        return `
+          <article class="blog-card" onclick="window.location.href='blog.html?post=${post.slug}'">
+            <div class="blog-card-image">
+              ${post.featured_image ? `<img src="${escapeHtml(normalizeAsset(post.featured_image))}" alt="${escapeHtml(post.title)}" />` : ''}
+              <span class="blog-card-badge ${typeClass}">${typeLabel}</span>
+              ${post.is_featured ? '<span class="blog-card-featured">Featured</span>' : ''}
+            </div>
+            <div class="blog-card-content">
+              <h3 class="blog-card-title">${escapeHtml(post.title)}</h3>
+              <p class="blog-card-excerpt">${escapeHtml(post.excerpt || post.content?.substring(0, 150) + '...' || '')}</p>
+              <div class="blog-card-meta">
+                <span class="blog-card-date">${formatDate(post.published_at || post.created_at)}</span>
+                <span class="blog-card-views">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                  ${post.view_count}
+                </span>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join('');
+
+      loadMoreContainer.style.display = hasMore ? 'block' : 'none';
+      if (!hasMore && allPosts.length > 0) {
+        loadMoreContainer.innerHTML = '<p style="color: rgba(10,9,8,0.5); font-size: 0.85rem;">No more posts to load</p>';
+      }
+    }
+
+    async function renderPostDetail(slug) {
+      const app = $('app');
+      app.innerHTML = '<div style="padding: 140px 20px; text-align: center;">Loading...</div>';
+
+      try {
+        const result = await api(`/api/posts/${slug}`);
+        const post = result.data;
+
+        const typeLabel = post.content_type === 'video' ? 'Video' : post.content_type === 'tutorial' ? 'Tutorial' : 'Article';
+        const typeClass = post.content_type === 'video' ? 'video' : post.content_type === 'tutorial' ? 'tutorial' : '';
+
+        app.innerHTML = `
+          <div class="blog-post-detail">
+            <a href="blog.html" class="back-to-blog">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+              </svg>
+              Back to Blog
+            </a>
+            <div class="blog-post-header">
+              <span class="blog-post-type ${typeClass}">${typeLabel}</span>
+              <h1 class="blog-post-title">${escapeHtml(post.title)}</h1>
+              <div class="blog-post-meta">
+                <span>${formatDate(post.published_at || post.created_at)}</span>
+                <span>${post.view_count} views</span>
+              </div>
+            </div>
+            ${post.featured_image ? `<img src="${escapeHtml(normalizeAsset(post.featured_image))}" alt="${escapeHtml(post.title)}" class="blog-post-featured-image" />` : ''}
+            ${post.video_url ? `
+              <video controls class="blog-post-video" poster="${post.video_thumbnail ? escapeHtml(normalizeAsset(post.video_thumbnail)) : ''}">
+                <source src="${escapeHtml(post.video_url)}" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            ` : ''}
+            <div class="blog-post-content">
+              ${formatContent(post.content)}
+            </div>
+          </div>
+        `;
+      } catch (error) {
+        app.innerHTML = `
+          <div class="blog-post-detail" style="text-align: center;">
+            <a href="blog.html" class="back-to-blog">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+              </svg>
+              Back to Blog
+            </a>
+            <div class="blog-empty">
+              <h2>Post not found</h2>
+              <p>The blog post you're looking for doesn't exist or hasn't been published yet.</p>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function formatContent(content) {
+      // Simple formatting - convert newlines to paragraphs
+      if (!content) return '';
+      return content.split('\n\n').map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`).join('');
+    }
+  </script>
+</body>
+</html>
