@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GlowExpert Admin Portal</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="icon" type="image/svg+xml" href="./src/assets/logo/glowexpert_logo.svg" />
+  <link rel="apple-touch-icon" href="./src/assets/logo/glowexpert_logo.svg" />
+  <link rel="shortcut icon" href="./src/assets/logo/glowexpert_logo.svg" />
+
+  <script type="module" src="./src/config.js"></script>
+
+  <link rel="stylesheet" href="./src/styles/admin-retro.css" /></head>
+<body>
+  <nav id="navbar">
+    <a href="index.html" class="nav-logo">Glow<span>Expert</span></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html" class="nav-close-mobile">Storefront</a></li>
+      <li><a href="blog.html" class="nav-close-mobile">Blog</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="nav-hamburger" id="navHamburger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="admin-wrap">
+    <section class="topbar">
+      <div class="admin-card">
+        <span class="section-label">Admin Portal</span>
+        <h1 class="section-title">Store Control Center</h1>
+        <p class="muted">Manage products, blog content, website settings, newsletter subscribers, customers, and checkout orders from one page.</p>
+        <div class="metric-grid">
+          <div class="metric"><span class="muted">Products</span><strong id="metricProducts">0</strong></div>
+          <div class="metric"><span class="muted">Subscribers</span><strong id="metricSubscribers">0</strong></div>
+          <div class="metric"><span class="muted">Customers</span><strong id="metricCustomers">0</strong></div>
+          <div class="metric"><span class="muted">Orders</span><strong id="metricOrders">0</strong></div>
+          <div class="metric"><span class="muted">Blog Posts</span><strong id="metricBlogPosts">0</strong></div>
+        </div>
+      </div>
+      <div class="admin-card">
+        <span class="section-label">Session</span>
+        <div class="muted" id="sessionInfo">Verifying admin access...</div>
+        <div class="actions">
+          <button class="btn" id="refreshBtn" type="button">Refresh Data</button>
+          <button class="btn secondary" id="logoutBtn" type="button">Logout</button>
+        </div>
+        <div class="admin-status-bar" aria-label="Status bar">
+          <div class="admin-status-item"><b>Ready</b></div>
+          <div class="admin-status-item"><b>Server Online</b></div>
+          <div class="admin-status-item"><b>Database Connected</b></div>
+          <div class="admin-status-item"><b>Administrator</b></div>
+          <div class="admin-status-item"><b>Current Time</b></div>
+          <div class="admin-status-item" id="status"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab Navigation -->
+    <div class="tab-nav">
+      <button class="tab-btn active" data-tab="products">Products</button>
+      <button class="tab-btn" data-tab="blog">Blog & Tutorials</button>
+      <button class="tab-btn" data-tab="content">Website Content</button>
+      <button class="tab-btn" data-tab="orders">Orders & Customers</button>
+      <button class="tab-btn" data-tab="influencers">Influencers</button>
+    </div>
+
+    <!-- Products Tab -->
+    <div class="tab-content active" id="tab-products">
+      <section class="dashboard-grid">
+        <div class="admin-card">
+          <span class="section-label">Products</span>
+          <h2 class="section-title">Create Or Edit Listings</h2>
+          <input id="productId" type="hidden" />
+          <div class="row">
+            <div>
+              <label for="name">Product Name</label>
+              <input id="name" />
+            </div>
+            <div>
+              <label for="slug">Slug</label>
+              <input id="slug" />
+            </div>
+          </div>
+          <label for="description">Description</label>
+          <textarea id="description"></textarea>
+          <div class="row">
+            <div>
+              <label for="category">Category</label>
+              <input id="category" placeholder="Haircare, Styling, Accessories" />
+            </div>
+            <div>
+              <label>
+                <input id="is_featured" type="checkbox" />
+                Featured product
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label for="price">Price</label>
+              <input id="price" type="number" min="0" step="0.01" />
+            </div>
+            <div>
+              <label for="currency">Currency</label>
+              <input id="currency" value="ZAR" />
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label for="stock">Stock</label>
+              <input id="stock" type="number" min="0" step="1" />
+            </div>
+            <div>
+              <label for="image_file">Image Upload</label>
+              <input id="image_file" type="file" accept="image/*" />
+            </div>
+          </div>
+          <label for="image_url">Image URL</label>
+          <input id="image_url" />
+          <div class="row">
+            <div>
+              <label for="meta_title">Meta Title</label>
+              <input id="meta_title" placeholder="SEO title for this product" />
+            </div>
+            <div>
+              <label for="meta_keywords">Meta Keywords</label>
+              <input id="meta_keywords" placeholder="luxury, hair, treatment" />
+            </div>
+          </div>
+          <label for="meta_description">Meta Description</label>
+          <textarea id="meta_description" placeholder="Short SEO description"></textarea>
+          <div class="actions">
+            <button class="btn" id="createBtn" type="button">Create Product</button>
+            <button class="btn secondary" id="updateBtn" type="button" disabled>Update Selected</button>
+            <button class="btn danger" id="clearBtn" type="button">Clear Form</button>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <span class="section-label">Live Listings</span>
+          <table>
+            <thead>
+              <tr><th>Name</th><th>Price</th><th>Stock</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="productsTbody"><tr><td colspan="4" class="muted">Loading products...</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- Blog Tab -->
+    <div class="tab-content" id="tab-blog">
+      <section class="dashboard-grid">
+        <div class="admin-card">
+          <span class="section-label">Blog Management</span>
+          <h2 class="section-title">Create Or Edit Blog Post / Tutorial</h2>
+          <p class="muted panel-text">Create articles, tutorials, and video content for your blog.</p>
+          <input id="blogPostId" type="hidden" />
+          <div class="row">
+            <div>
+              <label for="blogTitle">Title</label>
+              <input id="blogTitle" />
+            </div>
+            <div>
+              <label for="blogSlug">Slug</label>
+              <input id="blogSlug" />
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label for="blogContentType">Content Type</label>
+              <select id="blogContentType">
+                <option value="article">Article</option>
+                <option value="tutorial">Tutorial</option>
+                <option value="video">Video</option>
+              </select>
+            </div>
+            <div>
+              <label for="blogStatus">Status</label>
+              <select id="blogStatus">
+                <option value="draft">Draft</option>
+                <option value="published">Published</option>
+              </select>
+            </div>
+          </div>
+          <label for="blogExcerpt">Excerpt (Short Summary)</label>
+          <textarea id="blogExcerpt" placeholder="Brief summary for search results and previews..."></textarea>
+          <label for="blogContent">Content</label>
+          <textarea id="blogContent" class="large-textarea" placeholder="Write your full article, tutorial, or video description here..."></textarea>
+          <div class="row">
+            <div>
+              <label for="blogFeaturedImage">Featured Image URL</label>
+              <input id="blogFeaturedImage" placeholder="https://example.com/image.jpg" />
+            </div>
+            <div>
+              <label for="blogVideoUrl">Video URL (for video posts)</label>
+              <input id="blogVideoUrl" placeholder="https://youtube.com/watch?v=..." />
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label for="blogMetaDesc">Meta Description (SEO)</label>
+              <input id="blogMetaDesc" />
+            </div>
+            <div>
+              <label for="blogMetaKeywords">Meta Keywords (SEO)</label>
+              <input id="blogMetaKeywords" />
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>
+                <input type="checkbox" id="blogIsFeatured" />
+                Featured Post
+              </label>
+            </div>
+            <div>
+              <label for="blogSortOrder">Sort Order</label>
+              <input id="blogSortOrder" type="number" value="0" min="0" />
+            </div>
+          </div>
+          <div class="actions">
+            <button class="btn" id="createBlogBtn" type="button">Create Post</button>
+            <button class="btn secondary" id="updateBlogBtn" type="button" disabled>Update Selected</button>
+            <button class="btn danger" id="clearBlogBtn" type="button">Clear Form</button>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <span class="section-label">Blog Stats</span>
+          <div class="metric-grid metric-grid--spaced">
+            <div class="metric"><span class="muted">Total</span><strong id="blogStatTotal">0</strong></div>
+            <div class="metric"><span class="muted">Published</span><strong id="blogStatPublished">0</strong></div>
+            <div class="metric"><span class="muted">Drafts</span><strong id="blogStatDrafts">0</strong></div>
+            <div class="metric"><span class="muted">Videos</span><strong id="blogStatVideos">0</strong></div>
+          </div>
+          <h3 class="section-subtitle">All Blog Posts</h3>
+          <table>
+            <thead>
+              <tr><th>Title</th><th>Type</th><th>Status</th><th>Views</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="blogPostsTbody"><tr><td colspan="5" class="muted">Loading blog posts...</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- Website Content Tab -->
+    <div class="tab-content" id="tab-content">
+      <section class="dashboard-grid">
+        <div class="admin-card">
+          <div class="window-titlebar">
+            <div class="window-title">Video Management</div>
+            <div class="window-controls">
+              <span class="window-control">−</span>
+              <span class="window-control">☐</span>
+              <span class="window-control">×</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="retro-panel">
+              <h3>Upload Hero & Featured Videos</h3>
+              <p class="retro-notice">Upload videos securely to local browser storage (IndexedDB). These will seamlessly override the API settings on the home page.</p>
+
+              <div id="videoStorageStatus" class="status-panel">
+                <div class="status-title">Stored Videos</div>
+                <div class="status-grid">
+                  <div id="storedHeroStatus" class="status-item"><span class="muted">Hero</span> <span class="status-item-value">None</span></div>
+                  <div id="storedFeaturedOneStatus" class="status-item"><span class="muted">Featured 1</span> <span class="status-item-value">None</span></div>
+                  <div id="storedFeaturedTwoStatus" class="status-item"><span class="muted">Featured 2</span> <span class="status-item-value">None</span></div>
+                </div>
+              </div>
+
+              <div class="upload-grid">
+                <div class="upload-panel">
+                  <label for="heroVideoUpload">Hero Video (Background)</label>
+                  <input id="heroVideoUpload" type="file" accept="video/*" />
+                  <div class="button-row">
+                    <button class="btn" id="saveHeroBtn" type="button">Save</button>
+                    <button class="btn danger" id="deleteHeroBtn" type="button">Delete</button>
+                  </div>
+                  <div id="heroVideoStatus" class="status-text"></div>
+                </div>
+                <div class="upload-panel">
+                  <label for="featuredVideoOneUpload">Featured Video 1</label>
+                  <input id="featuredVideoOneUpload" type="file" accept="video/*" />
+                  <div class="button-row">
+                    <button class="btn" id="saveFeaturedOneBtn" type="button">Save</button>
+                    <button class="btn danger" id="deleteFeaturedOneBtn" type="button">Delete</button>
+                  </div>
+                  <div id="featuredVideoOneStatus" class="status-text"></div>
+                </div>
+                <div class="upload-panel">
+                  <label for="featuredVideoTwoUpload">Featured Video 2</label>
+                  <input id="featuredVideoTwoUpload" type="file" accept="video/*" />
+                  <div class="button-row">
+                    <button class="btn" id="saveFeaturedTwoBtn" type="button">Save</button>
+                    <button class="btn danger" id="deleteFeaturedTwoBtn" type="button">Delete</button>
+                  </div>
+                  <div id="featuredVideoTwoStatus" class="status-text"></div>
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button class="btn danger" id="clearVideosBtn" type="button">Clear All Videos</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <div class="window-titlebar">
+            <div class="window-title">Website Settings</div>
+            <div class="window-controls">
+              <span class="window-control">−</span>
+              <span class="window-control">☐</span>
+              <span class="window-control">×</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="retro-panel">
+              <h3>Storefront Content</h3>
+              <p class="retro-notice">Update the core text and configuration for your storefront. These settings take effect immediately.</p>
+
+              <div class="panel-grid">
+                <div class="panel-card">
+                  <h4>Branding & Contact</h4>
+                  <label for="brand_name">Brand Name</label>
+                  <input id="brand_name" />
+                  <label for="support_email">Support Email</label>
+                  <input id="support_email" />
+                  <label for="support_phone">Support Phone</label>
+                  <input id="support_phone" />
+                </div>
+
+                <div class="panel-card">
+                  <h4>Hero Section</h4>
+                  <label for="hero_title">Hero Title</label>
+                  <input id="hero_title" />
+                  <label for="hero_subtitle">Hero Subtitle</label>
+                  <textarea id="hero_subtitle"></textarea>
+                  <label for="hero_cta_label">Hero Button Label</label>
+                  <input id="hero_cta_label" />
+                  <label for="hero_video_url">Default API Video URL</label>
+                  <input id="hero_video_url" />
+                </div>
+
+                <div class="panel-card">
+                  <h4>Newsletter Section</h4>
+                  <label for="newsletter_heading">Newsletter Heading</label>
+                  <input id="newsletter_heading" />
+                  <label for="newsletter_copy">Newsletter Copy</label>
+                  <textarea id="newsletter_copy"></textarea>
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button class="btn" id="saveSettingsBtn" type="button">Save Settings</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Orders & Customers Tab -->
+    <div class="tab-content" id="tab-orders">
+      <section class="dashboard-grid">
+        <div class="admin-card">
+          <span class="section-label">Customers</span>
+          <table>
+            <thead>
+              <tr><th>Name</th><th>Email</th><th>Phone</th><th>Orders</th><th>Total Spent</th></tr>
+            </thead>
+            <tbody id="customersTbody"><tr><td colspan="5" class="muted">Loading customers...</td></tr></tbody>
+          </table>
+        </div>
+
+        <div class="admin-card">
+          <span class="section-label">Orders</span>
+          <table>
+            <thead>
+              <tr><th>Customer</th><th>Status</th><th>Total</th><th>Items</th><th>Date</th></tr>
+            </thead>
+            <tbody id="ordersTbody"><tr><td colspan="5" class="muted">Loading orders...</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="dashboard-grid dashboard-grid--spaced">
+        <div class="admin-card">
+          <span class="section-label">Subscribers</span>
+          <table>
+            <thead>
+              <tr><th>Name</th><th>Email</th><th>Joined</th></tr>
+            </thead>
+            <tbody id="subscribersTbody"><tr><td colspan="3" class="muted">Loading subscribers...</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- Influencers Tab -->
+    <div class="tab-content" id="tab-influencers">
+      <section class="dashboard-grid">
+        <div class="admin-card">
+          <span class="section-label">Register Influencer</span>
+          <h2 class="section-title">Create New Affiliate</h2>
+          <div id="influencerBanner" hidden class="informational-banner">
+            <div class="banner-row">
+              <div>
+                <strong>Influencer registered successfully.</strong>
+                <p class="banner-copy">Referral code: <code id="influencerBannerCode"></code></p>
+                <p class="banner-copy">Temporary password: <code id="influencerBannerPassword"></code></p>
+              </div>
+              <button class="btn secondary" id="closeInfluencerBanner" type="button">Dismiss</button>
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label for="influencerName">Name</label>
+              <input id="influencerName" placeholder="Jane Doe" />
+            </div>
+            <div>
+              <label for="influencerEmail">Email</label>
+              <input id="influencerEmail" type="email" placeholder="jane@example.com" />
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label for="influencerCellphone">Cellphone</label>
+              <input id="influencerCellphone" placeholder="+1234567890" />
+            </div>
+            <div>
+              <label for="influencerCommissionRate">Commission Rate (%)</label>
+              <input id="influencerCommissionRate" type="number" min="0" max="100" step="0.1" value="5" />
+            </div>
+          </div>
+          <div class="actions actions--spaced">
+            <button class="btn" id="registerInfluencerBtn" type="button">Register Influencer</button>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <span class="section-label">Influencer Performance</span>
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Referral Code</th>
+                <th>Commission</th>
+                <th>Total Earned</th>
+                <th>Order Count</th>
+                <th>Total Sales</th>
+              </tr>
+            </thead>
+            <tbody id="influencersTbody"><tr><td colspan="7" class="muted">Loading influencers...</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script type="module" src="./src/pages/admin/index.js"></script>
+</body>
+</html>
+

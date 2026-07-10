@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GlowExpert Influencer Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="icon" type="image/svg+xml" href="./src/assets/logo/glowexpert_logo.svg" />
+  <link rel="apple-touch-icon" href="./src/assets/logo/glowexpert_logo.svg" />
+  <link rel="shortcut icon" href="./src/assets/logo/glowexpert_logo.svg" />
+
+  <script type="module" src="./src/config.js"></script>
+  <link rel="stylesheet" href="./src/styles/admin-retro.css" />
+</head>
+<body>
+  <main class="admin-wrap">
+    <section class="topbar">
+      <div class="admin-card">
+        <span class="section-label">Influencer Dashboard</span>
+        <h1 class="section-title">Your Referral Hub</h1>
+        <p class="muted">Use your referral code to share products and track performance.</p>
+      </div>
+      <div class="admin-card">
+        <span class="section-label">Session</span>
+        <div class="muted" id="sessionInfo">Verifying session...</div>
+        <div class="actions">
+          <button class="btn secondary" id="logoutBtn" type="button">Logout</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="dashboard-grid">
+      <div class="admin-card">
+        <span class="section-label">Referral Code</span>
+        <h2 class="section-title" id="referralCodeDisplay">Loading...</h2>
+        <div class="actions" style="margin-top:18px;">
+          <button class="btn" id="copyReferralCodeBtn" type="button">Copy Code</button>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <span class="section-label">Influencer Stats</span>
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(120px,1fr));gap:16px;">
+          <div style="background:rgba(255,255,255,0.85);border-radius:18px;padding:18px;">
+            <div class="muted" style="font-size:.8rem;">Total Commission</div>
+            <strong id="totalCommission">ZAR 0.00</strong>
+          </div>
+          <div style="background:rgba(255,255,255,0.85);border-radius:18px;padding:18px;">
+            <div class="muted" style="font-size:.8rem;">Attributed Orders</div>
+            <strong id="totalOrders">0</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="dashboard-grid" style="margin-top:20px;">
+      <div class="admin-card">
+        <span class="section-label">Share a Product</span>
+        <h2 class="section-title">Generate a Referral Link</h2>
+        <div class="row">
+          <div>
+            <label for="productUrlInput">Product URL or ID</label>
+            <input id="productUrlInput" placeholder="Paste product URL or ID" />
+          </div>
+          <div>
+            <label for="productSelect">Select product</label>
+            <select id="productSelect">
+              <option value="">Loading products...</option>
+            </select>
+          </div>
+        </div>
+        <div class="actions" style="margin-top:18px;">
+          <button class="btn" id="generateLinkBtn" type="button">Generate Link</button>
+          <button class="btn secondary" id="copyLinkBtn" type="button" disabled>Copy Link</button>
+        </div>
+        <div style="margin-top:18px;">
+          <label for="generatedLink">Generated Referral Link</label>
+          <input id="generatedLink" readonly />
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <span class="section-label">Recent Attributed Orders</span>
+        <table>
+          <thead>
+            <tr><th>Customer</th><th>Total</th><th>Status</th><th>Date</th></tr>
+          </thead>
+          <tbody id="influencerOrdersTbody"><tr><td colspan="4" class="muted">Loading orders...</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="./src/pages/influencer/index.js"></script>
+</body>
+</html>

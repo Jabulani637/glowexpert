@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1000" width="900" height="1000">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&amp;family=Parisienne&amp;display=swap');
+
+      .script   { font-family: 'Parisienne', cursive; }
+      .serif    { font-family: 'Playfair Display', serif; }
+    </style>
+
+    <!-- Gradients for the hair-strand mark -->
+    <linearGradient id="strandPink" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e8a0b4"/>
+      <stop offset="100%" stop-color="#c46a88"/>
+    </linearGradient>
+    <linearGradient id="strandDeep" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#c46a88"/>
+      <stop offset="100%" stop-color="#7a4a35"/>
+    </linearGradient>
+    <linearGradient id="strandRose" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#dfc8cf"/>
+      <stop offset="100%" stop-color="#e8a0b4"/>
+    </linearGradient>
+
+    <radialGradient id="bgGlow" cx="50%" cy="38%" r="65%">
+      <stop offset="0%" stop-color="#fdf0f4"/>
+      <stop offset="100%" stop-color="#f8e8ee"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background card -->
+  <rect x="0" y="0" width="900" height="1000" rx="0" fill="url(#bgGlow)"/>
+
+  <!-- Thin outer frame for a boutique-badge feel -->
+  <rect x="40" y="40" width="820" height="920" rx="6" fill="none" stroke="#dfc8cf" stroke-width="1.5"/>
+
+  <!-- ===================== ICON: flowing hair-lock mark ===================== -->
+  <g transform="translate(450, 260)">
+
+    <!-- thin circular halo -->
+    <circle cx="0" cy="0" r="145" fill="none" stroke="#dfc8cf" stroke-width="1.5"/>
+
+    <!-- three flowing strands fanned from a single base point, like a lock of hair caught mid-sway -->
+    <g transform="translate(0,95)">
+      <path transform="rotate(-24)"
+            d="M 0,0 C -34,-55 -30,-110 0,-165 C 30,-110 34,-55 0,0 Z"
+            fill="url(#strandDeep)" opacity="0.95"/>
+
+      <path transform="rotate(0)"
+            d="M 0,0 C -24,-70 -18,-140 0,-195 C 18,-140 24,-70 0,0 Z"
+            fill="url(#strandPink)"/>
+
+      <path transform="rotate(24)"
+            d="M 0,0 C -32,-50 -28,-100 0,-150 C 28,-100 32,-50 0,0 Z"
+            fill="url(#strandRose)"/>
+
+      <!-- base bead where the strands gather -->
+      <circle cx="0" cy="0" r="7" fill="#c46a88"/>
+    </g>
+  </g>
+
+  <!-- ===================== WORDMARK ===================== -->
+  <g text-anchor="middle">
+    <text x="450" y="560" class="script" font-size="150" fill="#4a2c1e">Glow</text>
+    <text x="450" y="650" class="serif" font-weight="600" font-size="72" letter-spacing="14" fill="#c46a88">EXPERT</text>
+  </g>
+
+  <!-- divider -->
+  <line x1="330" y1="700" x2="570" y2="700" stroke="#dfc8cf" stroke-width="1.5"/>
+  <circle cx="450" cy="700" r="4" fill="#e8a0b4"/>
+
+  <!-- tagline -->
+  <text x="450" y="745" text-anchor="middle" class="serif" font-size="24" letter-spacing="6" fill="#7a4a35">WIGS &amp; HAIR WEAVES</text>
+
+</svg>

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog - GlowExpert</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="icon" type="image/svg+xml" href="./src/assets/logo/glowexpert_logo.svg" />
+  <link rel="apple-touch-icon" href="./src/assets/logo/glowexpert_logo.svg" />
+  <link rel="shortcut icon" href="./src/assets/logo/glowexpert_logo.svg" />
+
+  <script type="module" src="./src/config.js"></script>
+
+  <link rel="stylesheet" href="./src/styles/luxury.css" /></head>
+<body>
+  <nav id="navbar">
+    <a href="index.html" class="nav-logo">Glow<span>Expert</span></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html" class="nav-close-mobile">Home</a></li>
+      <li><a href="index.html#collections" class="nav-close-mobile">Collections</a></li>
+      <li><a href="blog.html" class="active nav-close-mobile">Blog</a></li>
+      <li><a href="login.html" class="nav-close-mobile" style="display:none;">Admin</a></li>
+
+
+    </ul>
+    <div class="nav-actions">
+      <span class="cart-badge" data-count="0">
+        <a href="index.html#collections" class="nav-icon" title="Shop" aria-label="Shop">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+        </a>
+      </span>
+      <button class="nav-hamburger" id="navHamburger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <div id="app"></div>
+
+  <script type="module" src="./src/pages/blog/index.js"></script>
+</body>
+</html>
+

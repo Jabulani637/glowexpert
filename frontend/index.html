@@ -1,0 +1,234 @@
+ <!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GlowExpert</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="icon" type="image/svg+xml" href="./src/assets/logo/glowexpert_logo.svg" />
+  <link rel="apple-touch-icon" href="./src/assets/logo/glowexpert_logo.svg" />
+  <link rel="shortcut icon" href="./src/assets/logo/glowexpert_logo.svg" />
+  <script type="module" src="./src/config.js"></script>
+
+  <link rel="stylesheet" href="./src/styles/luxury.css" />
+</head>
+<body>
+
+  <div class="cart-backdrop" id="cartBackdrop"></div>
+  <aside class="cart-panel" id="cartPanel" aria-label="Shopping cart">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+      <div>
+        <span class="section-label">Customer Cart</span>
+        <h2 class="section-title" style="margin:6px 0 0;">Checkout</h2>
+      </div>
+      <button class="close-cart" id="closeCartBtn" type="button">Close</button>
+    </div>
+    <div class="cart-list" id="cartList"></div>
+    <div>
+      <div style="display:flex;justify-content:space-between;align-items:center;font-weight:700;margin-bottom:10px;">
+        <span>Total</span>
+        <span id="cartTotal">ZAR 0.00</span>
+      </div>
+      <form class="checkout-form" id="checkoutForm">
+        <input id="checkoutName" type="text" placeholder="Full name" required />
+        <input id="checkoutEmail" type="email" placeholder="Email address" required />
+        <input id="checkoutPhone" type="text" placeholder="Phone number" required />
+        <input id="checkoutReferral" type="text" placeholder="Referral code (optional)" />
+        <button class="btn-luxury" type="submit" style="width:100%; color:#0a0908; background:var(--luxury-gold);">Place Order</button>
+      </form>
+      <div class="checkout-message" id="checkoutMessage"></div>
+    </div>
+  </aside>
+
+  <div class="maison-marquee" aria-hidden="true">
+    <div class="maison-marquee__track">
+      <span>100% Human Hair</span>
+      <span>Hand-Tied Wefts</span>
+      <span>Nationwide Delivery</span>
+      <span>New Arrivals Weekly</span>
+      <span>100% Human Hair</span>
+      <span>Hand-Tied Wefts</span>
+      <span>Nationwide Delivery</span>
+      <span>New Arrivals Weekly</span>
+    </div>
+  </div>
+
+  <nav id="navbar">
+    <a href="#" class="nav-logo" id="brandName">Glow<span>Expert</span></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#featured" class="nav-close-mobile">Featured</a></li>
+      <li><a href="#collections" class="nav-close-mobile">Collections</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <!-- Admin link removed from storefront navigation -->
+
+      <li><a href="#newsletter" class="nav-close-mobile">Newsletter</a></li>
+    </ul>
+    <div class="nav-actions">
+      <span class="cart-badge" data-count="0">
+        <button class="nav-icon" id="cartBtn" title="Cart" aria-label="Cart">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+        </button>
+      </span>
+      <button class="nav-hamburger" id="navHamburger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <section class="hero-video">
+    <video autoplay muted loop playsinline id="heroVideo">
+      <source src="" type="video/mp4" id="heroVideoSource" />
+    </video>
+    <div class="hero-overlay"></div>
+    <div class="hero-content-luxury">
+      <h1 class="hero-title-luxury" id="heroTitle">GlowExpert</h1>
+      <p class="hero-subtitle-luxury" id="heroSubtitle"></p>
+      <a href="#collections" class="btn-luxury" id="heroCta">Explore Gold Collection</a>
+    </div>
+  </section>
+
+  <section id="featured" class="featured-section">
+    <div class="section-shell">
+      <h2 class="section-title-luxury">Featured Collections</h2>
+      <p class="section-copy">A luxury storefront that now reflects real admin-managed products, content, and customer checkout activity.</p>
+      <div class="video-grid">
+        <div class="video-card">
+          <video autoplay muted loop playsinline id="featuredVideoOne">
+            <source src="" type="video/mp4" id="featuredVideoOneSource" />
+          </video>
+          <div class="video-overlay">
+            <h3 class="video-title" id="featuredVideoOneTitle"></h3>
+            <p id="featuredVideoOneDescription"></p>
+          </div>
+        </div>
+        <div class="video-card">
+          <video autoplay muted loop playsinline id="featuredVideoTwo">
+            <source src="" type="video/mp4" id="featuredVideoTwoSource" />
+          </video>
+          <div class="video-overlay">
+            <h3 class="video-title" id="featuredVideoTwoTitle"></h3>
+            <p id="featuredVideoTwoDescription"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="collections" class="collection-section">
+    <div class="section-shell">
+      <span class="section-label">Collections</span>
+      <h2 class="section-title-luxury">Shop The Luxury Shelf</h2>
+      <p class="section-copy">Products below are now loaded from the backend, and each listing can be created, edited, or removed from the admin dashboard.</p>
+      <div class="collection-grid" id="productsGrid"></div>
+    </div>
+  </section>
+
+  <section class="stats-section">
+    <div class="stats-grid">
+      <div class="stat-item"><div class="stat-number" id="statProducts">0</div><div class="stat-label">Live Products</div></div>
+      <div class="stat-item"><div class="stat-number">100%</div><div class="stat-label">Human Hair</div></div>
+      <div class="stat-item"><div class="stat-number">24/7</div><div class="stat-label">Support</div></div>
+      <div class="stat-item"><div class="stat-number" id="statStock">0</div><div class="stat-label">Units In Stock</div></div>
+    </div>
+  </section>
+
+  <section id="newsletter" class="newsletter-panel">
+    <div class="newsletter-box">
+      <span class="section-label">Newsletter</span>
+      <h2 class="section-title-luxury" id="newsletterHeading">Join The Glow List</h2>
+      <p class="section-copy" id="newsletterCopy" style="margin: 0 auto; color: rgba(255,255,255,.74);"></p>
+      <form class="newsletter-form" id="newsletterForm">
+        <input id="subscriberName" type="text" placeholder="Your name" />
+        <input id="subscriberEmail" type="email" placeholder="Your email address" required />
+        <button class="btn-luxury" type="submit">Subscribe</button>
+      </form>
+      <div class="newsletter-message" id="newsletterMessage"></div>
+      <p style="margin-top:20px;color:rgba(255,255,255,.48);">Support: <span id="supportEmail"></span> | <span id="supportPhone"></span></p>
+    </div>
+  </section>
+
+
+  <footer>
+      <div class="footer-top">
+       <div class="footer-brand">
+         <a href="#" class="nav-logo" id="brandNameFooter">Glow<span>Expert</span></a>
+         <p class="footer-tagline">Luxurious beauty, delivered.</p>
+         <div class="footer-socials">
+           <a href="https://wa.me/1234567890" class="social-link" target="_blank" aria-label="WhatsApp">
+             <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.52 3.48A11.86 11.86 0 0012 0C5.37 0 .01 5.36.01 11.99c0 2.11.55 4.17 1.61 5.99L0 24l6.31-1.65c1.73 1 3.73 1.54 5.69 1.54h.01c6.62 0 11.98-5.36 11.98-11.99 0-3.19-1.24-6.19-3.48-8.42zM12 22c-1.86 0-3.69-.5-5.27-1.44l-.38-.22-3.74 1 1-3.64-.24-.39A9.98 9.98 0 012 11.99C2 6.48 6.48 2 12 2s10 4.48 10 9.99-4.48 9.99-10 9.99z"/></svg>
+           </a>
+           <a href="https://facebook.com/yourpage" class="social-link" target="_blank" aria-label="Facebook">
+             <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 5 3.66 9.12 8.44 9.88v-6.99H7.9v-2.89h2.54V9.41c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.23.2 2.23.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.87h2.78l-.44 2.89h-2.34v6.99C18.34 21.12 22 17 22 12z"/></svg>
+           </a>
+           <a href="https://twitter.com/yourhandle" class="social-link" target="_blank" aria-label="X (Twitter)">
+             <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M23.954 4.569c-.885.389-1.83.654-2.825.775 1.014-.608 1.794-1.574 2.163-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-2.722 0-4.928 2.206-4.928 4.928 0 .386.044.762.128 1.124-4.094-.205-7.725-2.166-10.158-5.144-.424.727-.666 1.571-.666 2.475 0 1.708.869 3.215 2.188 4.099-.807-.026-1.566-.247-2.229-.616v.062c0 2.386 1.697 4.374 3.946 4.825-.413.112-.848.171-1.296.171-.317 0-.626-.031-.928-.089.627 1.956 2.445 3.38 4.6 3.422-1.68 1.317-3.808 2.104-6.115 2.104-.398 0-.79-.023-1.175-.069 2.179 1.397 4.768 2.214 7.557 2.214 9.054 0 14-7.496 14-13.986 0-.213-.005-.425-.014-.637.962-.695 1.797-1.562 2.457-2.549z"/></svg>
+           </a>
+           <a href="https://instagram.com/yourhandle" class="social-link" target="_blank" aria-label="Instagram">
+             <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.17.054 1.97.24 2.43.415a4.92 4.92 0 011.68 1.09 4.92 4.92 0 011.09 1.68c.176.46.361 1.26.415 2.43.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.054 1.17-.24 1.97-.415 2.43a4.92 4.92 0 01-1.09 1.68 4.92 4.92 0 01-1.68 1.09c-.46.176-1.26.361-2.43.415-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.17-.054-1.97-.24-2.43-.415a4.92 4.92 0 01-1.68-1.09 4.92 4.92 0 01-1.09-1.68c-.176-.46-.361-1.26-.415-2.43-.058-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.054-1.17.24-1.97.415-2.43a4.92 4.92 0 011.09-1.68 4.92 4.92 0 011.68-1.09c.46-.176 1.26-.361 2.43-.415 1.266-.058 1.646-.07 4.85-.07zm0-2.163C8.755 0 8.332.012 7.052.07 5.777.127 4.825.352 4.032.692a7.082 7.082 0 00-2.58 1.684A7.082 7.082 0 00.692 4.952c-.34.793-.565 1.745-.622 3.02C.012 8.332 0 8.755 0 12c0 3.245.012 3.668.07 4.948.057 1.275.282 2.227.622 3.02a7.082 7.082 0 001.684 2.58 7.082 7.082 0 002.58 1.684c.793.34 1.745.565 3.02.622C8.332 23.988 8.755 24 12 24s3.668-.012 4.948-.07c1.275-.057 2.227-.282 3.02-.622a7.082 7.082 0 002.58-1.684 7.082 7.082 0 001.684-2.58c.34-.793.565-1.745.622-3.02.058-1.28.07-1.703.07-4.948s-.012-3.668-.07-4.948c-.057-1.275-.282-2.227-.622-3.02a7.082 7.082 0 00-1.684-2.58 7.082 7.082 0 00-2.58-1.684c-.793-.34-1.745-.565-3.02-.622C15.668.012 15.245 0 12 0z"/><path d="M12 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a3.999 3.999 0 110-7.998 3.999 3.999 0 010 7.998zM18.406 4.594a1.44 1.44 0 11-2.88 0 1.44 1.44 0 012.88 0z"/></svg>
+           </a>
+           <a href="https://tiktok.com/@yourhandle" class="social-link" target="_blank" aria-label="TikTok">
+             <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 0c-1.66 0-3 1.34-3 3v9c0 2.21 1.79 4 4 4h2c3.31 0 6-2.69 6-6V6c0-2.21-1.79-4-4-4h-5z"/></svg>
+           </a>
+         </div>
+       </div>
+
+       <div class="footer-col" style="min-width: 180px;">
+         <h5>My Order</h5>
+         <ul>
+           <li><a href="order.html">View orders</a></li>
+         </ul>
+       </div>
+
+       <div class="footer-col" style="min-width: 180px;">
+         <h5>FAQs</h5>
+         <ul>
+           <li><a href="faq.html">Frequently asked questions</a></li>
+         </ul>
+       </div>
+
+       <div class="footer-col" style="min-width: 180px;">
+         <h5>Email Unsubscribe</h5>
+         <ul>
+           <li><a href="unsubscribe.html">Unsubscribe</a></li>
+         </ul>
+       </div>
+
+       <div class="footer-col" style="min-width: 180px;">
+         <h5>Sitemap</h5>
+         <ul>
+           <li><a href="sitemap.html">Site map</a></li>
+         </ul>
+       </div>
+
+       <div class="footer-col" style="min-width: 220px;">
+         <h5>The Company</h5>
+         <ul>
+           <li><a href="terms.html">About GlowExpert</a></li>
+           <li><a href="terms.html">Our Sourcing</a></li>
+           <li><a href="terms.html">Code of Ethics</a></li>
+           <li><a href="terms.html">Careers</a></li>
+           <li><a href="terms.html">Corporate Information</a></li>
+           <li><a href="terms.html">Vulnerability Disclosure Policy</a></li>
+         </ul>
+       </div>
+     </div>
+     <div class="footer-bottom">
+       <span class="footer-copy">© 2026 GlowExpert. All rights reserved.</span>
+     </div>
+   </footer>
+
+   <a href="https://wa.me/1234567890" class="whatsapp-float" target="_blank" aria-label="WhatsApp Chat">
+     <img src="./src/assets/logo/whatsapp.svg" alt="WhatsApp" style="width: 100%; height: 100%; display: block;" />
+     <span class="whatsapp-tooltip">Chat on WhatsApp</span>
+   </a>
+
+  <script type="module" src="./src/pages/home/index.js"></script>
+</body>
+</html>

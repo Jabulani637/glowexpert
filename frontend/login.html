@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GlowExpert Admin Login</title>
+  <link rel="icon" type="image/svg+xml" href="./src/assets/logo/glowexpert_logo.svg" />
+  <link rel="apple-touch-icon" href="./src/assets/logo/glowexpert_logo.svg" />
+  <link rel="shortcut icon" href="./src/assets/logo/glowexpert_logo.svg" />
+
+  <script type="module" src="./src/config.js"></script>
+  <link rel="stylesheet" href="./src/styles/admin-retro.css" />
+</head>
+<body>
+  <div class="login-wrap">
+    <div class="login-window">
+      <div class="window-titlebar">
+        <div class="window-title">Admin Login</div>
+      </div>
+      <div class="window-body">
+        <div class="brand-banner">
+          <strong>Glow Expert</strong>
+        </div>
+
+        <p>Enter your assigned email or cellphone number and password to access the admin dashboard.</p>
+
+        <label for="cellphone">Email</label>
+        <input id="cellphone" type="text" placeholder="enter..." autocomplete="username" />
+
+        <label for="password">Password</label>
+        <input id="password" type="password" placeholder="password..." autocomplete="current-password" />
+
+        <button class="btn" id="loginBtn" type="button">Sign In</button>
+
+        <div class="error" id="errorMessage"></div>
+        <div class="muted">Only the single assigned admin account may sign in.</div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./src/pages/login/index.js"></script>
+</body>
+</html>
+

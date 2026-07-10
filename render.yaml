@@ -1,0 +1,58 @@
+﻿
+services:
+  - type: web
+    name: glowexpert-backend
+    runtime: node
+    region: frankfurt
+    plan: free
+    rootDir: backend
+    branch: main
+    buildCommand: "npm install --omit=dev"
+    startCommand: "npm start"
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: DB_SSL
+        value: "true"
+      - key: SUPABASE_URL
+        value: ""
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: SUPABASE_STORAGE_BUCKET
+        value: glowexpert-storage
+      - key: STORAGE_PROVIDER
+        value: supabase
+      - key: S3_REGION
+        value: eu-west-3
+      - key: S3_ENDPOINTS
+        value: ""
+      - key: S3_BUCKET
+        value: 
+      - key: S3_ACCESS_KEY_ID
+        sync: false
+      - key: S3_SECRET_ACCESS_KEY
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_EXPIRES_IN
+        value: "7d"
+      - key: SESSION_SECRET
+        sync: false
+      - key: ADMIN_EMAIL
+        value: 
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: ADMIN_NAME
+        value: ""
+      - key: ADMIN_CELLPHONE
+        value: ""
+      - key: CORS_ALLOWED_ORIGINS
+        value: ""
+      - key: FRONTEND_URL
+        value: ""
+      - key: BACKEND_URL
+        value: ""
