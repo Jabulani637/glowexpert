@@ -70,7 +70,7 @@ app.use(cors({
 
     // Hardcoded fallback for the known Vercel frontend origin.
     // This prevents OTP/CORS failures when env vars are not set correctly.
-    const allowedFallback = ['https://glowexpert-frontend.vercel.app'];
+    const allowedFallback = ['glowexpert.vercel.app'];
 
     const allowed = [...new Set([...allowedFromEnv, ...allowedFallback])];
     if (allowed.includes(origin)) return cb(null, true);
