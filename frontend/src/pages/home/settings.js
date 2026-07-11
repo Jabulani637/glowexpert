@@ -14,29 +14,87 @@ function normalizeBrandName(rawBrand) {
   return base || 'Glow';
 }
 
+function setSourceAndForceLoad(videoEl, sourceEl, src) {
+  if (!videoEl || !sourceEl) return;
+
+  // If src is missing/empty, blank the source and reload so the browser
+  // doesn't keep using a previous cached one.
+  const finalSrc = src || '';
+  if (sourceEl.src !== finalSrc) {
+    // Some browsers don't fully respect source.src changes unless the
+    // element is "blanked" first.
+    sourceEl.src = '';
+    videoEl.src = '';
+  }
+
+  sourceEl.src = finalSrc;
+
+  // Force reload.
+  try {
+    videoEl.load();
+  } catch {
+    // no-op
+  }
+}
+
 function applyVideoSettings(settings) {
+  const heroVideoEl = $('heroVideo');
+  const heroVideoSourceEl = $('heroVideoSource');
+
+  const featuredOneVideoEl = $('featuredVideoOne');
+  const featuredOneSourceEl = $('featuredVideoOneSource');
+
+  const featuredTwoVideoEl = $('featuredVideoTwo');
+  const featuredTwoSourceEl = $('featuredVideoTwoSource');
+
   Promise.all([
     resolveVideoSrc('hero', normalizeAsset(settings.hero_video_url || '')),
     resolveVideoSrc('featured_one', normalizeAsset(settings.featured_video_one_url || '')),
     resolveVideoSrc('featured_two', normalizeAsset(settings.featured_video_two_url || ''))
-  ]).then(([heroSrc, featOneSrc, featTwoSrc]) => {
-    // Ensure <source> tags are updated reliably.
-    const heroSource = $('heroVideoSource');
-    const featuredOneSource = $('featuredVideoOneSource');
-    const featuredTwoSource = $('featuredVideoTwoSource');
+  ])
+    .then(([heroSrc, featOneSrc, featTwoSrc]) => {
+      // Debug guard: helps confirm backend is returning values.
+      // (Visible in console; remove later if desired.)
+      if (!heroSrc && !featOneSrc && !featTwoSrc) {
+        console.warn('[home/settings] Video URLs are empty after resolve:', {
+          hero: settings.hero_video_url,
+          featuredOne: settings.featured_video_one_url,
+          featuredTwo: settings.featured_video_two_url
+        });
+      }
 
-    if (heroSource && heroSrc) heroSource.src = heroSrc;
-    if (featuredOneSource && featOneSrc) featuredOneSource.src = featOneSrc;
-    if (featuredTwoSource && featTwoSrc) featuredTwoSource.src = featTwoSrc;
+      setSourceAndForceLoad(heroVideoEl, heroVideoSourceEl, heroSrc);
+      setSourceAndForceLoad(featuredOneVideoEl, featuredOneSourceEl, featOneSrc);
+      setSourceAndForceLoad(featuredTwoVideoEl, featuredTwoSourceEl, featTwoSrc);
 
-    // If src changed, force the browser to reload the <video>.
-    $('heroVideo')?.load();
-    $('featuredVideoOne')?.load();
-    $('featuredVideoTwo')?.load();
-  }).catch((err) => {
-    // Avoid breaking the page if IndexedDB is unavailable.
-    console.warn('[home/settings] Failed to resolve video src:', err?.message || err);
-  });
+      // Retry once shortly after: some browsers ignore immediate load()
+      // if called back-to-back during initial render.
+      setTimeout(() => {
+        setSourceAndForceLoad(heroVideoEl, heroVideoSourceEl, heroSrc);
+        setSourceAndForceLoad(featuredOneVideoEl, featuredOneSourceEl, featOneSrc);
+        setSourceAndForceLoad(featuredTwoVideoEl, featuredTwoSourceEl, featTwoSrc);
+      }, 500);
+    })
+    .catch((err) => {
+      console.warn('[home/settings] Failed to resolve video src:', err?.message || err);
+
+      // Fallback: still try raw URLs from settings if IndexedDB fails.
+      setSourceAndForceLoad(
+        heroVideoEl,
+        heroVideoSourceEl,
+        normalizeAsset(settings.hero_video_url || '')
+      );
+      setSourceAndForceLoad(
+        featuredOneVideoEl,
+        featuredOneSourceEl,
+        normalizeAsset(settings.featured_video_one_url || '')
+      );
+      setSourceAndForceLoad(
+        featuredTwoVideoEl,
+        featuredTwoSourceEl,
+        normalizeAsset(settings.featured_video_two_url || '')
+      );
+    });
 }
 
 

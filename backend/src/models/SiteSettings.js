@@ -54,9 +54,18 @@ async function ensureSiteSettingsSchema() {
 async function getAllSettings() {
   const { rows } = await query('SELECT key, value FROM site_settings ORDER BY key ASC');
   const data = { ...DEFAULT_SETTINGS };
+
   for (const row of rows) {
-    data[row.key] = row.value;
+    // If a row exists but the value is empty (''/whitespace), treat it as unset
+    // and keep the DEFAULT_SETTINGS value.
+    const raw = row.value;
+    const val = typeof raw === 'string' ? raw.trim() : raw;
+
+    if (val === '' || val === null || val === undefined) continue;
+
+    data[row.key] = String(raw);
   }
+
   return data;
 }
 
