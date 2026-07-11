@@ -62,7 +62,14 @@ function getAllowedOrigins() {
 
   // Hardcoded fallback for the known Vercel frontend origin.
   // Prevents OTP/CORS failures when env vars are not set correctly.
-  const allowedFallback = ['glowexpert.vercel.app'];
+  // NOTE: Express CORS expects the *full origin* (including scheme),
+  // because we compare against `origin` exactly.
+  const allowedFallback = [
+    'https://glowexpert.vercel.app',
+    'http://glowexpert.vercel.app',
+    // Also accept the bare hostname defensively (in case env values are mis-set)
+    'glowexpert.vercel.app'
+  ];
 
   return [...new Set([...allowedFromEnv, ...allowedFallback])];
 }
