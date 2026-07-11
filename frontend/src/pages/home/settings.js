@@ -20,15 +20,25 @@ function applyVideoSettings(settings) {
     resolveVideoSrc('featured_one', normalizeAsset(settings.featured_video_one_url || '')),
     resolveVideoSrc('featured_two', normalizeAsset(settings.featured_video_two_url || ''))
   ]).then(([heroSrc, featOneSrc, featTwoSrc]) => {
-    if ($('heroVideoSource')) $('heroVideoSource').src = heroSrc;
-    if ($('featuredVideoOneSource')) $('featuredVideoOneSource').src = featOneSrc;
-    if ($('featuredVideoTwoSource')) $('featuredVideoTwoSource').src = featTwoSrc;
+    // Ensure <source> tags are updated reliably.
+    const heroSource = $('heroVideoSource');
+    const featuredOneSource = $('featuredVideoOneSource');
+    const featuredTwoSource = $('featuredVideoTwoSource');
 
+    if (heroSource && heroSrc) heroSource.src = heroSrc;
+    if (featuredOneSource && featOneSrc) featuredOneSource.src = featOneSrc;
+    if (featuredTwoSource && featTwoSrc) featuredTwoSource.src = featTwoSrc;
+
+    // If src changed, force the browser to reload the <video>.
     $('heroVideo')?.load();
     $('featuredVideoOne')?.load();
     $('featuredVideoTwo')?.load();
+  }).catch((err) => {
+    // Avoid breaking the page if IndexedDB is unavailable.
+    console.warn('[home/settings] Failed to resolve video src:', err?.message || err);
   });
 }
+
 
 export function applySettings(settings) {
   const brandBase = normalizeBrandName(settings.brand_name);

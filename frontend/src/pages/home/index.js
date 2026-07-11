@@ -17,8 +17,25 @@ $('checkoutForm')?.addEventListener('submit', submitCheckout);
 
 initializeStore()
   .then(() => {
+    // Ensure video sources reflect latest /api/settings values.
+    // (Useful when returning from admin after saving updates.)
+    try {
+      if ($('heroVideo') && $('heroVideoSource')?.src) {
+        $('heroVideo').load();
+      }
+      if ($('featuredVideoOne') && $('featuredVideoOneSource')?.src) {
+        $('featuredVideoOne').load();
+      }
+      if ($('featuredVideoTwo') && $('featuredVideoTwoSource')?.src) {
+        $('featuredVideoTwo').load();
+      }
+    } catch {
+      // no-op
+    }
+
     try {
       const params = new URLSearchParams(window.location.search);
+
       const productId = params.get('product')?.trim();
       const refCode = params.get('ref')?.trim();
       const referralInput = $('checkoutReferral');
