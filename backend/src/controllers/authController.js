@@ -84,11 +84,13 @@ async function login(req, res) {
     return res.status(503).json({ message: 'Service temporarily unavailable. Please try again later.' });
   }
 
+  // Normalize to reduce user enumeration.
   if (!user) return res.status(401).json({ message: 'Invalid credentials' });
 
   if (user.locked_until && new Date(user.locked_until) > new Date()) {
-    return res.status(403).json({ message: 'Account locked. Try again later.' });
+    return res.status(401).json({ message: 'Invalid credentials' });
   }
+
 
   if (!user.password_hash) {
     return res.status(401).json({ message: 'Please use social login for this account.' });
@@ -119,6 +121,7 @@ async function login(req, res) {
     role: user.role
   });
 
+
   return res.status(200).json({
     message: 'Login successful',
     access_token: token,
@@ -135,46 +138,77 @@ async function login(req, res) {
 
 
 async function socialAuth(req, res) {
+  // Verify Google ID token server-side.
+  // Frontend must send ONLY `token` (idToken). We never trust frontend claims.
+
   const { token: idToken } = req.body;
-  // Note: In production, verify this token with Google's API (e.g., google-auth-library)
-  // For this implementation, we assume the frontend sends verified user data after Google sign-in
-  const { email, name, sub: googleId } = req.body; 
-
-  if (!googleId || !email) {
-    return res.status(400).json({ message: 'Invalid social auth data' });
+  if (!idToken || typeof idToken !== 'string') {
+    return res.status(400).json({ message: 'Missing or invalid idToken' });
   }
 
-  let user = await findByGoogleId(googleId);
-  
-  if (!user) {
-    // Check if email exists to link account, otherwise create
-    user = await findByEmail(email.toLowerCase());
-    if (user) {
-      // Link existing account to Google
-      await run('UPDATE users SET google_id = ? WHERE id = ?', [googleId, user.id]);
-    } else {
-      user = await createUser({
-        name,
-        email: email.toLowerCase(),
-        googleId,
-        role: 'customer'
-      });
+  try {
+    const { OAuth2Client } = require('google-auth-library');
+    const clientId = process.env.GOOGLE_CLIENT_ID;
+
+    if (!clientId) {
+      return res.status(500).json({ message: 'Server misconfigured: GOOGLE_CLIENT_ID not set' });
     }
+
+    const client = new OAuth2Client(clientId);
+    const ticket = await client.verifyIdToken({
+      idToken,
+      audience: clientId
+    });
+
+    const payload = ticket.getPayload();
+    if (!payload) {
+      return res.status(401).json({ message: 'Invalid idToken payload' });
+    }
+
+    const googleId = payload.sub;
+    const email = payload.email;
+    const name = payload.name || payload.given_name || payload.family_name || 'Google User';
+
+    if (!googleId || !email) {
+      return res.status(400).json({ message: 'idToken missing required claims' });
+    }
+
+    let user = await findByGoogleId(googleId);
+
+    if (!user) {
+      // Link existing account by email, otherwise create.
+      user = await findByEmail(email.toLowerCase());
+      if (user) {
+        await run('UPDATE users SET google_id = ? WHERE id = ?', [googleId, user.id]);
+      } else {
+        user = await createUser({
+          name,
+          email: email.toLowerCase(),
+          googleId,
+          role: 'customer'
+        });
+      }
+    }
+
+    const token = signAccessToken({
+      sub: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role
+    });
+
+    return res.status(200).json({
+      message: 'Social login successful',
+      access_token: token,
+      user: { id: user.id, name: user.name, email: user.email, role: user.role }
+    });
+  } catch (err) {
+    console.error('socialAuth verification error:', err?.message || err);
+    return res.status(401).json({ message: 'Invalid social auth token' });
   }
-
-  const token = signAccessToken({
-    sub: user.id,
-    email: user.email,
-    name: user.name,
-    role: user.role
-  });
-
-  return res.status(200).json({
-    message: 'Social login successful',
-    access_token: token,
-    user: { id: user.id, name: user.name, email: user.email, role: user.role }
-  });
 }
+
+
 
 module.exports = { register, login, socialAuth };
 

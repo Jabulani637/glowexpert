@@ -42,7 +42,7 @@ async function ensureUserSchema() {
   } catch (err) {
     // Table might already exist, ignore error
   }
-  
+
   // Add new columns if they don't exist
   try {
     await run(`ALTER TABLE users ADD COLUMN cellphone TEXT`);
@@ -68,10 +68,12 @@ async function ensureUserSchema() {
   try {
     await run(`ALTER TABLE users ADD COLUMN otp_last_sent_at TEXT`);
   } catch (err) {}
-  
+
   // Create unique index only where cellphone is not null
   try {
-    await run(`CREATE UNIQUE INDEX IF NOT EXISTS idx_users_cellphone ON users(cellphone) WHERE cellphone IS NOT NULL`);
+    await run(
+      `CREATE UNIQUE INDEX IF NOT EXISTS idx_users_cellphone ON users(cellphone) WHERE cellphone IS NOT NULL`
+    );
   } catch (err) {
     // Index might already exist
   }
@@ -79,10 +81,7 @@ async function ensureUserSchema() {
 
 async function findByEmail(email) {
   try {
-    const { rows } = await query(
-      'SELECT * FROM users WHERE email = ? LIMIT 1',
-      [email]
-    );
+    const { rows } = await query('SELECT * FROM users WHERE email = ? LIMIT 1', [email]);
     return rows[0] || null;
   } catch (err) {
     const store = getFallbackStore();
@@ -92,10 +91,7 @@ async function findByEmail(email) {
 
 async function findByCellphone(cellphone) {
   try {
-    const { rows } = await query(
-      'SELECT * FROM users WHERE cellphone = ? LIMIT 1',
-      [cellphone]
-    );
+    const { rows } = await query('SELECT * FROM users WHERE cellphone = ? LIMIT 1', [cellphone]);
     return rows[0] || null;
   } catch (err) {
     const store = getFallbackStore();
@@ -105,10 +101,7 @@ async function findByCellphone(cellphone) {
 
 async function findByGoogleId(googleId) {
   try {
-    const { rows } = await query(
-      'SELECT * FROM users WHERE google_id = ? LIMIT 1',
-      [googleId]
-    );
+    const { rows } = await query('SELECT * FROM users WHERE google_id = ? LIMIT 1', [googleId]);
     return rows[0] || null;
   } catch (err) {
     const store = getFallbackStore();
@@ -116,7 +109,14 @@ async function findByGoogleId(googleId) {
   }
 }
 
-async function createUser({ name, email, cellphone = null, passwordHash = null, role = 'customer', googleId = null } = {}) {
+async function createUser({
+  name,
+  email,
+  cellphone = null,
+  passwordHash = null,
+  role = 'customer',
+  googleId = null
+} = {}) {
   try {
     const id = generateUUID();
     const now = getCurrentTimestamp();
@@ -188,10 +188,7 @@ async function resetFailedLogin(id) {
 
 async function findById(id) {
   try {
-    const { rows } = await query(
-      'SELECT * FROM users WHERE id = ? LIMIT 1',
-      [id]
-    );
+    const { rows } = await query('SELECT * FROM users WHERE id = ? LIMIT 1', [id]);
     return rows[0] || null;
   } catch (err) {
     const store = getFallbackStore();
@@ -211,10 +208,12 @@ async function ensureAdminUser({ name, email, cellphone, passwordHash, role = 'a
   await ensureUserSchema();
   const normalizedCellphone = normalizeCellphone(cellphone);
   const normalizedEmail = String(email || '').toLowerCase();
+
   let admin = await findByCellphone(normalizedCellphone);
   if (!admin) {
     admin = await findByEmail(normalizedEmail);
   }
+
   if (!admin) {
     admin = await createUser({ name, email: normalizedEmail, cellphone: normalizedCellphone, passwordHash, role });
   } else {
@@ -240,6 +239,7 @@ async function ensureAdminUser({ name, email, cellphone, passwordHash, role = 'a
       admin = existing || admin;
     }
   }
+
   return admin;
 }
 
@@ -256,3 +256,4 @@ module.exports = {
   updateOtp,
   getCurrentTimestamp
 };
+

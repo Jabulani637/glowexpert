@@ -1,0 +1,23 @@
+Auth flow findings
+
+- JWT implementation:
+  - HS256 JWTs using process.env.JWT_SECRET
+  - signAccessToken uses only safePayload: sub/email/name/role
+  - verifyAccessToken enforces algorithms ['HS256']
+
+- Backend middleware:
+  - Expects Authorization header: Bearer <token>
+  - 401 for missing/invalid header or invalid JWT
+  - Attaches decoded claims to req.user
+
+- Auth endpoints:
+  - /register creates customer role only
+  - /login supports identifier that may be email-like or cellphone
+  - Login includes account locking after repeated failures
+  - OTP route is present in code but commented out in authRoutes
+
+- Frontend behavior:
+  - api() wrapper attaches auth headers when requireAuth=true
+  - On 401/403 with requireAuth: clears local storage and redirects to login.html
+  - Token storage is localStorage-based (XSS risk noted in comments)
+

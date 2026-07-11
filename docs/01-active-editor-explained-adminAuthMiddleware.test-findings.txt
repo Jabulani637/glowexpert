@@ -1,0 +1,16 @@
+adminAuthMiddleware.test.js findings
+
+- What it tests:
+  - No Authorization header on /api/admin/products => 401
+  - Bearer token with role=customer => 403
+  - Bearer token with role=admin => response is not 401/403 (route proceeds)
+
+- How it works:
+  - Creates JWTs with role embedded in payload.
+  - Uses createAppForTests() to mount Express routes/middleware.
+  - Uses supertest to call the endpoint.
+
+- Assumptions/notes:
+  - route handler might still fail (DB/model stubs), so the “admin can reach route” test only checks auth codes.
+  - Adds a /__noop__ call to help Jest avoid open-handle warnings.
+

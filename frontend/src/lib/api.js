@@ -1,47 +1,75 @@
-// Shared fetch wrapper used across every page script. Replaces the four
-// near-identical copies that used to live in home.js, admin.js, blog.js,
-// and login.js.
+// Shared fetch wrapper used across every page script.
+// Centralizes auth header attachment, safe URL construction, timeouts,
+// and consistent JSON/error parsing.
 
 import { authHeaders, clearSession } from './auth.js';
+import { API_BASE } from '../config.js';
 
-export const API_BASE = import.meta.env.VITE_API_BASE || window.__API_BASE__ || window.location.origin;
+function isProbablyApiPath(path) {
+  // Require either a relative path (/something) or an already-safe absolute URL
+  // on the same origin. This prevents accidental usage of external URLs.
+  if (typeof path !== 'string') return false;
+  if (path.startsWith('/')) return true;
+  if (path.startsWith(API_BASE)) return true;
+  return false;
+}
 
 async function parseBody(res) {
-  const text = await res.text();
-  if (!text) return {};
+  const contentType = res.headers.get('content-type') || '';
+  if (!contentType.includes('application/json')) {
+    // Avoid trying to JSON.parse non-JSON responses (e.g. HTML errors).
+    const text = await res.text();
+    return text ? { message: text } : {};
+  }
+
   try {
-    return JSON.parse(text);
+    return await res.json();
   } catch {
-    return { message: text };
+    return { message: 'Invalid JSON response' };
   }
 }
 
 /**
  * api(path, options)
- * - `options.requireAuth` (default false) attaches the admin bearer token
- *   and, on a 401/403 response, clears the stored session and redirects
- *   to login.html. Public storefront/blog/login calls should leave this
- *   unset; admin calls should pass `requireAuth: true`.
+ * - `options.requireAuth` attaches the bearer token and clears session+redirects
+ *   on 401/403.
  */
 export async function api(path, options = {}) {
-  const { requireAuth = false, headers = {}, ...rest } = options;
+  const { requireAuth = false, headers = {}, timeoutMs = 15000, ...rest } = options;
 
-  const res = await fetch(API_BASE + path, {
-    ...rest,
-    headers: requireAuth ? authHeaders(headers) : headers
-  });
-
-  const json = await parseBody(res);
-
-  if (!res.ok) {
-    if (requireAuth && (res.status === 401 || res.status === 403)) {
-      clearSession();
-      window.location.href = 'login.html';
-    }
-    throw new Error(json.message || 'Request failed');
+  if (!isProbablyApiPath(path)) {
+    throw new Error('Invalid API path');
   }
 
-  return json;
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    const res = await fetch(`${API_BASE}${path.startsWith('/') ? path : ''}`, {
+      ...rest,
+      signal: controller.signal,
+      headers: {
+        Accept: 'application/json',
+        ...(requireAuth ? authHeaders(headers) : headers)
+      }
+    });
+
+    const payload = await parseBody(res);
+
+    if (!res.ok) {
+      if (requireAuth && (res.status === 401 || res.status === 403)) {
+        clearSession();
+        window.location.href = 'login.html';
+      }
+      // Avoid reflecting unexpected server messages that might not be user-safe.
+      const message = typeof payload?.message === 'string' ? payload.message : 'Request failed';
+      throw new Error(message);
+    }
+
+    return payload;
+  } finally {
+    clearTimeout(timeoutId);
+  }
 }
 
 /** Resolves an /uploads/... relative path against the API host. */
@@ -49,3 +77,4 @@ export function normalizeAsset(url) {
   if (!url) return '';
   return url.startsWith('/uploads/') ? `${API_BASE}${url}` : url;
 }
+

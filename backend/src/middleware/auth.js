@@ -1,27 +1,39 @@
-// backend/src/middleware/auth.js
-const jwt = require('jsonwebtoken');
+const { verifyAccessToken } = require('../auth/jwt');
 
-// Middleware to verify JWT token and attach user info to req
+/**
+ * DEPRECATED: prefer `backend/src/auth/middlewareAuth.js`.
+ * This file is kept for backwards compatibility with older imports.
+ *
+ * It now uses the same JWT verification logic + payload shape as auth middleware,
+ * so `req.user` is consistent across the codebase.
+ */
 function authenticate(req, res, next) {
   const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-  if (!token) {
-    return res.status(401).json({ message: 'Access denied. No token provided.' });
+
+  if (
+    !authHeader ||
+    typeof authHeader !== 'string' ||
+    !authHeader.toLowerCase().startsWith('bearer ')
+  ) {
+    return res.status(401).json({ message: 'Access denied' });
   }
+
+  const token = authHeader.slice('bearer '.length).trim();
+  if (!token) return res.status(401).json({ message: 'Access denied' });
+
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // expects payload contains role, e.g., { id, role }
-    next();
-  } catch (err) {
-    return res.status(403).json({ message: 'Invalid token.' });
+    const decoded = verifyAccessToken(token);
+    // decoded is the safe payload from backend/src/auth/jwt.js: { sub, email, name, role }
+    req.user = decoded;
+    return next();
+  } catch {
+    return res.status(401).json({ message: 'Access denied' });
   }
 }
 
-// Authorization middleware: only allow admin users
+/** Authorization middleware: only allow admin users */
 function ensureAdmin(req, res, next) {
-  if (req.user && req.user.role === 'admin') {
-    return next();
-  }
+  if (req.user && req.user.role === 'admin') return next();
   return res.status(403).json({ message: 'Access denied. Admins only.' });
 }
 

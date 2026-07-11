@@ -1,0 +1,22 @@
+backend/src/server.js findings
+
+- Core responsibilities:
+  - Express app config (helmet/cors/morgan/json)
+  - Rate limiting (global /api + tighter /api/auth)
+  - Static serving (/uploads and frontend directory)
+  - Mounting API routes
+  - JSON 404 for unknown /api/*
+  - Global error handler that returns JSON
+
+- Security behavior:
+  - CSP disabled deliberately (HTML + inline scripts use case)
+  - CORS uses computed allowlist; rejects other origins with a controlled error.
+
+- Startup side effects:
+  - Ensures DB schema via ensure*Schema() functions.
+  - Seeds admin user only if ADMIN_EMAIL and ADMIN_PASSWORD are provided.
+
+- Operational behavior:
+  - Tries successive ports if the preferred one is busy.
+  - Graceful shutdown on SIGTERM/SIGINT.
+

@@ -1,0 +1,13 @@
+Admin route guarding findings
+
+- Router-level protection:
+  - adminProductRoutes.js applies authMiddleware + requireRoles(['admin']) to the entire router.
+
+- Expected HTTP behavior (as tested):
+  - Missing Authorization header => 401
+  - JWT valid but role != admin => 403
+  - JWT with role=admin => not 401/403 (route reaches handler)
+
+- Practical outcome:
+  - multer/controller logic only runs after the auth + role checks.
+

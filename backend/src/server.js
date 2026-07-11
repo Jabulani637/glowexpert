@@ -46,9 +46,26 @@ try {
 const app = express();
 
 // Production Security Headers
+// Keep CSP disabled because this app serves multiple HTML files and likely uses inline scripts.
+// If you switch to a stricter frontend build, enable and tune CSP.
 app.use(helmet({
-  contentSecurityPolicy: false, // Disable if it interferes with your frontend static serving
+  contentSecurityPolicy: false,
 }));
+
+
+function getAllowedOrigins() {
+  const allowedEnv = (process.env.CORS_ALLOWED_ORIGINS || process.env.FRONTEND_URL || '');
+  const allowedFromEnv = allowedEnv
+    .split(',')
+    .map(s => s.trim())
+    .filter(Boolean);
+
+  // Hardcoded fallback for the known Vercel frontend origin.
+  // Prevents OTP/CORS failures when env vars are not set correctly.
+  const allowedFallback = ['glowexpert.vercel.app'];
+
+  return [...new Set([...allowedFromEnv, ...allowedFallback])];
+}
 
 // CORS configuration - allow localhost for development and FRONTEND_URL from .env
 app.options('*', cors());
@@ -57,22 +74,13 @@ app.use(cors({
   origin: function (origin, cb) {
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return cb(null, true);
+
     // Allow localhost origins for development
     if (origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1')) {
       return cb(null, true);
     }
-    // Use FRONTEND_URL env var or CORS_ALLOWED_ORIGINS list
-    const allowedEnv = (process.env.CORS_ALLOWED_ORIGINS || process.env.FRONTEND_URL || '');
-    const allowedFromEnv = allowedEnv
-      .split(',')
-      .map(s => s.trim())
-      .filter(Boolean);
 
-    // Hardcoded fallback for the known Vercel frontend origin.
-    // This prevents OTP/CORS failures when env vars are not set correctly.
-    const allowedFallback = ['glowexpert.vercel.app'];
-
-    const allowed = [...new Set([...allowedFromEnv, ...allowedFallback])];
+    const allowed = getAllowedOrigins();
     if (allowed.includes(origin)) return cb(null, true);
     return cb(new Error('Not allowed by CORS'));
   },
@@ -155,11 +163,7 @@ async function start() {
   // Log effective CORS allowlist (helps confirm what the *running* server is using)
   console.log('ℹ︎ CORS_ALLOWED_ORIGINS:', process.env.CORS_ALLOWED_ORIGINS);
   console.log('ℹ︎ FRONTEND_URL:', process.env.FRONTEND_URL);
-  const debugAllowed = (process.env.CORS_ALLOWED_ORIGINS || process.env.FRONTEND_URL || '')
-    .split(',')
-    .map(s => s.trim())
-    .filter(Boolean);
-  console.log('ℹ︎ Effective allowed origins:', debugAllowed);
+  console.log('ℹ︎ Effective allowed origins:', getAllowedOrigins());
 
   const startupSteps = [
     ['products', ensureProductSchema],
@@ -183,22 +187,37 @@ async function start() {
 
   try {
     const bcrypt = require('bcryptjs');
-    const adminEmail = process.env.ADMIN_EMAIL || 'admin@glowexpert.com';
-    const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
-    const adminCell = process.env.ADMIN_CELLPHONE || '+1234567890';
-    await ensureAdminUser({
-      name: 'GlowExpert Admin',
-      email: adminEmail,
-      cellphone: adminCell,
-      passwordHash: await bcrypt.hash(adminPassword, 12),
-      role: 'admin'
-    });
-    console.log(`✓ Seeded admin account for ${adminEmail}`);
+    const adminEmail = process.env.ADMIN_EMAIL;
+    const adminPassword = process.env.ADMIN_PASSWORD;
+    const adminCell = process.env.ADMIN_CELLPHONE;
+
+    // CRITICAL: never fall back to a known default password.
+    // If not configured, skip seeding and require an explicit provisioning step.
+    if (!adminEmail || !adminPassword) {
+      console.warn(
+        '! Skipping admin seeding: ADMIN_EMAIL and ADMIN_PASSWORD must be set to provision the initial admin safely.'
+      );
+    } else {
+      await ensureAdminUser({
+        name: 'GlowExpert Admin',
+        email: adminEmail,
+        cellphone: adminCell || null,
+        passwordHash: await bcrypt.hash(adminPassword, 12),
+        role: 'admin'
+      });
+      console.log(`✓ Seeded admin account for ${adminEmail}`);
+    }
   } catch (seedErr) {
     console.warn('! Could not seed admin account:', seedErr.message);
   }
 
+
+
+
   const preferredPort = Number(process.env.PORT || process.env.BACKEND_PORT || 8081);
+
+
+
 
   const registerShutdown = (server) => {
     const shutdown = (signal) => {

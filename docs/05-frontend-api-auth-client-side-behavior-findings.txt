@@ -1,0 +1,21 @@
+Frontend auth behavior findings
+
+- API_BASE in config.js:
+  - Vite env => window.__API_BASE__ => window.location.origin
+
+- api() wrapper (lib/api.js):
+  - Validates API path shape (relative / starts-with API_BASE)
+  - Implements timeout via AbortController
+  - Parses JSON only when content-type indicates JSON
+  - On 401/403 with requireAuth=true:
+    - clears localStorage session
+    - redirects to login.html
+
+- Token/session storage (lib/auth.js):
+  - localStorage-based admin_token/admin_user + influencer_token
+  - authHeaders() attaches Authorization: Bearer <token>
+
+- Explicit security warning in comments:
+  - localStorage token storage is vulnerable to XSS
+  - suggests HttpOnly Secure cookies + CSRF as the real mitigation
+

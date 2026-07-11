@@ -1,10 +1,12 @@
 const express = require('express');
-const { authenticate } = require('../middleware/auth');
+const { authMiddleware } = require('../auth/middlewareAuth');
+
 const { findInfluencerByUserId } = require('../models/Influencer');
 const { listOrdersByInfluencer } = require('../models/Order');
 
 const router = express.Router();
-router.use(authenticate);
+router.use(authMiddleware);
+
 
 function ensureInfluencer(req, res, next) {
   if (req.user && req.user.role === 'influencer') {
@@ -51,3 +53,4 @@ router.get('/orders', async (req, res) => {
 });
 
 module.exports = router;
+
