@@ -12,6 +12,7 @@ const authRoutes = require('./routes/authRoutes');
 const healthRoutes = require('./routes/healthRoutes');
 const productsRoutes = require('./routes/productsRoutes');
 const adminProductRoutes = require('./routes/adminProductRoutes');
+const adminAuthRoutes = require('./routes/adminAuthRoutes');
 const siteRoutes = require('./routes/siteRoutes');
 const subscriberRoutes = require('./routes/subscriberRoutes');
 const orderRoutes = require('./routes/orderRoutes');
@@ -146,9 +147,11 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productsRoutes);
 app.use('/api/admin', adminProductRoutes);
+app.use('/api/admin', adminAuthRoutes);
 app.use('/api/admin/influencers', adminInfluencerRoutes);
 app.use('/api/admin/media', adminMediaRoutes);
 app.use('/api/influencer', influencerRoutes);
+
 app.use('/api', siteRoutes);
 app.use('/api', subscriberRoutes);
 app.use('/api', orderRoutes);

@@ -73,10 +73,28 @@ export function authHeaders(extra = {}) {
   };
 }
 
-/** Call at the top of an admin-only page. Redirects away if not logged in. */
-export function requireLogin(redirectTo = 'login.html') {
-  if (!isLoggedIn()) window.location.href = redirectTo;
+/** Call at the top of an admin-only page.
+ * Performs a backend verification of the bearer token + admin role.
+ * Redirects away if not authenticated.
+ */
+export async function requireLogin(redirectTo = 'login.html') {
+  // Always re-validate admin access on page entry.
+  // Do NOT trust localStorage alone; it may contain a stale/invalid token.
+
+  // Import lazily to avoid circular deps in some bundlers.
+  const { api } = await import('./api.js');
+
+  try {
+    // Force backend validation: verifies token + admin role.
+    await api('/api/admin/me', { method: 'GET', requireAuth: true });
+  } catch (_err) {
+    // `api()` clears session + redirects on 401/403 when requireAuth=true,
+    // but enforce a defensive redirect here as well.
+    window.location.href = redirectTo;
+  }
 }
+
+
 
 /** Call at the top of the login page. Redirects away if already logged in. */
 export function redirectIfLoggedIn(redirectTo = 'admin.html') {

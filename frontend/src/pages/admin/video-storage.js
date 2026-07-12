@@ -1,5 +1,6 @@
 import { $ } from '../../lib/dom.js';
-import { setStatus } from './status.js';
+import { api, setStatus } from './status.js';
+
 
 const MAX_VIDEO_SIZE = 200 * 1024 * 1024; // 200MB
 
@@ -130,6 +131,52 @@ async function uploadVideoToIDB(inputId, statusId) {
   }
 }
 
+async function uploadVideoToSupabaseAndIDB(inputId, statusId, endpoint) {
+  const input = $(inputId);
+  const statusElLocal = $(statusId);
+  const file = input?.files && input.files[0];
+  if (!file) return;
+
+  if (file.size > MAX_VIDEO_SIZE) {
+    if (statusElLocal) {
+      statusElLocal.textContent = `❌ File too large (${(file.size / 1024 / 1024).toFixed(1)}MB). Max is 200MB.`;
+      statusElLocal.style.color = '#b00020';
+    }
+    input.value = '';
+    return;
+  }
+
+  if (statusElLocal) {
+    statusElLocal.textContent = '⏳ Uploading to server…';
+    statusElLocal.style.color = '#000080';
+  }
+
+  try {
+    const formData = new FormData();
+    // backend multer expects field name "video"
+    formData.append('video', file);
+
+    await api(endpoint, { method: 'POST', body: formData });
+
+    if (statusElLocal) {
+      statusElLocal.textContent = '✅ Uploaded. Saving locally…';
+      statusElLocal.style.color = '#008000';
+    }
+
+    // preserve existing behavior (homepage override from IndexedDB)
+    await uploadVideoToIDB(inputId, statusId);
+
+    setStatus('Video uploaded and saved.');
+  } catch (err) {
+    const msg = err?.message || err;
+    if (statusElLocal) {
+      statusElLocal.textContent = '❌ Upload failed: ' + msg;
+      statusElLocal.style.color = '#b00020';
+    }
+    setStatus('Video upload failed.', true);
+  }
+}
+
 async function deleteIndividualVideo(key, inputId, statusId) {
   if (!confirm('Remove this video and revert to API default?')) return;
   try {
@@ -144,18 +191,38 @@ async function deleteIndividualVideo(key, inputId, statusId) {
 }
 
 export function setupVideoButtons() {
-  $('saveHeroBtn')?.addEventListener('click', () => uploadVideoToIDB('heroVideoUpload', 'heroVideoStatus'));
+
+  // Also upload to backend so the videos persist for all users (Supabase storage)
+  // in addition to saving locally in IndexedDB for instant overrides.
+  $('saveHeroBtn')?.addEventListener('click', () =>
+    uploadVideoToSupabaseAndIDB('heroVideoUpload', 'heroVideoStatus', '/api/admin/media/video/hero', 'hero')
+  );
   $('deleteHeroBtn')?.addEventListener('click', () => deleteIndividualVideo('hero', 'heroVideoUpload', 'heroVideoStatus'));
 
-  $('saveFeaturedOneBtn')?.addEventListener('click', () => uploadVideoToIDB('featuredVideoOneUpload', 'featuredVideoOneStatus'));
+  $('saveFeaturedOneBtn')?.addEventListener('click', () =>
+    uploadVideoToSupabaseAndIDB(
+      'featuredVideoOneUpload',
+      'featuredVideoOneStatus',
+      '/api/admin/media/video/featured-one',
+      'featured_one'
+    )
+  );
   $('deleteFeaturedOneBtn')?.addEventListener('click', () =>
     deleteIndividualVideo('featured_one', 'featuredVideoOneUpload', 'featuredVideoOneStatus')
   );
 
-  $('saveFeaturedTwoBtn')?.addEventListener('click', () => uploadVideoToIDB('featuredVideoTwoUpload', 'featuredVideoTwoStatus'));
+  $('saveFeaturedTwoBtn')?.addEventListener('click', () =>
+    uploadVideoToSupabaseAndIDB(
+      'featuredVideoTwoUpload',
+      'featuredVideoTwoStatus',
+      '/api/admin/media/video/featured-two',
+      'featured_two'
+    )
+  );
   $('deleteFeaturedTwoBtn')?.addEventListener('click', () =>
     deleteIndividualVideo('featured_two', 'featuredVideoTwoUpload', 'featuredVideoTwoStatus')
   );
+
 
   $('clearVideosBtn')?.addEventListener('click', async () => {
     if (!confirm('Remove all locally stored videos and revert to API defaults?')) return;
