@@ -1,5 +1,6 @@
 const express = require('express');
-const { authMiddleware } = require('../middleware/auth');
+const { authMiddleware } = require('../auth/middlewareAuth');
+
 const { requireRoles } = require('../auth/roles');
 const { createHelpCentreMessage, listHelpCentreMessages, markHelpCentreMessageHandled } = require('../models/HelpCentreMessage');
 const { z } = require('zod');
