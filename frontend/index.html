@@ -3,7 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GlowExpert</title>
+  <title>GlowExpert - 100% Virgin Human Hair Extensions & HD Lace Wigs</title>
+
+  <meta name="description" content="Shop 100% virgin human hair extensions, 13x4 HD lace wigs, and black curly styles. Authentic quality and nationwide delivery." />
+  <link rel="canonical" href="https://glowexpert.vercel.app/index.html" />
+
+  <meta property="og:title" content="GlowExpert - 100% Virgin Human Hair Extensions & HD Lace Wigs" />
+  <meta property="og:description" content="Shop 100% virgin human hair extensions, 13x4 HD lace wigs, and black curly styles. Authentic quality and nationwide delivery." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -14,6 +23,7 @@
   <script type="module" src="./src/config.js"></script>
 
   <link rel="stylesheet" href="./src/styles/luxury.css" />
+  <link rel="stylesheet" href="./src/styles/hero-rotator.css" />
 </head>
 <body>
 
@@ -83,11 +93,23 @@
   </nav>
 
   <section class="hero-video">
-    <video autoplay muted loop playsinline id="heroVideo">
+    <!-- Rotating hero background (DB-driven). Back-compat: heroVideo is still present but hidden behind the rotator layers -->
+    <div id="heroBgContainer" class="hero-bg-rotator bg-transition-fade">
+      <img id="heroBgImage" class="hero-bg-image" src="" alt="" />
+
+      <video autoplay muted loop playsinline id="heroBgVideo" aria-hidden="true" tabindex="-1">
+        <source src="" type="video/mp4" id="heroBgVideoSource" />
+      </video>
+    </div>
+
+    <!-- Keep legacy elements for existing JS references; hidden by CSS when rotator is active -->
+    <video autoplay muted loop playsinline id="heroVideo" aria-hidden="true" tabindex="-1" style="display:none;">
       <source src="" type="video/mp4" id="heroVideoSource" />
     </video>
+
     <div class="hero-overlay"></div>
     <div class="hero-content-luxury">
+
       <h1 class="hero-title-luxury" id="heroTitle">GlowExpert</h1>
       <p class="hero-subtitle-luxury" id="heroSubtitle"></p>
       <a href="#collections" class="btn-luxury" id="heroCta">Explore Gold Collection</a>
@@ -208,14 +230,13 @@
        </div>
 
        <div class="footer-col" style="min-width: 220px;">
-         <h5>The Company</h5>
+         <h5>Legal & Company</h5>
          <ul>
-           <li><a href="terms.html">About GlowExpert</a></li>
-           <li><a href="terms.html">Our Sourcing</a></li>
-           <li><a href="terms.html">Code of Ethics</a></li>
-           <li><a href="terms.html">Careers</a></li>
-           <li><a href="terms.html">Corporate Information</a></li>
-           <li><a href="terms.html">Vulnerability Disclosure Policy</a></li>
+           <li><a href="terms.html">Terms &amp; Conditions</a></li>
+           <li><a href="privacy.html">Privacy Policy</a></li>
+           <li><a href="refund.html">Refund Policy</a></li>
+           <li><a href="gift-cards.html">Gift Cards</a></li>
+           <li><a href="terms.html">About Us</a></li>
          </ul>
        </div>
      </div>

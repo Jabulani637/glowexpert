@@ -17,6 +17,8 @@ const subscriberRoutes = require('./routes/subscriberRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const influencerRoutes = require('./routes/influencerRoutes');
 const blogRoutes = require('./routes/blogRoutes');
+const publicBlogSeoRoutes = require('./routes/publicBlogSeoRoutes');
+
 const { ensureUserSchema, ensureAdminUser } = require('./models/User');
 const { ensureProductSchema } = require('./models/Product');
 const { ensureSiteSettingsSchema } = require('./models/SiteSettings');
@@ -27,7 +29,7 @@ const { ensureInfluencerSchema } = require('./models/Influencer');
 const { ensureReviewSchema } = require('./models/Review');
 const adminInfluencerRoutes = require('./routes/adminInfluencerRoutes');
 const adminMediaRoutes = require('./routes/adminMediaRoutes');
-
+const helpCentreRoutes = require('./routes/helpCentreRoutes');
 
 // Create uploads directory if it doesn't exist.
 // On some platforms (e.g., Vercel), the filesystem may be read-only or disallow writes.
@@ -42,22 +44,22 @@ try {
   console.warn('  ', err.message);
 }
 
-
 const app = express();
 
 // Production Security Headers
 // Keep CSP disabled because this app serves multiple HTML files and likely uses inline scripts.
 // If you switch to a stricter frontend build, enable and tune CSP.
-app.use(helmet({
-  contentSecurityPolicy: false,
-}));
-
+app.use(
+  helmet({
+    contentSecurityPolicy: false
+  })
+);
 
 function getAllowedOrigins() {
   const allowedEnv = (process.env.CORS_ALLOWED_ORIGINS || process.env.FRONTEND_URL || '');
   const allowedFromEnv = allowedEnv
     .split(',')
-    .map(s => s.trim())
+    .map((s) => s.trim())
     .filter(Boolean);
 
   // Hardcoded fallback for the known Vercel frontend origin.
@@ -77,45 +79,52 @@ function getAllowedOrigins() {
 // CORS configuration - allow localhost for development and FRONTEND_URL from .env
 app.options('*', cors());
 
-app.use(cors({
-  origin: function (origin, cb) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return cb(null, true);
+app.use(
+  cors({
+    origin: function (origin, cb) {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return cb(null, true);
 
-    // Allow localhost origins for development
-    if (origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1')) {
-      return cb(null, true);
-    }
+      // Allow localhost origins for development
+      if (origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1')) {
+        return cb(null, true);
+      }
 
-    const allowed = getAllowedOrigins();
-    if (allowed.includes(origin)) return cb(null, true);
-    return cb(new Error('Not allowed by CORS'));
-  },
-  credentials: true
-}));
+      const allowed = getAllowedOrigins();
+      if (allowed.includes(origin)) return cb(null, true);
+      return cb(new Error('Not allowed by CORS'));
+    },
+    credentials: true
+  })
+);
 
 app.use(express.json({ limit: '1mb' }));
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 
 // Rate limiting: generous global cap so the API can't be trivially hammered,
 // plus a tighter limit on auth endpoints (on top of the existing per-account
-// failed-login lockout in authController, which protects a single account —
-// this protects the endpoint itself from being flooded across many accounts).
-app.use('/api', rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 300,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: { message: 'Too many requests, please try again later.' }
-}));
+// failed-login lockout in authController, which protects a single account).
+app.use(
+  '/api',
+  rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 300,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { message: 'Too many requests, please try again later.' }
+  })
+);
 
-app.use('/api/auth', rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 20,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: { message: 'Too many attempts, please try again later.' }
-}));
+app.use(
+  '/api/auth',
+  rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 20,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { message: 'Too many attempts, please try again later.' }
+  })
+);
 
 // Serve uploaded images statically
 app.use('/uploads', express.static(uploadsDir));
@@ -129,9 +138,9 @@ if (fs.existsSync(frontendDir)) {
   console.warn(`! Frontend directory not found at: ${frontendDir}`);
 }
 
-// Redirect the root path to the admin dashboard
+// Redirect the root path to the storefront (SEO-friendly)
 app.get('/', (req, res) => {
-  res.redirect('/admin.html');
+  res.redirect('/index.html');
 });
 
 app.use('/api/auth', authRoutes);
@@ -144,19 +153,19 @@ app.use('/api', siteRoutes);
 app.use('/api', subscriberRoutes);
 app.use('/api', orderRoutes);
 app.use('/api', blogRoutes);
+app.use('/api', helpCentreRoutes);
 app.use('/api', healthRoutes);
 
-// JSON 404 for any unmatched /api/* route, instead of Express's default HTML
-// error page. Unmatched API routes previously returned raw HTML which broke
-// frontend code expecting JSON (e.g. surfaced as an unhandled error dump in
-// the admin UI). This also acts as a safety net for future route-mounting
-// mistakes.
+// SEO-friendly server-rendered blog shell (optional but improves indexing)
+app.use('/blog', publicBlogSeoRoutes);
+
+// JSON 404 for any unmatched /api/* route
+
 app.use('/api', (req, res) => {
   res.status(404).json({ message: 'Not found' });
 });
 
-// Global error handler - ensures unexpected errors return JSON, not an HTML
-// stack trace, and prevents the process from leaking internals to clients.
+// Global error handler - ensures unexpected errors return JSON, not an HTML stack trace
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   console.error('Unhandled error:', err);
@@ -167,6 +176,10 @@ app.use((err, req, res, next) => {
 });
 
 async function start() {
+  // Ensure help-centre table exists
+  const { ensureHelpCentreMessageSchema } = require('./models/HelpCentreMessage');
+  await ensureHelpCentreMessageSchema();
+
   // Log effective CORS allowlist (helps confirm what the *running* server is using)
   console.log('ℹ︎ CORS_ALLOWED_ORIGINS:', process.env.CORS_ALLOWED_ORIGINS);
   console.log('ℹ︎ FRONTEND_URL:', process.env.FRONTEND_URL);
@@ -218,13 +231,7 @@ async function start() {
     console.warn('! Could not seed admin account:', seedErr.message);
   }
 
-
-
-
   const preferredPort = Number(process.env.PORT || process.env.BACKEND_PORT || 8081);
-
-
-
 
   const registerShutdown = (server) => {
     const shutdown = (signal) => {

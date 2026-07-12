@@ -26,10 +26,18 @@ async function ensureProductSchema() {
       gallery_urls TEXT NULL,
       attributes TEXT NULL,
       stock INTEGER NOT NULL DEFAULT 0,
+
+      is_featured INTEGER NOT NULL DEFAULT 0,
+      is_new_arrival INTEGER NOT NULL DEFAULT 0,
+      is_best_seller INTEGER NOT NULL DEFAULT 0,
+      is_on_sale INTEGER NOT NULL DEFAULT 0,
+      sale_percent_off REAL NOT NULL DEFAULT 0,
+      is_wholesale INTEGER NOT NULL DEFAULT 0,
+
       meta_title TEXT NULL,
       meta_description TEXT NULL,
       meta_keywords TEXT NULL,
-      is_featured INTEGER NOT NULL DEFAULT 0,
+
       created_at TEXT NOT NULL,
       updated_at TEXT NOT NULL
     )
@@ -59,11 +67,32 @@ async function ensureProductSchema() {
     await run(`ALTER TABLE products ADD COLUMN meta_keywords TEXT`);
   } catch (err) {}
 
+  // New badge/sale/wholesale columns
+  try {
+    await run(`ALTER TABLE products ADD COLUMN is_new_arrival INTEGER NOT NULL DEFAULT 0`);
+  } catch (err) {}
+  try {
+    await run(`ALTER TABLE products ADD COLUMN is_best_seller INTEGER NOT NULL DEFAULT 0`);
+  } catch (err) {}
+  try {
+    await run(`ALTER TABLE products ADD COLUMN is_on_sale INTEGER NOT NULL DEFAULT 0`);
+  } catch (err) {}
+  try {
+    await run(`ALTER TABLE products ADD COLUMN sale_percent_off REAL NOT NULL DEFAULT 0`);
+  } catch (err) {}
+  try {
+    await run(`ALTER TABLE products ADD COLUMN is_wholesale INTEGER NOT NULL DEFAULT 0`);
+  } catch (err) {}
+
   await run(`CREATE INDEX IF NOT EXISTS idx_products_category ON products(category)`);
   try {
     await run(`CREATE INDEX IF NOT EXISTS idx_products_is_featured ON products(is_featured) WHERE is_featured = 1`);
   } catch (err) {}
+  try {
+    await run(`CREATE INDEX IF NOT EXISTS idx_products_is_on_sale ON products(is_on_sale) WHERE is_on_sale = 1`);
+  } catch (err) {}
 }
+
 
 async function listProducts({ limit = 50, offset = 0, category = null, isFeatured = null } = {}) {
   try {
@@ -118,14 +147,80 @@ async function findProductById(id) {
   }
 }
 
-async function createProduct({ name, slug = null, category = null, description = null, price, currency = 'ZAR', image_url = null, gallery_urls = null, attributes = null, stock = 0, is_featured = false, meta_title = null, meta_description = null, meta_keywords = null } = {}) {
+async function createProduct({
+  name,
+  slug = null,
+  category = null,
+  description = null,
+  price,
+  currency = 'ZAR',
+  image_url = null,
+  gallery_urls = null,
+  attributes = null,
+  stock = 0,
+  is_featured = false,
+  is_new_arrival = false,
+  is_best_seller = false,
+  is_on_sale = false,
+  sale_percent_off = 0,
+  is_wholesale = false,
+  meta_title = null,
+  meta_description = null,
+  meta_keywords = null
+} = {}) {
   try {
     const id = generateUUID();
     const now = getCurrentTimestamp();
     await run(
-      `INSERT INTO products (id, name, slug, category, description, price, currency, image_url, gallery_urls, attributes, stock, is_featured, meta_title, meta_description, meta_keywords, created_at, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [id, name, slug, category, description, price, currency, image_url, JSON.stringify(gallery_urls), JSON.stringify(attributes), stock, is_featured ? 1 : 0, meta_title, meta_description, meta_keywords, now, now]
+      `INSERT INTO products (
+        id,
+        name,
+        slug,
+        category,
+        description,
+        price,
+        currency,
+        image_url,
+        gallery_urls,
+        attributes,
+        stock,
+        is_featured,
+        is_new_arrival,
+        is_best_seller,
+        is_on_sale,
+        sale_percent_off,
+        is_wholesale,
+        meta_title,
+        meta_description,
+        meta_keywords,
+        created_at,
+        updated_at
+      )
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        id,
+        name,
+        slug,
+        category,
+        description,
+        price,
+        currency,
+        image_url,
+        JSON.stringify(gallery_urls),
+        JSON.stringify(attributes),
+        stock,
+        is_featured ? 1 : 0,
+        is_new_arrival ? 1 : 0,
+        is_best_seller ? 1 : 0,
+        is_on_sale ? 1 : 0,
+        Number(sale_percent_off) || 0,
+        is_wholesale ? 1 : 0,
+        meta_title,
+        meta_description,
+        meta_keywords,
+        now,
+        now
+      ]
     );
     return await findProductById(id);
   } catch (err) {
@@ -143,19 +238,45 @@ async function createProduct({ name, slug = null, category = null, description =
       attributes: attributes || {},
       stock,
       is_featured: Boolean(is_featured),
+      is_new_arrival: Boolean(is_new_arrival),
+      is_best_seller: Boolean(is_best_seller),
+      is_on_sale: Boolean(is_on_sale),
+      sale_percent_off: Number(sale_percent_off) || 0,
+      is_wholesale: Boolean(is_wholesale),
       meta_title,
       meta_description,
       meta_keywords,
       created_at: getCurrentTimestamp(),
       updated_at: getCurrentTimestamp()
     };
+
     store.products.unshift(item);
     saveFallbackStore(store);
     return { ...item, is_featured: Boolean(item.is_featured) };
   }
 }
 
-async function updateProduct(id, { name, slug = null, category = null, description = null, price, currency = 'ZAR', image_url = null, gallery_urls = null, attributes = null, stock = 0, is_featured = false, meta_title = null, meta_description = null, meta_keywords = null } = {}) {
+async function updateProduct(id, {
+  name,
+  slug = null,
+  category = null,
+  description = null,
+  price,
+  currency = 'ZAR',
+  image_url = null,
+  gallery_urls = null,
+  attributes = null,
+  stock = 0,
+  is_featured = false,
+  is_new_arrival = false,
+  is_best_seller = false,
+  is_on_sale = false,
+  sale_percent_off = 0,
+  is_wholesale = false,
+  meta_title = null,
+  meta_description = null,
+  meta_keywords = null
+} = {}) {
   try {
     const now = getCurrentTimestamp();
     await run(
@@ -171,12 +292,39 @@ async function updateProduct(id, { name, slug = null, category = null, descripti
            attributes = ?,
            stock = ?,
            is_featured = ?,
+           is_new_arrival = ?,
+           is_best_seller = ?,
+           is_on_sale = ?,
+           sale_percent_off = ?,
+           is_wholesale = ?,
            meta_title = ?,
            meta_description = ?,
            meta_keywords = ?,
            updated_at = ?
        WHERE id = ?`,
-      [name, slug, category, description, price, currency, image_url, JSON.stringify(gallery_urls), JSON.stringify(attributes), stock, is_featured ? 1 : 0, meta_title, meta_description, meta_keywords, now, id]
+      [
+        name,
+        slug,
+        category,
+        description,
+        price,
+        currency,
+        image_url,
+        JSON.stringify(gallery_urls),
+        JSON.stringify(attributes),
+        stock,
+        is_featured ? 1 : 0,
+        is_new_arrival ? 1 : 0,
+        is_best_seller ? 1 : 0,
+        is_on_sale ? 1 : 0,
+        Number(sale_percent_off) || 0,
+        is_wholesale ? 1 : 0,
+        meta_title,
+        meta_description,
+        meta_keywords,
+        now,
+        id
+      ]
     );
     return await findProductById(id);
   } catch (err) {
@@ -196,11 +344,17 @@ async function updateProduct(id, { name, slug = null, category = null, descripti
       attributes: attributes || {},
       stock,
       is_featured: Boolean(is_featured),
+      is_new_arrival: Boolean(is_new_arrival),
+      is_best_seller: Boolean(is_best_seller),
+      is_on_sale: Boolean(is_on_sale),
+      sale_percent_off: Number(sale_percent_off) || 0,
+      is_wholesale: Boolean(is_wholesale),
       meta_title,
       meta_description,
       meta_keywords,
       updated_at: getCurrentTimestamp()
     };
+
     saveFallbackStore(store);
     return { ...store.products[index], is_featured: Boolean(store.products[index].is_featured) };
   }

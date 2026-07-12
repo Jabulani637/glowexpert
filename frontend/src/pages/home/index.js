@@ -3,7 +3,7 @@ import { setupMobileNav, setupScrollShadow } from '../../lib/nav.js';
 import { setupCartDelegates, openCart, closeCart, saveReferralCode, loadReferralCode, addToCart } from './cart.js';
 import { submitNewsletter, submitCheckout } from './checkout.js';
 import { initializeStore } from './store.js';
-
+import { startHeroBackgroundRotator } from './background-rotator.js';
 
 setupMobileNav();
 setupScrollShadow();
@@ -16,13 +16,20 @@ $('newsletterForm')?.addEventListener('submit', submitNewsletter);
 $('checkoutForm')?.addEventListener('submit', submitCheckout);
 
 initializeStore()
-  .then(() => {
-    // Ensure video sources reflect latest /api/settings values.
+  .then(async () => {
+    // Hero background rotator is DB-driven via /api/settings.
+    // It replaces the legacy single hero video background.
+    try {
+      const settingsResp = await fetch('/api/settings');
+      const settingsJson = await settingsResp.json();
+      startHeroBackgroundRotator(settingsJson?.data || settingsJson || {});
+    } catch {
+      // no-op: keep page functional with any legacy fallback.
+    }
+
+    // Ensure featured video sources reflect latest /api/settings values.
     // (Useful when returning from admin after saving updates.)
     try {
-      if ($('heroVideo') && $('heroVideoSource')?.src) {
-        $('heroVideo').load();
-      }
       if ($('featuredVideoOne') && $('featuredVideoOneSource')?.src) {
         $('featuredVideoOne').load();
       }
@@ -32,6 +39,7 @@ initializeStore()
     } catch {
       // no-op
     }
+
 
     try {
       const params = new URLSearchParams(window.location.search);

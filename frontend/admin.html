@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>GlowExpert Admin Portal</title>
 
+  <meta name="robots" content="noindex,nofollow" />
+
+
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <link rel="icon" type="image/svg+xml" href="./src/assets/logo/glowexpert_logo.svg" />
@@ -28,7 +31,13 @@
     </div>
   </nav>
 
+  <div class="admin-desktop-only" aria-live="polite">
+    <h1>Admin Portal (Desktop Only)</h1>
+    <p>This admin panel is designed for desktop screens. Please open this page on a laptop/desktop for the full experience.</p>
+  </div>
+
   <main class="admin-wrap">
+
     <section class="topbar">
       <div class="admin-card">
         <span class="section-label">Admin Portal</span>
@@ -97,6 +106,43 @@
               <label>
                 <input id="is_featured" type="checkbox" />
                 Featured product
+              </label>
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label>
+                <input id="is_new_arrival" type="checkbox" />
+                New Arrival
+              </label>
+            </div>
+            <div>
+              <label>
+                <input id="is_best_seller" type="checkbox" />
+                Best Seller
+              </label>
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label>
+                <input id="is_on_sale" type="checkbox" />
+                On Sale
+              </label>
+            </div>
+            <div>
+              <label for="sale_percent_off">% Off</label>
+              <input id="sale_percent_off" type="number" min="0" max="100" step="1" value="0" />
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label>
+                <input id="is_wholesale" type="checkbox" />
+                Wholesale
               </label>
             </div>
           </div>

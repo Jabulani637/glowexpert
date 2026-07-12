@@ -21,7 +21,19 @@ const base = {
   gallery_urls: z.array(z.string()).optional().nullable(),
   attributes: z.record(z.any()).optional().nullable(),
   stock: z.coerce.number().int().nonnegative().optional().default(0),
+
   is_featured: booleanField,
+  is_new_arrival: booleanField,
+  is_best_seller: booleanField,
+  is_on_sale: booleanField,
+  sale_percent_off: z
+    .coerce.number()
+    .min(0)
+    .max(100)
+    .optional()
+    .default(0),
+  is_wholesale: booleanField,
+
   meta_title: z.string().max(255).optional().nullable(),
   meta_description: z.string().optional().nullable(),
   meta_keywords: z.string().optional().nullable()

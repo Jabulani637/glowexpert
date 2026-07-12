@@ -2,6 +2,10 @@ import { normalizeAsset } from '../../lib/api.js';
 import { $, escapeHtml } from '../../lib/dom.js';
 import { resolveVideoSrc } from './video-overrides.js';
 
+// Note: hero background is handled by background-rotator.js (DB-backed).
+
+
+
 /** Removes a duplicated trailing "Expert" (e.g. a settings value of
  * "GlowExpert Expert" or "Glow Expert Expert") down to a single one. */
 function normalizeBrandName(rawBrand) {

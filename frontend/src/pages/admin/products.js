@@ -11,6 +11,11 @@ export function setSelected(product) {
   $('description').value = product.description || '';
   $('category').value = product.category || '';
   $('is_featured').checked = Boolean(product.is_featured);
+  $('is_new_arrival')?.checked && ($('is_new_arrival').checked = Boolean(product.is_new_arrival));
+  $('is_best_seller')?.checked && ($('is_best_seller').checked = Boolean(product.is_best_seller));
+  $('is_on_sale')?.checked && ($('is_on_sale').checked = Boolean(product.is_on_sale));
+  $('sale_percent_off')?.value && ($('sale_percent_off').value = product.sale_percent_off ?? 0);
+  $('is_wholesale')?.checked && ($('is_wholesale').checked = Boolean(product.is_wholesale));
   $('price').value = product.price ?? '';
   $('currency').value = product.currency || 'ZAR';
   $('stock').value = product.stock ?? 0;
@@ -31,6 +36,11 @@ export function clearProductForm() {
   $('description').value = '';
   $('category').value = '';
   $('is_featured').checked = false;
+  $('is_new_arrival') && ($('is_new_arrival').checked = false);
+  $('is_best_seller') && ($('is_best_seller').checked = false);
+  $('is_on_sale') && ($('is_on_sale').checked = false);
+  $('sale_percent_off') && ($('sale_percent_off').value = 0);
+  $('is_wholesale') && ($('is_wholesale').checked = false);
   $('price').value = '';
   $('currency').value = 'ZAR';
   $('stock').value = '';
@@ -83,6 +93,11 @@ export function collectProductBody() {
     formData.append('description', $('description').value.trim() || '');
     formData.append('category', $('category').value.trim() || '');
     formData.append('is_featured', $('is_featured').checked ? 'true' : 'false');
+    formData.append('is_new_arrival', $('is_new_arrival')?.checked ? 'true' : 'false');
+    formData.append('is_best_seller', $('is_best_seller')?.checked ? 'true' : 'false');
+    formData.append('is_on_sale', $('is_on_sale')?.checked ? 'true' : 'false');
+    formData.append('sale_percent_off', String(Number($('sale_percent_off')?.value ?? 0)));
+    formData.append('is_wholesale', $('is_wholesale')?.checked ? 'true' : 'false');
     formData.append('price', String(Number($('price').value)));
     formData.append('currency', $('currency').value.trim() || 'ZAR');
     formData.append('stock', String(Number($('stock').value)));
@@ -100,6 +115,11 @@ export function collectProductBody() {
       description: $('description').value.trim() || null,
       category: $('category').value.trim() || null,
       is_featured: $('is_featured').checked,
+      is_new_arrival: $('is_new_arrival')?.checked ?? false,
+      is_best_seller: $('is_best_seller')?.checked ?? false,
+      is_on_sale: $('is_on_sale')?.checked ?? false,
+      sale_percent_off: Number($('sale_percent_off')?.value ?? 0),
+      is_wholesale: $('is_wholesale')?.checked ?? false,
       price: Number($('price').value),
       currency: $('currency').value.trim() || 'ZAR',
       image_url: $('image_url').value.trim() || null,

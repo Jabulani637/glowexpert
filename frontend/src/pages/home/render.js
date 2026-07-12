@@ -35,6 +35,10 @@ function productCardTemplate(product) {
         <div class="product-meta-row">
           ${product.category ? `<span class="product-category">${escapeHtml(product.category)}</span>` : ''}
           ${product.is_featured ? '<span class="product-featured-pill">Featured</span>' : ''}
+          ${product.is_new_arrival ? '<span class="product-featured-pill product-pill-new">New Arrival</span>' : ''}
+          ${product.is_best_seller ? '<span class="product-featured-pill product-pill-best">Best Seller</span>' : ''}
+          ${product.is_wholesale ? '<span class="product-featured-pill product-pill-wholesale">Wholesale</span>' : ''}
+          ${product.is_on_sale ? `<span class="product-featured-pill product-pill-sale">${escapeHtml(String(product.sale_percent_off ?? 0))}% OFF</span>` : ''}
         </div>
         <h3 class="product-name">${escapeHtml(product.name)}</h3>
         <p class="product-description">${escapeHtml(product.description || 'Luxury hair product')}</p>

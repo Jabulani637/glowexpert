@@ -803,50 +803,48 @@ tr:hover td {
   margin-top: 8px;
 }
 
-/* ── RESPONSIVE ── */
-@media (max-width: 768px) {
-  .admin-wrap {
-    padding: 4px;
+/* ── DESKTOP-ONLY GUARD ── */
+/*
+  Admin panel must work on desktop only.
+  On small widths, we block interaction visually while keeping the page loadable.
+*/
+.admin-wrap { }
+
+.admin-desktop-only {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  /* Hide/disable admin UI */
+  body { overflow-x: hidden; }
+  nav { display: none; }
+  main.admin-wrap, .admin-wrap { display: none !important; }
+
+  /* Show message */
+  .admin-desktop-only {
+    display: block;
+    padding: 32px 18px;
+    max-width: 720px;
+    margin: 32px auto;
+    background: rgba(192, 192, 192, 0.95);
+    border: 2px solid;
+    border-color: #ffffff #808080 #808080 #ffffff;
+    font-family: 'MS Sans Serif', 'Tahoma', sans-serif;
   }
-  
-  .topbar {
-    grid-template-columns: 1fr;
+
+  .admin-desktop-only h1 {
+    font-size: 18px;
+    margin-bottom: 12px;
+    color: #000080;
   }
-  
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .metric-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-  
-  .admin-status-bar {
-    grid-template-columns: repeat(3, 1fr);
-  }
-  
-  .row {
-    grid-template-columns: 1fr;
-  }
-  
-  .tab-nav {
-    flex-wrap: wrap;
-  }
-  
-  .tab-btn {
-    flex: 1;
-    min-width: 80px;
-    text-align: center;
-  }
-  
-  table {
-    font-size: 10px;
-  }
-  
-  th, td {
-    padding: 2px 4px;
+
+  .admin-desktop-only p {
+    font-size: 12px;
+    color: #000000;
+    line-height: 1.5;
   }
 }
+
 
 /* ── SCROLLBAR (Retro Style) ── */
 ::-webkit-scrollbar {

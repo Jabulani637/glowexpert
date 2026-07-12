@@ -1,33 +1,29 @@
-# TODO - GlowExpert production readiness (blackboxai)
+# TODO - glowexpert improvements (mobile + hero media + maintainability)
 
-## Security & Auth (priority)
-- [x] Unify JWT middleware: use `backend/src/auth/middlewareAuth.js` instead of `backend/src/middleware/auth.js` in active routers.
-- [x] Standardize `req.user` payload shape across middlewares (role/email/sub/name/id) by ensuring routes use the same JWT middleware.
-- [x] Update any remaining routes (or tests) using the older middleware to the unified one.
-
-
-## Social auth correctness
-- [x] Update `backend/src/controllers/authController.js` `socialAuth` to verify provider tokens server-side (do not trust frontend-provided idToken/claims).
+## 1. Responsive & admin desktop-only
+- [x] Verify mobile breakpoints in `frontend/src/styles/luxury.css` and ensure storefront layouts behave on <720px.
+- [x] Add “desktop-only” guard for admin in `frontend/src/styles/admin-retro.css` (e.g. message / disable small-screen layouts).
+- [x] Add desktop-only message container in `frontend/admin.html`.
 
 
-## DB schema + production behavior
-- [ ] Remove runtime DDL from `backend/src/models/User.js` (`ensureUserSchema`) in production.
-- [ ] Remove/disable fallback-store behavior in production (fail fast on DB errors).
-- [ ] Ensure migrations are run during deployment (document in README / scripts).
+- [ ] Remove key inline styles from `frontend/index.html` and replace with CSS classes.
 
-## Security headers / CSP
-- [ ] Enable helmet security headers for production; remove `contentSecurityPolicy: false` or replace with tuned CSP.
 
-## Frontend session security
-- [ ] Replace localStorage token storage (`frontend/src/lib/auth.js`) with secure cookie-based approach (HttpOnly Secure + CSRF) OR document risk and apply compensating protections.
-- [ ] If cookies are implemented, update fetch wrapper `frontend/src/lib/api.js` to use `credentials: 'include'`.
+## 2. Frontend code quality
+- [ ] Reduce empty catch blocks in `frontend/src/pages/home/index.js` and improve logging in dev.
+- [ ] Ensure hero/featured video loads are robust without redundant reload calls.
 
-## Request validation & errors
-- [ ] Verify each route uses Zod validation consistently.
-- [ ] Standardize JSON error responses.
+## 3. DB-backed hero background items (images/videos) with animation
+- [x] Extend `backend/src/models/SiteSettings.js` with `hero_background_items_json` default.
 
-## Ops / logging / tests
-- [ ] Add a logger (pino/winston) and request-id middleware.
-- [ ] Add production smoke test script.
-- [ ] Run/verify `npm test` (backend) and lints/build if present.
+
+- [ ] Add admin upload endpoints for hero background images/videos if not already covered by `adminMediaRoutes.js`.
+- [ ] Update admin UI (Website Content section) to manage multiple hero background items (add, reorder, enable/disable).
+- [ ] Implement a background rotator on storefront that supports animated slide/fade between items.
+- [ ] Respect `prefers-reduced-motion`.
+
+## 4. Tests / verification
+- [ ] Run backend tests.
+- [ ] Smoke-test: home mobile layout, cart panel, hero background rotation.
+- [ ] Smoke-test: admin works on desktop and is blocked/notice shown on mobile widths.
 
