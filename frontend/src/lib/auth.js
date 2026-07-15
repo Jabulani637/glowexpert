@@ -3,6 +3,8 @@
 // XSS. Backend-side mitigation (HttpOnly Secure cookies + CSRF protection)
 // is the real fix, but we can still improve robustness/consistency here.
 
+import { getClerk } from './clerk.js';
+
 const TOKEN_KEY = 'admin_token';
 const USER_KEY = 'admin_user';
 const INFLUENCER_TOKEN_KEY = 'influencer_token';
@@ -22,7 +24,21 @@ function safeParseJson(value) {
   }
 }
 
-export function getToken() {
+export async function getToken() {
+  const mode = localStorage.getItem(AUTH_MODE_KEY);
+  if (mode === 'influencer') {
+    return localStorage.getItem(INFLUENCER_TOKEN_KEY) || '';
+  }
+
+  try {
+    const clerk = await getClerk();
+    if (clerk.session) {
+      return await clerk.session.getToken();
+    }
+  } catch (err) {
+    console.warn('Failed to get clerk session token:', err);
+  }
+
   // Prefer mode-specific token; fall back for backward compatibility.
   return (
     localStorage.getItem(normalizeTokenKey()) ||
@@ -35,8 +51,8 @@ export function getUser() {
   return safeParseJson(localStorage.getItem(USER_KEY)) || null;
 }
 
-export function isLoggedIn() {
-  return Boolean(getToken());
+export async function isLoggedIn() {
+  return Boolean(await getToken());
 }
 
 export function setSession(token, user) {
@@ -62,9 +78,9 @@ export function clearSession() {
   localStorage.removeItem(AUTH_MODE_KEY);
 }
 
-export function authHeaders(extra = {}) {
+export async function authHeaders(extra = {}) {
   // Avoid sending an empty token if not logged in.
-  const token = getToken();
+  const token = await getToken();
   if (!token) return { ...extra };
 
   return {
@@ -97,8 +113,8 @@ export async function requireLogin(redirectTo = 'login.html') {
 
 
 /** Call at the top of the login page. Redirects away if already logged in. */
-export function redirectIfLoggedIn(redirectTo = 'admin.html') {
-  if (isLoggedIn()) window.location.href = redirectTo;
+export async function redirectIfLoggedIn(redirectTo = 'admin.html') {
+  if (await isLoggedIn()) window.location.href = redirectTo;
 }
 
 export function logout(redirectTo = 'login.html') {

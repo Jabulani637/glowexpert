@@ -2,19 +2,25 @@
 
 const express = require('express');
 
-const { authMiddleware } = require('../auth/middlewareAuth');
-const { requireRoles } = require('../auth/roles');
+const { clerkMiddleware, requireAdminRole } = require('../auth/clerkMiddleware');
+const { getAuth } = require('@clerk/express');
 
 const router = express.Router();
 
-// Returns the currently authenticated admin user (verifies token + role).
-// Frontend should call this on every admin page entry.
-router.get('/me', authMiddleware, requireRoles(['admin']), (req, res) => {
+// Returns the currently authenticated admin user.
+router.get('/me', clerkMiddleware(), requireAdminRole, (req, res) => {
+  const auth = getAuth(req);
   res.json({
     authenticated: true,
-    user: req.user
+    user: {
+      id: auth?.userId || null,
+      role: auth?.sessionClaims?.metadata?.role || null,
+      email: auth?.sessionClaims?.email || null,
+      name: auth?.sessionClaims?.name || null
+    }
   });
 });
 
 module.exports = router;
+
 

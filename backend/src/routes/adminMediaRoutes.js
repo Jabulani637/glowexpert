@@ -16,13 +16,13 @@ const path    = require('path');
 const crypto  = require('crypto');
 
 const { updateSettings }   = require('../models/SiteSettings');
-const { authMiddleware }   = require('../auth/middlewareAuth');
-const { requireRoles }     = require('../auth/roles');
+const { clerkMiddleware, requireAdminRole } = require('../auth/clerkMiddleware');
+
 const { uploadToSupabase } = require('../lib/supabaseStorage');
 
 const router = express.Router();
-router.use(authMiddleware);
-router.use(requireRoles(['admin']));
+router.use(clerkMiddleware(), requireAdminRole);
+
 
 // ---------------------------------------------------------------------------
 // Multer – memory storage only (no local disk writes).

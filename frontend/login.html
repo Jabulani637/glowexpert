@@ -13,30 +13,9 @@
 </head>
 <body>
   <div class="login-wrap">
-    <div class="login-window">
-      <div class="window-titlebar">
-        <div class="window-title">Admin Login</div>
-      </div>
-      <div class="window-body">
-        <div class="brand-banner">
-          <strong>Glow Expert</strong>
-        </div>
-
-        <p>Enter your assigned email or cellphone number and password to access the admin dashboard.</p>
-
-        <label for="cellphone">Email</label>
-        <input id="cellphone" type="text" placeholder="enter..." autocomplete="username" />
-
-        <label for="password">Password</label>
-        <input id="password" type="password" placeholder="password..." autocomplete="current-password" />
-
-        <button class="btn" id="loginBtn" type="button">Sign In</button>
-
-        <div class="error" id="errorMessage"></div>
-        <div class="muted">Only the single assigned admin account may sign in.</div>
-      </div>
-    </div>
+    <div id="sign-in"></div>
   </div>
+
 
   <script type="module" src="./src/pages/login/index.js"></script>
 </body>

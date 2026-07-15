@@ -125,7 +125,7 @@ async function loadInfluencerData() {
 
 logoutBtn?.addEventListener('click', () => logout('login.html'));
 
-requireLogin('login.html');
+await requireLogin('login.html');
 loadInfluencerData().catch((error) => {
   console.error('Influencer dashboard load failed:', error);
   alert(error.message || 'Unable to load influencer dashboard.');

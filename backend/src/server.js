@@ -13,6 +13,7 @@ const healthRoutes = require('./routes/healthRoutes');
 const productsRoutes = require('./routes/productsRoutes');
 const adminProductRoutes = require('./routes/adminProductRoutes');
 const adminAuthRoutes = require('./routes/adminAuthRoutes');
+
 const siteRoutes = require('./routes/siteRoutes');
 const subscriberRoutes = require('./routes/subscriberRoutes');
 const orderRoutes = require('./routes/orderRoutes');
@@ -145,6 +146,13 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/auth', authRoutes);
+
+// Clerk middleware: verifies Clerk auth tokens if present.
+// For admin-only endpoints we enforce role in the route handlers.
+const { clerkMiddleware } = require('./auth/clerkMiddleware');
+// apply only to /api/admin and /api/influencer*? We'll leave route modules to enforce.
+app.use('/api', clerkMiddleware());
+
 app.use('/api/products', productsRoutes);
 app.use('/api/admin', adminProductRoutes);
 app.use('/api/admin', adminAuthRoutes);

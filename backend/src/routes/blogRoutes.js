@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const blogController = require('../controllers/blogController');
-const { requireAuth, requireAdmin } = require('../auth/middlewareAuth');
+const { clerkMiddleware, requireAdminRole } = require('../auth/clerkMiddleware');
+
 
 // Public routes
 router.get('/posts', blogController.getBlogPosts);
@@ -9,7 +10,8 @@ router.get('/posts/featured', blogController.getFeaturedPosts);
 router.get('/posts/:slug', blogController.getBlogPost);
 
 // Admin routes
-router.use('/admin', requireAuth, requireAdmin);
+router.use('/admin', clerkMiddleware(), requireAdminRole);
+
 
 router.get('/admin/blog', blogController.getAllPosts);
 router.get('/admin/blog/stats', blogController.getStats);

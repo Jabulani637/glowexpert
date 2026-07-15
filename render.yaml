@@ -1,4 +1,4 @@
-﻿
+
 services:
   - type: web
     name: glowexpert-backend
@@ -56,3 +56,7 @@ services:
         value: ""
       - key: BACKEND_URL
         value: ""
+      - key: CLERK_PUBLISHABLE_KEY
+        value: "pk_test_Y2FwYWJsZS1yZWRmaXNoLTg1LmNsZXJrLmFjY291bnRzLmRldiQ"
+      - key: CLERK_SECRET_KEY
+        sync: false

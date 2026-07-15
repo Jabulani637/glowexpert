@@ -1,6 +1,7 @@
 import { $ } from '../../lib/dom.js';
 import { setupMobileNav } from '../../lib/nav.js';
-import { requireLogin, logout, getUser } from '../../lib/auth.js';
+import { getClerk } from '../../lib/clerk.js';
+
 
 import { api, setStatus } from './status.js';
 import { state } from './state.js';
@@ -50,9 +51,9 @@ async function loadAll() {
   renderOrders(ordersRes.data || []);
   renderInfluencers(influencersRes.data || []);
 
-  const user = getUser();
   const sessionInfo = $('sessionInfo');
-  if (sessionInfo) sessionInfo.textContent = user ? `${user.name} (${user.email})` : 'Authenticated admin session';
+  if (sessionInfo) sessionInfo.textContent = 'Authenticated admin session';
+
 
   setStatus('Dashboard refreshed');
 }
@@ -150,8 +151,9 @@ function setupGlobalButtons() {
     }
   });
 
-  $('logoutBtn')?.addEventListener('click', () => logout());
+  // Logout is handled by Clerk UserButton.
 }
+
 
 /** Event delegation for the Edit/Delete buttons rendered inside the
  * products and blog post tables. */
@@ -206,7 +208,13 @@ function setupTableDelegates() {
 }
 
 // ─── Boot ───────────────────────────────────────────────────────────────────
-requireLogin();
+const clerk = await getClerk();
+if (!clerk.user || clerk.user.publicMetadata?.role !== 'admin') {
+  window.location.href = 'login.html';
+} else {
+  clerk.mountUserButton(document.getElementById('user-button'));
+}
+
 
 setupMobileNav();
 setupTabNavigation();

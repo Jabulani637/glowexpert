@@ -50,7 +50,7 @@ export async function api(path, options = {}) {
       signal: controller.signal,
       headers: {
         Accept: 'application/json',
-        ...(requireAuth ? authHeaders(headers) : headers)
+        ...(requireAuth ? await authHeaders(headers) : headers)
       }
     });
 

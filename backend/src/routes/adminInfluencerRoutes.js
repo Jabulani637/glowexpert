@@ -2,14 +2,18 @@
 const express = require('express');
 const router = express.Router();
 const { findInfluencerByCode } = require('../models/Influencer');
-const { authMiddleware, requireAdmin } = require('../auth/middlewareAuth');
+const { clerkMiddleware, requireAdminRole } = require('../auth/clerkMiddleware');
+
+
+
 
 
 const { influencerAdminCreateSchema } = require('../validation/authSchemas');
 const { adminCreateInfluencer, adminListInfluencers } = require('../controllers/influencerAdminController');
 
-// Apply authentication and admin authorization to all routes in this router
-router.use(authMiddleware, requireAdmin);
+// Apply Clerk authentication + role authorization to all routes in this router
+router.use(clerkMiddleware(), requireAdminRole);
+
 
 
 // Register a new influencer (admin only)

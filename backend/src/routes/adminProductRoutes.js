@@ -2,16 +2,16 @@ const express = require('express');
 const multer  = require('multer');
 const path    = require('path');
 
-const { authMiddleware } = require('../auth/middlewareAuth');
-const { requireRoles }   = require('../auth/roles');
+const { clerkMiddleware, requireAdminRole } = require('../auth/clerkMiddleware');
+
 
 const controller      = require('../controllers/adminProductController');
 const adminController = require('../controllers/adminController');
 
 const router = express.Router();
 
-router.use(authMiddleware);
-router.use(requireRoles(['admin']));
+router.use(clerkMiddleware(), requireAdminRole);
+
 
 // ---------------------------------------------------------------------------
 // Multer – memory storage only.
