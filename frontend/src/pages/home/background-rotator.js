@@ -1,4 +1,5 @@
-import { $, normalizeAsset } from '../../lib/api.js';
+import { normalizeAsset } from '../../lib/api.js';
+import { $ } from '../../lib/dom.js';
 
 let timer = null;
 let currentIndex = 0;

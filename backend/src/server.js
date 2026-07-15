@@ -21,7 +21,7 @@ const influencerRoutes = require('./routes/influencerRoutes');
 const blogRoutes = require('./routes/blogRoutes');
 const publicBlogSeoRoutes = require('./routes/publicBlogSeoRoutes');
 
-const { ensureUserSchema, ensureAdminUser } = require('./models/User');
+const { ensureUserSchema } = require('./models/User');
 const { ensureProductSchema } = require('./models/Product');
 const { ensureSiteSettingsSchema } = require('./models/SiteSettings');
 const { ensureSubscriberSchema } = require('./models/Subscriber');
@@ -216,31 +216,7 @@ async function start() {
     }
   }
 
-  try {
-    const bcrypt = require('bcryptjs');
-    const adminEmail = process.env.ADMIN_EMAIL;
-    const adminPassword = process.env.ADMIN_PASSWORD;
-    const adminCell = process.env.ADMIN_CELLPHONE;
-
-    // CRITICAL: never fall back to a known default password.
-    // If not configured, skip seeding and require an explicit provisioning step.
-    if (!adminEmail || !adminPassword) {
-      console.warn(
-        '! Skipping admin seeding: ADMIN_EMAIL and ADMIN_PASSWORD must be set to provision the initial admin safely.'
-      );
-    } else {
-      await ensureAdminUser({
-        name: 'GlowExpert Admin',
-        email: adminEmail,
-        cellphone: adminCell || null,
-        passwordHash: await bcrypt.hash(adminPassword, 12),
-        role: 'admin'
-      });
-      console.log(`✓ Seeded admin account for ${adminEmail}`);
-    }
-  } catch (seedErr) {
-    console.warn('! Could not seed admin account:', seedErr.message);
-  }
+  // Legacy admin seeding logic removed as admin users are now handled entirely by Clerk.
 
   const preferredPort = Number(process.env.PORT || process.env.BACKEND_PORT || 8081);
 

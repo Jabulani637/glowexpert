@@ -1,4 +1,5 @@
-import { api, normalizeAsset, API_BASE } from '../../lib/api.js';
+import { api, normalizeAsset } from '../../lib/api.js';
+import { API_BASE } from '../../config.js';
 import { $, escapeHtml } from '../../lib/dom.js';
 import { formatDate, typeBadge } from './format.js';
 

@@ -5,6 +5,7 @@ export default defineConfig({
   root: '.',
   base: './',
   build: {
+    target: 'esnext',
     outDir: 'dist',
     rollupOptions: {
       input: {

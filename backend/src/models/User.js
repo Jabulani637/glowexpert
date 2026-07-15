@@ -204,45 +204,6 @@ async function updateOtp(id, otpCode, otpExpiresAt) {
   );
 }
 
-async function ensureAdminUser({ name, email, cellphone, passwordHash, role = 'admin' } = {}) {
-  await ensureUserSchema();
-  const normalizedCellphone = normalizeCellphone(cellphone);
-  const normalizedEmail = String(email || '').toLowerCase();
-
-  let admin = await findByCellphone(normalizedCellphone);
-  if (!admin) {
-    admin = await findByEmail(normalizedEmail);
-  }
-
-  if (!admin) {
-    admin = await createUser({ name, email: normalizedEmail, cellphone: normalizedCellphone, passwordHash, role });
-  } else {
-    try {
-      const now = getCurrentTimestamp();
-      await run(
-        'UPDATE users SET name = ?, email = ?, cellphone = ?, password_hash = ?, role = ?, updated_at = ? WHERE id = ?',
-        [name, normalizedEmail, normalizedCellphone, passwordHash, role, now, admin.id]
-      );
-      admin = await findById(admin.id);
-    } catch (err) {
-      const store = getFallbackStore();
-      const existing = store.users.find((entry) => entry.id === admin.id);
-      if (existing) {
-        existing.name = name;
-        existing.email = normalizedEmail;
-        existing.cellphone = normalizedCellphone;
-        existing.password_hash = passwordHash;
-        existing.role = role;
-        existing.updated_at = getCurrentTimestamp();
-        saveFallbackStore(store);
-      }
-      admin = existing || admin;
-    }
-  }
-
-  return admin;
-}
-
 module.exports = {
   ensureUserSchema,
   findByEmail,
@@ -251,7 +212,6 @@ module.exports = {
   updateFailedLogin,
   resetFailedLogin,
   findById,
-  ensureAdminUser,
   findByGoogleId,
   updateOtp,
   getCurrentTimestamp
