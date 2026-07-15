@@ -13,6 +13,7 @@ export default defineConfig({
         admin: resolve(__dirname, 'admin.html'),
         blog: resolve(__dirname, 'blog.html'),
         login: resolve(__dirname, 'login.html'),
+        authCallback: resolve(__dirname, 'auth-callback.html'),
         influencer: resolve(__dirname, 'influencer.html'),
         faq: resolve(__dirname, 'faq.html'),
         privacy: resolve(__dirname, 'privacy.html'),

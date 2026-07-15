@@ -212,7 +212,9 @@ const clerk = await getClerk();
 if (!clerk.user || clerk.user.publicMetadata?.role !== 'admin') {
   window.location.href = 'login.html';
 } else {
-  clerk.mountUserButton(document.getElementById('user-button'));
+  clerk.mountUserButton(document.getElementById('user-button'), {
+    afterSignOutUrl: 'index.html'
+  });
 }
 
 

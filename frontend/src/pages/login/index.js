@@ -7,6 +7,8 @@ if (clerk.user) {
     ? 'influencer.html'
     : 'admin.html';
 } else {
-  clerk.mountSignIn(document.getElementById('sign-in'));
+  clerk.mountSignIn(document.getElementById('sign-in'), {
+    afterSignInUrl: 'auth-callback.html'
+  });
 }
 
