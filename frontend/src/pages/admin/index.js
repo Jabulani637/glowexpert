@@ -151,9 +151,15 @@ function setupGlobalButtons() {
     }
   });
 
-  // Logout is handled by Clerk UserButton.
+  $('logoutBtn')?.addEventListener('click', async () => {
+    try {
+      const clerk = await getClerk();
+      await clerk.signOut({ redirectUrl: 'index.html' });
+    } catch (error) {
+      setStatus(error.message, true);
+    }
+  });
 }
-
 
 /** Event delegation for the Edit/Delete buttons rendered inside the
  * products and blog post tables. */

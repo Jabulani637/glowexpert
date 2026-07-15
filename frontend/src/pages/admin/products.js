@@ -133,12 +133,16 @@ export function collectProductBody() {
 }
 
 export async function createProduct() {
+  if (!$('name').value.trim()) throw new Error('Product name is required');
+  if ($('price').value === '') throw new Error('Price is required');
   const { body, headers } = collectProductBody();
   await api('/api/admin/products', { method: 'POST', body, headers });
 }
 
 export async function updateProduct() {
   if (!state.selectedId) throw new Error('Select a product first.');
+  if (!$('name').value.trim()) throw new Error('Product name is required');
+  if ($('price').value === '') throw new Error('Price is required');
   const { body, headers } = collectProductBody();
   await api(`/api/admin/products/${state.selectedId}`, { method: 'PUT', body, headers });
 }

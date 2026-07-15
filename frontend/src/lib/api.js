@@ -62,7 +62,14 @@ export async function api(path, options = {}) {
         window.location.href = 'login.html';
       }
       // Avoid reflecting unexpected server messages that might not be user-safe.
-      const message = typeof payload?.message === 'string' ? payload.message : 'Request failed';
+      let message = typeof payload?.message === 'string' ? payload.message : 'Request failed';
+      if (payload?.errors && typeof payload.errors === 'object') {
+        const fieldErrors = payload.errors.fieldErrors;
+        if (fieldErrors) {
+          const firstField = Object.keys(fieldErrors)[0];
+          message += `: ${firstField} ${fieldErrors[firstField][0]}`;
+        }
+      }
       throw new Error(message);
     }
 
