@@ -1,0 +1,10 @@
+.git
+.gitignore
+**/.git/**
+**/.gitignore
+worktree-*
+**/worktree-*/
+**/node_modules/**
+**/dist/**
+
+
