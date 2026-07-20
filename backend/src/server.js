@@ -17,6 +17,7 @@ const adminAuthRoutes = require('./routes/adminAuthRoutes');
 const siteRoutes = require('./routes/siteRoutes');
 const subscriberRoutes = require('./routes/subscriberRoutes');
 const orderRoutes = require('./routes/orderRoutes');
+const giftCardRoutes = require('./routes/giftCardRoutes');
 const influencerRoutes = require('./routes/influencerRoutes');
 const blogRoutes = require('./routes/blogRoutes');
 const publicBlogSeoRoutes = require('./routes/publicBlogSeoRoutes');
@@ -26,6 +27,7 @@ const { ensureProductSchema } = require('./models/Product');
 const { ensureSiteSettingsSchema } = require('./models/SiteSettings');
 const { ensureSubscriberSchema } = require('./models/Subscriber');
 const { ensureOrderSchema } = require('./models/Order');
+const { ensureGiftCardSchema } = require('./models/GiftCard');
 const { ensureBlogPostSchema } = require('./models/BlogPost');
 const { ensureInfluencerSchema } = require('./models/Influencer');
 const { ensureReviewSchema } = require('./models/Review');
@@ -163,6 +165,7 @@ app.use('/api/influencer', influencerRoutes);
 app.use('/api', siteRoutes);
 app.use('/api', subscriberRoutes);
 app.use('/api', orderRoutes);
+app.use('/api', giftCardRoutes);
 app.use('/api', blogRoutes);
 app.use('/api', helpCentreRoutes);
 app.use('/api', healthRoutes);
@@ -205,6 +208,7 @@ async function start() {
     ['site settings', ensureSiteSettingsSchema],
     ['subscribers', ensureSubscriberSchema],
     ['orders', ensureOrderSchema],
+    ['gift cards', ensureGiftCardSchema],
     ['blog posts', ensureBlogPostSchema],
     ['reviews', ensureReviewSchema],
     ['users', ensureUserSchema],

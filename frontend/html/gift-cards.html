@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gift Cards - GlowExpert</title>
+
+  <meta name="description" content="GlowExpert gift cards — the perfect beauty gift. Check your gift card balance or learn how gift cards work." />
+  <link rel="canonical" href="https://glowexpert.vercel.app/gift-cards.html" />
+
+  <meta property="og:title" content="Gift Cards - GlowExpert" />
+  <meta property="og:description" content="GlowExpert gift cards — the perfect beauty gift. Check your gift card balance or learn how gift cards work." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../src/styles/luxury.css">
+</head>
+<body>
+  <nav id="navbar">
+    <a href="index.html" class="nav-logo">Glow<span>Expert</span></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html" class="nav-close-mobile">Home</a></li>
+      <li><a href="index.html#collections" class="nav-close-mobile">Collections</a></li>
+      <li><a href="blog.html" class="nav-close-mobile">Blog</a></li>
+    </ul>
+    <div class="nav-actions">
+      <span class="cart-badge" data-count="0">
+        <a href="index.html#collections" class="nav-icon" title="Shop" aria-label="Shop">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+        </a>
+      </span>
+      <button class="nav-hamburger" id="navHamburger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <main style="padding: 120px 80px; max-width: 1000px; margin: 0 auto;">
+    <h1 class="section-title" style="font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 16px;">Gift Cards</h1>
+    <p class="muted" style="line-height: 1.9; margin-bottom: 28px;">
+      Give the gift of gorgeous hair. GlowExpert gift cards are the perfect present for any occasion.
+    </p>
+
+    <section style="background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.18); border-radius: 18px; padding: 18px; margin-bottom: 14px;">
+      <h3 style="font-family: var(--font-display); font-weight: 400;">How Gift Cards Work</h3>
+      <p class="muted" style="margin-top: 8px; line-height: 1.9;">Purchase a GlowExpert gift card and receive a unique code. The recipient can apply the code at checkout to use the gift card balance towards any product in our store. Gift cards can be used in full or partially — any remaining balance stays on the card for future use.</p>
+    </section>
+
+    <section style="background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.18); border-radius: 18px; padding: 18px; margin-bottom: 14px;">
+      <h3 style="font-family: var(--font-display); font-weight: 400;">Terms &amp; Conditions</h3>
+      <ul class="muted" style="margin-top: 8px; line-height: 1.9; padding-left: 20px;">
+        <li>Gift cards are non-refundable and cannot be exchanged for cash</li>
+        <li>Gift cards do not expire</li>
+        <li>Lost or stolen gift cards cannot be replaced</li>
+        <li>Gift cards can only be redeemed on the GlowExpert online store</li>
+      </ul>
+    </section>
+
+    <section style="background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.18); border-radius: 18px; padding: 18px; margin-bottom: 14px;">
+      <h3 style="font-family: var(--font-display); font-weight: 400;">Check Your Balance</h3>
+      <p class="muted" style="margin-top: 8px; line-height: 1.9; margin-bottom: 14px;">Enter your gift card code below to check the remaining balance.</p>
+      <form id="giftCardForm" style="display:grid; gap: 12px;" onsubmit="event.preventDefault();">
+        <label style="font-weight:700; letter-spacing:0.1em; text-transform:uppercase; font-size:0.75rem;">Gift Card Code</label>
+        <input id="giftCardCode" type="text" required placeholder="e.g. GLOW-XXXX-XXXX" style="padding: 14px 16px; border-radius: 14px; border: 1px solid rgba(201,168,76,0.35); background: rgba(255,255,255,0.6); outline:none; font-family: var(--font-body);" />
+        <button type="submit" class="btn-luxury" style="border:none; cursor:pointer;">Check Balance</button>
+        <p id="giftCardMsg" class="muted" style="margin:0; line-height:1.7;"></p>
+      </form>
+    </section>
+
+    <section style="background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.18); border-radius: 18px; padding: 18px;">
+      <h3 style="font-family: var(--font-display); font-weight: 400;">Need Help?</h3>
+      <p class="muted" style="margin-top: 8px; line-height: 1.9;">If you have questions about gift cards, contact our support team via the details in the site footer or through WhatsApp.</p>
+    </section>
+  </main>
+
+  <footer style="margin-top: 80px;">
+    <div class="footer-bottom" style="padding: 28px 80px; justify-content:center;">
+      <span class="footer-copy">&copy; 2026 GlowExpert. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('giftCardForm');
+    const msg = document.getElementById('giftCardMsg');
+    form?.addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      if (!msg) return;
+      msg.textContent = '';
+      msg.style.color = '';
+      const input = document.getElementById('giftCardCode');
+      const code = input?.value?.trim();
+      if (!code) {
+        msg.textContent = 'Please enter a gift card code.';
+        return;
+      }
+      try {
+        const res = await fetch('/api/gift-cards/check-balance', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code })
+        });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.message || 'Lookup failed');
+        const d = json.data;
+        msg.style.color = 'var(--luxury-gold, #c9a84c)';
+        msg.textContent = `Balance: ${d.currency} ${Number(d.balance).toFixed(2)} — Status: ${d.status}`;
+      } catch (err) {
+        msg.style.color = '#b44';
+        msg.textContent = err.message || 'Could not check balance. Please try again.';
+      }
+    });
+  </script>
+</body>
+</html>

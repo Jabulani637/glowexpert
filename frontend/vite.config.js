@@ -22,6 +22,8 @@ export default defineConfig({
         sitemap: resolve(__dirname, 'html/sitemap.html'),
         unsubscribe: resolve(__dirname, 'html/unsubscribe.html'),
         order: resolve(__dirname, 'html/order.html'),
+        refund: resolve(__dirname, 'html/refund.html'),
+        giftCards: resolve(__dirname, 'html/gift-cards.html'),
       },
     },
   },
