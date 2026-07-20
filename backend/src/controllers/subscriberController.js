@@ -9,8 +9,6 @@ async function subscribe(req, res) {
   });
 }
 
-module.exports = { subscribe };
-
 async function unsubscribe(req, res) {
   try {
     const { email } = req.body;
@@ -23,4 +21,4 @@ async function unsubscribe(req, res) {
   }
 }
 
-module.exports.unsubscribe = unsubscribe;
+module.exports = { subscribe, unsubscribe };

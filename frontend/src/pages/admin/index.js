@@ -216,7 +216,7 @@ function setupTableDelegates() {
 // ─── Boot ───────────────────────────────────────────────────────────────────
 const clerk = await getClerk();
 if (!clerk.user || clerk.user.publicMetadata?.role !== 'admin') {
-  window.location.href = 'login.html';
+  window.location.href = 'index.html';
 } else {
   clerk.mountUserButton(document.getElementById('user-button'), {
     afterSignOutUrl: 'index.html'

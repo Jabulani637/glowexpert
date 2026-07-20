@@ -1,40 +1,16 @@
-const { verifyAccessToken } = require('../auth/jwt');
+// This module previously contained JWT-based auth.
+// JWT helpers have been removed in favor of Clerk-only authentication.
+//
+// Keep this file to avoid breaking older imports, but hard-fail so non-Clerk
+// auth is never used.
 
-/**
- * DEPRECATED: prefer `backend/src/auth/middlewareAuth.js`.
- * This file is kept for backwards compatibility with older imports.
- *
- * It now uses the same JWT verification logic + payload shape as auth middleware,
- * so `req.user` is consistent across the codebase.
- */
-function authenticate(req, res, next) {
-  const authHeader = req.headers['authorization'];
-
-  if (
-    !authHeader ||
-    typeof authHeader !== 'string' ||
-    !authHeader.toLowerCase().startsWith('bearer ')
-  ) {
-    return res.status(401).json({ message: 'Access denied' });
-  }
-
-  const token = authHeader.slice('bearer '.length).trim();
-  if (!token) return res.status(401).json({ message: 'Access denied' });
-
-  try {
-    const decoded = verifyAccessToken(token);
-    // decoded is the safe payload from backend/src/auth/jwt.js: { sub, email, name, role }
-    req.user = decoded;
-    return next();
-  } catch {
-    return res.status(401).json({ message: 'Access denied' });
-  }
+function authenticate(_req, res) {
+  return res.status(401).json({ message: 'Access denied' });
 }
 
-/** Authorization middleware: only allow admin users */
-function ensureAdmin(req, res, next) {
-  if (req.user && req.user.role === 'admin') return next();
+function ensureAdmin(_req, res) {
   return res.status(403).json({ message: 'Access denied. Admins only.' });
 }
 
 module.exports = { authenticate, ensureAdmin };
+

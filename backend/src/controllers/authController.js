@@ -3,8 +3,7 @@ const path = require('path');
 const bcrypt = require('bcryptjs');
 const { query, run } = require('../db');
 const { findByEmail, findByCellphone, createUser, updateFailedLogin, resetFailedLogin, findByGoogleId, updateOtp, getCurrentTimestamp } = require('../models/User');
-const { signAccessToken } = require('../auth/jwt');
-const { normalizeRole } = require('../auth/roles');
+const { evaluateAdminLoginThrottle, computeAdminLockout } = require('../auth/adminLoginThrottle');
 
 function normalizeCellphone(value = '') {
   const cleaned = String(value || '')
@@ -87,10 +86,20 @@ async function login(req, res) {
   // Normalize to reduce user enumeration.
   if (!user) return res.status(401).json({ message: 'Invalid credentials' });
 
-  if (user.locked_until && new Date(user.locked_until) > new Date()) {
-    return res.status(401).json({ message: 'Invalid credentials' });
+  const isAdmin = user.role === 'admin';
+
+  if (isAdmin) {
+    const throttle = evaluateAdminLoginThrottle(user);
+    if (!throttle.allowed) {
+      return res.status(401).json({ message: throttle.message, retry_after_ms: throttle.retryAfterMs });
+    }
   }
 
+  if (user.locked_until && new Date(user.locked_until) > new Date()) {
+    // Non-admin lockout behavior: keep existing UX-neutral response.
+    // (Admin lockout is handled above with a user-friendly message.)
+    return res.status(401).json({ message: 'Invalid credentials' });
+  }
 
   if (!user.password_hash) {
     return res.status(401).json({ message: 'Please use social login for this account.' });
@@ -99,41 +108,44 @@ async function login(req, res) {
   const ok = await bcrypt.compare(password, user.password_hash);
   if (!ok) {
     const failedAttempts = (user.failed_attempts || 0) + 1;
+
     let lockedUntil = null;
     let message = 'Invalid credentials';
 
-    if (failedAttempts > 6) {
-      lockedUntil = new Date(Date.now() + 30 * 60 * 1000).toISOString();
-      message = 'Account locked after too many failed login attempts. Try again later.';
+    // Admin-only throttle: after 3 failed attempts, lock admin logins for 2 hours.
+    if (isAdmin && failedAttempts >= 3) {
+      lockedUntil = computeAdminLockout({
+        nowMs: Date.now(),
+        durationMs: 2 * 60 * 60 * 1000
+      });
+      message = 'Too many failed login attempts. Try again in 2 hours.';
+    } else if (!isAdmin) {
+      // Keep existing non-admin global behavior unchanged.
+      if (failedAttempts > 6) {
+        lockedUntil = new Date(Date.now() + 30 * 60 * 1000).toISOString();
+        message = 'Account locked after too many failed login attempts. Try again later.';
+      }
     }
 
     await updateFailedLogin(user.id, failedAttempts, lockedUntil);
+
+    // If admin was just locked, include a friendly retry-after hint.
+    if (isAdmin && lockedUntil) {
+      const retryAfterMs = new Date(lockedUntil).getTime() - Date.now();
+      return res.status(401).json({
+        message: message,
+        retry_after_ms: Math.max(0, retryAfterMs)
+      });
+    }
+
     return res.status(401).json({ message });
   }
 
   await resetFailedLogin(user.id);
 
-  // OTP login disabled. Admins receive an access token directly like customers.
-  const token = signAccessToken({
-    sub: user.id,
-    email: user.email,
-    name: user.name,
-    role: user.role
-  });
-
-
-  return res.status(200).json({
-    message: 'Login successful',
-    access_token: token,
-    token_type: 'Bearer',
-    user: {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      cellphone: user.cellphone,
-      role: user.role
-    }
-  });
+  // OTP login disabled.
+  // Clerk-only auth: do not issue non-Clerk JWT/Bearer tokens.
+  return res.status(403).json({ message: 'Use Clerk authentication' });
 }
 
 
@@ -190,18 +202,8 @@ async function socialAuth(req, res) {
       }
     }
 
-    const token = signAccessToken({
-      sub: user.id,
-      email: user.email,
-      name: user.name,
-      role: user.role
-    });
-
-    return res.status(200).json({
-      message: 'Social login successful',
-      access_token: token,
-      user: { id: user.id, name: user.name, email: user.email, role: user.role }
-    });
+    // Clerk-only auth: do not issue non-Clerk JWT/Bearer tokens.
+    return res.status(403).json({ message: 'Use Clerk authentication' });
   } catch (err) {
     console.error('socialAuth verification error:', err?.message || err);
     return res.status(401).json({ message: 'Invalid social auth token' });

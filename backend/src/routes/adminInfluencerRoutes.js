@@ -24,7 +24,7 @@ router.post('/', async (req, res) => {
   return adminCreateInfluencer(req, res);
 });
 
-// List influencers with stats (admin dashboard)
+// List influencers with stats (admin portal)
 router.get('/', async (req, res) => {
   return adminListInfluencers(req, res);
 });

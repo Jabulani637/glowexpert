@@ -30,20 +30,18 @@ function createApp() {
   return app;
 }
 
-function signAdminToken() {
-  const jwt = require('jsonwebtoken');
-  const payload = { sub: '1', email: 'admin@test.com', name: 'Admin', role: 'admin' };
-  return jwt.sign(payload, process.env.JWT_SECRET, { algorithm: 'HS256', expiresIn: '1h' });
+function getAuthHeader(role) {
+  return { Authorization: `Bearer ${role}` };
 }
 
 describe('admin product upload handling', () => {
   test('POST /products with JSON body => 201', async () => {
     const app = createApp();
-    const token = signAdminToken();
 
     const res = await request(app)
       .post('/api/admin/products')
-      .set('Authorization', `Bearer ${token}`)
+      .set(getAuthHeader('admin'))
+
       .send({
         name: 'Test Product',
         slug: 'test-product',
@@ -69,12 +67,12 @@ describe('admin product upload handling', () => {
     // The route uses multer.memoryStorage + expects images under field name "images".
 
     const app = createApp();
-    const token = signAdminToken();
 
     // Mock upload by sending a small fake image buffer.
     const res = await request(app)
       .post('/api/admin/products')
-      .set('Authorization', `Bearer ${token}`)
+      .set(getAuthHeader('admin'))
+
       .field('name', 'Test Product')
       .field('slug', 'test-product')
       .field('category', 'cat')
@@ -102,11 +100,11 @@ describe('admin product upload handling', () => {
     });
 
     const app = createApp();
-    const token = signAdminToken();
 
     const res = await request(app)
       .post('/api/admin/products')
-      .set('Authorization', `Bearer ${token}`)
+      .set(getAuthHeader('admin'))
+
       .field('name', 'Test Product')
       .field('slug', 'test-product')
       .field('category', 'cat')

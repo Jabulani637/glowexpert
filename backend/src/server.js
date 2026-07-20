@@ -179,11 +179,15 @@ app.use('/api', (req, res) => {
 // Global error handler - ensures unexpected errors return JSON, not an HTML stack trace
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
-  console.error('Unhandled error:', err);
+  console.error(`Unhandled error on ${req.method} ${req.path}:`, err);
   if (err && err.message === 'Not allowed by CORS') {
     return res.status(403).json({ message: 'Origin not allowed' });
   }
-  res.status(err?.status || 500).json({ message: 'Internal server error' });
+  const status = err?.status || 500;
+  const message = status === 500
+    ? (err?.message || 'Internal server error')
+    : (err?.message || 'Request failed');
+  res.status(status).json({ message });
 });
 
 async function start() {

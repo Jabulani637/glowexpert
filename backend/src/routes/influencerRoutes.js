@@ -1,21 +1,21 @@
 const express = require('express');
-const { authMiddleware } = require('../auth/middlewareAuth');
+const { clerkMiddleware, requireAdminRole } = require('../auth/clerkMiddleware');
 
 const { findInfluencerByUserId } = require('../models/Influencer');
 const { listOrdersByInfluencer } = require('../models/Order');
 
 const router = express.Router();
-router.use(authMiddleware);
-
+router.use(clerkMiddleware());
 
 function ensureInfluencer(req, res, next) {
-  if (req.user && req.user.role === 'influencer') {
-    return next();
-  }
+  const userRole = req.auth?.sessionClaims?.metadata?.role;
+  if (userRole === 'influencer') return next();
   return res.status(403).json({ message: 'Access denied. Influencers only.' });
 }
 
 router.use(ensureInfluencer);
+
+
 
 router.get('/me', async (req, res) => {
   try {

@@ -22,32 +22,34 @@ function createApp() {
   return app;
 }
 
-function signAdminToken() {
-  const jwt = require('jsonwebtoken');
-  const payload = { sub: '1', email: 'admin@test.com', name: 'Admin', role: 'admin' };
-  return jwt.sign(payload, process.env.JWT_SECRET, { algorithm: 'HS256', expiresIn: '1h' });
+function setAuthRole(res, role) {
+  // These route handlers use Clerk middleware in production.
+  // For isolated route tests, we emulate the expected "role" by using
+  // req.auth.sessionClaims.metadata.role via a test shim (see testServer).
+  // Here we simply attach the role token string.
+  return res.set('Authorization', `Bearer ${role}`);
 }
 
 describe('admin media video upload routes', () => {
   test('POST hero without file => 400 or 422', async () => {
     const app = createApp();
-    const token = signAdminToken();
 
     const res = await request(app)
       .post('/api/admin/media/video/hero')
-      .set('Authorization', `Bearer ${token}`);
+      .set('Authorization', 'Bearer admin');
+
 
     expect([400, 422]).toContain(res.status);
   });
 
   test('POST hero with file => success JSON', async () => {
     const app = createApp();
-    const token = signAdminToken();
 
     const res = await request(app)
       .post('/api/admin/media/video/hero')
-      .set('Authorization', `Bearer ${token}`)
+      .set('Authorization', 'Bearer admin')
       .attach('video', Buffer.from('fake-mp4'), 'hero.mp4');
+
 
     expect(res.status).toBe(200);
     expect(res.body).toHaveProperty('success', true);

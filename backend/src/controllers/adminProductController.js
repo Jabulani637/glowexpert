@@ -8,17 +8,45 @@ const { createProductSchema, updateProductSchema } = require('../validation/prod
 const { uploadToSupabase } = require('../lib/supabaseStorage');
 
 // ---------------------------------------------------------------------------
-// Internal helper – upload all multer buffers to Supabase Storage.
-// Returns an array of permanent public URLs in the same order as req.files.
+// Internal helper – upload multer buffers to Supabase Storage.
+// Returns an array of permanent public URLs in the same order as the input.
 // ---------------------------------------------------------------------------
-async function uploadProductImages(files) {
+function buildSupabaseFilename(originalname) {
+  const ext = path.extname(originalname) || '.bin';
+  return `${Date.now()}-${crypto.randomBytes(8).toString('hex')}${ext}`;
+}
+
+async function uploadProductImages(files = []) {
   const uploads = files.map(async (file) => {
-    const ext      = path.extname(file.originalname) || '.bin';
-    const filename = `${Date.now()}-${crypto.randomBytes(8).toString('hex')}${ext}`;
+    const filename = buildSupabaseFilename(file.originalname);
     return uploadToSupabase(file.buffer, 'products', filename, file.mimetype);
   });
   return Promise.all(uploads);
 }
+
+function parseJsonField(value) {
+  if (typeof value !== 'string') return { ok: true, value };
+  try {
+    return { ok: true, value: JSON.parse(value) };
+  } catch (e) {
+    return { ok: false };
+  }
+}
+
+async function maybeUploadImages(req) {
+  if (req.files && req.files.length > 0) {
+    const urls = await uploadProductImages(req.files);
+    return { image_url: urls[0], gallery_urls: urls };
+  }
+
+  if (req.file) {
+    const urls = await uploadProductImages([req.file]);
+    return { image_url: urls[0], gallery_urls: urls };
+  }
+
+  return {};
+}
+
 
 // ---------------------------------------------------------------------------
 // GET /api/admin/products
@@ -42,45 +70,51 @@ async function adminGet(req, res) {
 // ---------------------------------------------------------------------------
 // POST /api/admin/products   (multipart/form-data or JSON)
 // ---------------------------------------------------------------------------
+
 async function adminCreate(req, res) {
   let productData = { ...req.body };
 
+
+
+
   // Upload any attached images to Supabase Storage
-  if (req.files && req.files.length > 0) {
-    try {
-      const urls = await uploadProductImages(req.files);
-      productData.image_url   = urls[0];        // Primary image
-      productData.gallery_urls = urls;           // Full gallery
-    } catch (err) {
-      console.error('[adminCreate] Supabase upload error:', err.message);
-      return res.status(502).json({ message: 'Image upload failed', detail: err.message });
+
+
+  try {
+    const uploaded = await maybeUploadImages(req);
+    if (Object.keys(uploaded).length) {
+      productData = { ...productData, ...uploaded };
     }
-  } else if (req.file) {
-    try {
-      const urls = await uploadProductImages([req.file]);
-      productData.image_url   = urls[0];
-      productData.gallery_urls = urls;
-    } catch (err) {
-      console.error('[adminCreate] Supabase upload error:', err.message);
-      return res.status(502).json({ message: 'Image upload failed', detail: err.message });
-    }
+  } catch (err) {
+    console.error('[adminCreate] Supabase upload error:', err.message);
+    return res.status(502).json({ message: 'Image upload failed', detail: err.message });
   }
 
+
+
+
   // Parse JSON fields that arrive as strings with FormData
-  if (typeof productData.attributes === 'string') {
-    try { productData.attributes = JSON.parse(productData.attributes); } catch { productData.attributes = null; }
-  }
-  if (typeof productData.gallery_urls === 'string') {
-    try { productData.gallery_urls = JSON.parse(productData.gallery_urls); } catch {}
-  }
+
+  const attrs = parseJsonField(productData.attributes);
+  if (attrs.ok) productData.attributes = attrs.value;
+
+  const gallery = parseJsonField(productData.gallery_urls);
+  if (gallery.ok) productData.gallery_urls = gallery.value;
+
+
 
   const parsed = createProductSchema.safeParse(productData);
   if (!parsed.success) {
     return res.status(422).json({ message: 'Validation failed', errors: parsed.error.flatten() });
   }
 
-  const item = await createProduct(parsed.data);
-  return res.status(201).json({ data: item });
+  try {
+    const item = await createProduct(parsed.data);
+    return res.status(201).json({ data: item });
+  } catch (err) {
+    console.error('[adminCreate] DB error:', err);
+    return res.status(500).json({ message: 'Failed to create product', detail: err.message });
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -91,51 +125,48 @@ async function adminUpdate(req, res) {
   let productData = { ...req.body };
 
   // Upload any new images to Supabase Storage
-  if (req.files && req.files.length > 0) {
-    try {
-      const urls = await uploadProductImages(req.files);
-      productData.image_url   = urls[0];
-      productData.gallery_urls = urls;
-    } catch (err) {
-      console.error('[adminUpdate] Supabase upload error:', err.message);
-      return res.status(502).json({ message: 'Image upload failed', detail: err.message });
+  try {
+    const uploaded = await maybeUploadImages(req);
+    if (Object.keys(uploaded).length) {
+      productData = { ...productData, ...uploaded };
     }
-  } else if (req.file) {
-    try {
-      const urls = await uploadProductImages([req.file]);
-      productData.image_url   = urls[0];
-      productData.gallery_urls = urls;
-    } catch (err) {
-      console.error('[adminUpdate] Supabase upload error:', err.message);
-      return res.status(502).json({ message: 'Image upload failed', detail: err.message });
-    }
+  } catch (err) {
+    console.error('[adminUpdate] Supabase upload error:', err.message);
+    return res.status(502).json({ message: 'Image upload failed', detail: err.message });
   }
 
   // Parse JSON fields
-  if (typeof productData.attributes === 'string') {
-    try { productData.attributes = JSON.parse(productData.attributes); } catch { productData.attributes = null; }
-  }
-  if (typeof productData.gallery_urls === 'string') {
-    try { productData.gallery_urls = JSON.parse(productData.gallery_urls); } catch {}
-  }
+  const attrs = parseJsonField(productData.attributes);
+  if (attrs.ok) productData.attributes = attrs.value;
+
+  const gallery = parseJsonField(productData.gallery_urls);
+  if (gallery.ok) productData.gallery_urls = gallery.value;
+
 
   const parsed = updateProductSchema.safeParse(productData);
   if (!parsed.success) {
     return res.status(422).json({ message: 'Validation failed', errors: parsed.error.flatten() });
   }
 
-  const updated = await updateProduct(id, parsed.data);
-  if (!updated) return res.status(404).json({ message: 'Product not found' });
-  return res.json({ data: updated });
+  try {
+    const updated = await updateProduct(id, parsed.data);
+    if (!updated) return res.status(404).json({ message: 'Product not found' });
+    return res.json({ data: updated });
+  } catch (err) {
+    console.error('[adminUpdate] DB error:', err);
+    return res.status(500).json({ message: 'Failed to update product', detail: err.message });
+  }
 }
 
-// ---------------------------------------------------------------------------
-// DELETE /api/admin/products/:id
-// ---------------------------------------------------------------------------
 async function adminDelete(req, res) {
-  const ok = await deleteProduct(req.params.id);
-  if (!ok) return res.status(404).json({ message: 'Product not found' });
-  return res.status(204).send();
+  try {
+    const ok = await deleteProduct(req.params.id);
+    if (!ok) return res.status(404).json({ message: 'Product not found' });
+    return res.status(204).send();
+  } catch (err) {
+    console.error('[adminDelete] DB error:', err);
+    return res.status(500).json({ message: 'Failed to delete product', detail: err.message });
+  }
 }
 
 module.exports = { adminList, adminGet, adminCreate, adminUpdate, adminDelete };

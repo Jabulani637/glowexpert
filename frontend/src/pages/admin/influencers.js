@@ -66,7 +66,7 @@ export function setupInfluencerButtons() {
       });
 
       if (banner && bannerCode && bannerPassword) {
-        bannerCode.textContent = result.influencer?.referral_code || result.influencer?.referral_code || '-';
+        bannerCode.textContent = result.influencer?.referral_code || result.influencer?.code || '-';
         bannerPassword.textContent = result.temp_password || '—';
         banner.hidden = false;
       }

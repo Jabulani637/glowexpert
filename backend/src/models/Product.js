@@ -224,6 +224,7 @@ async function createProduct({
     );
     return await findProductById(id);
   } catch (err) {
+    console.error('[createProduct] DB insert failed, using fallback:', err.message);
     const store = getFallbackStore();
     const item = {
       id: generateUUID(),
@@ -251,7 +252,9 @@ async function createProduct({
     };
 
     store.products.unshift(item);
-    saveFallbackStore(store);
+    try { saveFallbackStore(store); } catch (fsErr) {
+      console.warn('[createProduct] Could not persist fallback store:', fsErr.message);
+    }
     return { ...item, is_featured: Boolean(item.is_featured) };
   }
 }
@@ -355,7 +358,9 @@ async function updateProduct(id, {
       updated_at: getCurrentTimestamp()
     };
 
-    saveFallbackStore(store);
+    try { saveFallbackStore(store); } catch (fsErr) {
+      console.warn('[updateProduct] Could not persist fallback store:', fsErr.message);
+    }
     return { ...store.products[index], is_featured: Boolean(store.products[index].is_featured) };
   }
 }
@@ -368,7 +373,9 @@ async function deleteProduct(id) {
     const store = getFallbackStore();
     const before = store.products.length;
     store.products = store.products.filter((product) => product.id !== id);
-    saveFallbackStore(store);
+    try { saveFallbackStore(store); } catch (fsErr) {
+      console.warn('[deleteProduct] Could not persist fallback store:', fsErr.message);
+    }
     return store.products.length < before;
   }
 }

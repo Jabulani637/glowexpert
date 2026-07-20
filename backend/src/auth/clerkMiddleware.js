@@ -1,17 +1,14 @@
 const { clerkMiddleware, getAuth, clerkClient } = require('@clerk/express');
 
-/**
- * Require admin role via Clerk claims.
- *
- * Convention: `req.auth?.sessionClaims?.metadata?.role === 'admin'`.
- * This assumes the admin role is stored in user public metadata.
- */
+
 async function requireAdminRole(req, res, next) {
   try {
     const auth = getAuth(req);
     if (!auth || !auth.userId) {
-      return res.status(401).json({ message: 'Unauthorized' });
+      // Friendly non-hard-fail: keep consistent auth messaging for normal users.
+      return res.status(401).json({ message: 'Please sign in to access the admin area.' });
     }
+
 
     let role = auth.sessionClaims?.metadata?.role;
 

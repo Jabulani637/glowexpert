@@ -20,11 +20,7 @@ router.post('/login', async (req, res) => {
   return login(req, res);
 });
 
-// OTP login disabled
-// router.post('/login/verify-otp', async (req, res) => {
-//   const { verifyOtpLogin } = require('../controllers/authOtpController');
-//   return verifyOtpLogin(req, res);
-// });
+
 
 router.post('/social', socialAuth);
 

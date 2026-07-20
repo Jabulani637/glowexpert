@@ -1,7 +1,6 @@
 const express = require('express');
-const { authMiddleware } = require('../auth/middlewareAuth');
 
-const { requireRoles } = require('../auth/roles');
+const { clerkMiddleware, requireAdminRole } = require('../auth/clerkMiddleware');
 const { createHelpCentreMessage, listHelpCentreMessages, markHelpCentreMessageHandled } = require('../models/HelpCentreMessage');
 const { z } = require('zod');
 
@@ -30,32 +29,44 @@ router.post('/help-centre/messages', async (req, res) => {
   }
 });
 
-// Admin endpoints
-router.get('/admin/help-centre/messages', authMiddleware, requireRoles(['admin']), async (req, res) => {
-  try {
-    const limit = req.query?.limit ? Number(req.query.limit) : 200;
-    const data = await listHelpCentreMessages({ limit });
-    return res.json({ data });
-  } catch (err) {
-    console.error('help-centre/messages list error:', err?.message || err);
-    return res.status(500).json({ message: 'Internal server error' });
+// Admin endpoints (Clerk only)
+router.get(
+  '/admin/help-centre/messages',
+  clerkMiddleware(),
+  requireAdminRole,
+  async (req, res) => {
+    try {
+      const limit = req.query?.limit ? Number(req.query.limit) : 200;
+      const data = await listHelpCentreMessages({ limit });
+      return res.json({ data });
+    } catch (err) {
+      console.error('help-centre/messages list error:', err?.message || err);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
   }
-});
+);
 
-router.put('/admin/help-centre/messages/:id/handled', authMiddleware, requireRoles(['admin']), async (req, res) => {
-  try {
-    const id = String(req.params.id || '').trim();
-    if (!id) return res.status(400).json({ message: 'Invalid id' });
+router.put(
+  '/admin/help-centre/messages/:id/handled',
+  clerkMiddleware(),
+  requireAdminRole,
+  async (req, res) => {
+    try {
+      const id = String(req.params.id || '').trim();
+      if (!id) return res.status(400).json({ message: 'Invalid id' });
 
-    const data = await markHelpCentreMessageHandled(id);
-    if (!data) return res.status(404).json({ message: 'Not found' });
+      const data = await markHelpCentreMessageHandled(id);
+      if (!data) return res.status(404).json({ message: 'Not found' });
 
-    return res.json({ data });
-  } catch (err) {
-    console.error('help-centre/messages handled error:', err?.message || err);
-    return res.status(500).json({ message: 'Internal server error' });
+      return res.json({ data });
+    } catch (err) {
+      console.error('help-centre/messages handled error:', err?.message || err);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
   }
-});
+);
 
 module.exports = router;
+
+
 
