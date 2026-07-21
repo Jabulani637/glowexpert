@@ -1,6 +1,5 @@
- # ----------------------------
+
 # Node / build output
-# ----------------------------
 node_modules/
 .pnp/
 .pnp.js
@@ -11,9 +10,8 @@ out/
 coverage/
 *.tsbuildinfo
 
-# ----------------------------
 # Logs
-# ----------------------------
+
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -24,16 +22,14 @@ pnpm-debug.log*
 backend/src/*.log
 backend/src/**/*.log
 
-# ----------------------------
 # Environment variables
-# ----------------------------
+
 .env
 .env.*
 !.env.production
 
-# ----------------------------
 # OS / editor files
-# ----------------------------
+
 .DS_Store
 Thumbs.db
 
@@ -44,30 +40,23 @@ Thumbs.db
 *.swn
 *.bak
 
-# ----------------------------
 # Backend (runtime / local)
-# ----------------------------
+
 backend/uploads/
 
 # Local SQLite/DB files (if used)
+
 *.sqlite
 *.sqlite3
 *.db
 *.db-journal
 *.db-wal
 
-# ----------------------------
 # Frontend
-# ----------------------------
+
 frontend/dist/
 frontend/build/
 frontend/coverage/
 
-# ----------------------------
 # Misc
-# ----------------------------
-# Keep lockfiles if you prefer; remove this section if you want them ignored.
-# package-lock.json
-# pnpm-lock.yaml
-# yarn.lock
 /docs
