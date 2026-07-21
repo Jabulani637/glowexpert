@@ -117,11 +117,11 @@ async function uploadVideoToIDB(inputId, statusId) {
     await saveVideoBlob(key, file);
 
     if (statusElLocal) {
-      statusElLocal.textContent = `✅ Saved (${(file.size / 1024 / 1024).toFixed(2)}MB). Refresh the homepage to apply.`;
+      statusElLocal.textContent = `✅ Saved locally (${(file.size / 1024 / 1024).toFixed(2)}MB). Refresh the homepage to apply.`;
       statusElLocal.style.color = '#008000';
     }
 
-    setStatus('Video saved — refresh the homepage to see it.');
+    setStatus('Video saved locally — refresh the homepage to see it.');
     await refreshVideoStorageStatus();
   } catch (err) {
     if (statusElLocal) {
@@ -131,7 +131,9 @@ async function uploadVideoToIDB(inputId, statusId) {
   }
 }
 
-async function uploadVideoToSupabaseAndIDB(inputId, statusId, endpoint) {
+// Server upload disabled - backend endpoints removed in scalability refactor
+// Videos are now saved locally to IndexedDB only for browser-specific overrides
+async function uploadVideoToSupabaseAndIDB(inputId, statusId) {
   const input = $(inputId);
   const statusElLocal = $(statusId);
   const file = input?.files && input.files[0];
@@ -147,33 +149,21 @@ async function uploadVideoToSupabaseAndIDB(inputId, statusId, endpoint) {
   }
 
   if (statusElLocal) {
-    statusElLocal.textContent = '⏳ Uploading to server…';
+    statusElLocal.textContent = '⏳ Saving to browser storage (server upload disabled)…';
     statusElLocal.style.color = '#000080';
   }
 
   try {
-    const formData = new FormData();
-    // backend multer expects field name "video"
-    formData.append('video', file);
-
-    await api(endpoint, { method: 'POST', body: formData });
-
-    if (statusElLocal) {
-      statusElLocal.textContent = '✅ Uploaded. Saving locally…';
-      statusElLocal.style.color = '#008000';
-    }
-
-    // preserve existing behavior (homepage override from IndexedDB)
+    // Skip server upload - use local IndexedDB only
     await uploadVideoToIDB(inputId, statusId);
-
-    setStatus('Video uploaded and saved.');
+    setStatus('Video saved locally (server upload disabled).');
   } catch (err) {
     const msg = err?.message || err;
     if (statusElLocal) {
-      statusElLocal.textContent = '❌ Upload failed: ' + msg;
+      statusElLocal.textContent = '❌ Save failed: ' + msg;
       statusElLocal.style.color = '#b00020';
     }
-    setStatus('Video upload failed.', true);
+    setStatus('Video save failed.', true);
   }
 }
 
@@ -191,20 +181,17 @@ async function deleteIndividualVideo(key, inputId, statusId) {
 }
 
 export function setupVideoButtons() {
-
-  // Also upload to backend so the videos persist for all users (Supabase storage)
-  // in addition to saving locally in IndexedDB for instant overrides.
+  // Save videos to IndexedDB only (server upload disabled in scalability refactor)
+  // This allows local browser-specific overrides for testing/preview
   $('saveHeroBtn')?.addEventListener('click', () =>
-    uploadVideoToSupabaseAndIDB('heroVideoUpload', 'heroVideoStatus', '/api/admin/media/video/hero', 'hero')
+    uploadVideoToSupabaseAndIDB('heroVideoUpload', 'heroVideoStatus')
   );
   $('deleteHeroBtn')?.addEventListener('click', () => deleteIndividualVideo('hero', 'heroVideoUpload', 'heroVideoStatus'));
 
   $('saveFeaturedOneBtn')?.addEventListener('click', () =>
     uploadVideoToSupabaseAndIDB(
       'featuredVideoOneUpload',
-      'featuredVideoOneStatus',
-      '/api/admin/media/video/featured-one',
-      'featured_one'
+      'featuredVideoOneStatus'
     )
   );
   $('deleteFeaturedOneBtn')?.addEventListener('click', () =>
@@ -214,9 +201,7 @@ export function setupVideoButtons() {
   $('saveFeaturedTwoBtn')?.addEventListener('click', () =>
     uploadVideoToSupabaseAndIDB(
       'featuredVideoTwoUpload',
-      'featuredVideoTwoStatus',
-      '/api/admin/media/video/featured-two',
-      'featured_two'
+      'featuredVideoTwoStatus'
     )
   );
   $('deleteFeaturedTwoBtn')?.addEventListener('click', () =>
@@ -225,7 +210,7 @@ export function setupVideoButtons() {
 
 
   $('clearVideosBtn')?.addEventListener('click', async () => {
-    if (!confirm('Remove all locally stored videos and revert to API defaults?')) return;
+    if (!confirm('Remove all locally stored videos?')) return;
     try {
       await Promise.all([deleteVideoBlob('hero'), deleteVideoBlob('featured_one'), deleteVideoBlob('featured_two')]);
       if ($('heroVideoUpload')) $('heroVideoUpload').value = '';
@@ -235,7 +220,7 @@ export function setupVideoButtons() {
       if ($('featuredVideoOneStatus')) $('featuredVideoOneStatus').textContent = '';
       if ($('featuredVideoTwoStatus')) $('featuredVideoTwoStatus').textContent = '';
       await refreshVideoStorageStatus();
-      setStatus('All locally stored videos cleared. Homepage will now use API defaults.');
+      setStatus('All locally stored videos cleared.');
     } catch (err) {
       setStatus('Error clearing videos: ' + err.message, true);
     }

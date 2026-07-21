@@ -14,3 +14,4 @@ if (postSlug) {
 } else {
   renderBlogListing();
 }
+

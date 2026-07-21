@@ -12,6 +12,14 @@ function exists(path) {
 
 // In some CI environments, `git submodule update` can fail (or submodules may not exist at all).
 // This guard ensures we never fail the build because of missing/unfetchable submodules.
+//
+// Vercel sets `VERCEL=1` during builds; GitHub Actions typically sets `CI=true`.
+// In these environments we skip submodule operations entirely to avoid submodule fetch warnings.
+if (process.env.VERCEL || process.env.CI === 'true') {
+  process.exit(0);
+}
+
+
 try {
   if (!exists(new URL('../..', import.meta.url).pathname + '/.gitmodules')) {
     process.exit(0);
@@ -29,4 +37,5 @@ try {
 } catch {
   // swallow errors intentionally
 }
+
 

@@ -13,6 +13,7 @@ export default defineConfig({
         admin: resolve(__dirname, 'html/admin.html'),
         blog: resolve(__dirname, 'html/blog.html'),
         login: resolve(__dirname, 'html/login.html'),
+
         authCallback: resolve(__dirname, 'html/auth-callback.html'),
         influencer: resolve(__dirname, 'html/influencer.html'),
         faq: resolve(__dirname, 'html/faq.html'),
@@ -28,3 +29,4 @@ export default defineConfig({
     },
   },
 });
+
