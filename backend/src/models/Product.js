@@ -1,6 +1,5 @@
 const { query, run } = require('../db');
 const crypto = require('crypto');
-const { getFallbackStore, saveFallbackStore, clone } = require('../lib/fallbackStore');
 
 // Helper to generate UUID
 function generateUUID() {
@@ -118,12 +117,8 @@ async function listProducts({ limit = 50, offset = 0, category = null, isFeature
       is_featured: !!row.is_featured
     }));
   } catch (err) {
-    const store = getFallbackStore();
-    const items = store.products
-      .filter((p) => (category ? p.category === category : true))
-      .filter((p) => (isFeatured !== null ? Boolean(p.is_featured) === Boolean(isFeatured) : true))
-      .slice(offset, offset + limit);
-    return items.map((item) => ({ ...item, is_featured: Boolean(item.is_featured) }));
+    console.error('[listProducts] DB query failed:', err.message);
+    throw err;
   }
 }
 
@@ -141,9 +136,8 @@ async function findProductById(id) {
       is_featured: !!rows[0].is_featured
     };
   } catch (err) {
-    const store = getFallbackStore();
-    const item = store.products.find((product) => product.id === id);
-    return item ? { ...item, is_featured: Boolean(item.is_featured) } : null;
+    console.error('[findProductById] DB query failed:', err.message);
+    throw err;
   }
 }
 
@@ -224,38 +218,8 @@ async function createProduct({
     );
     return await findProductById(id);
   } catch (err) {
-    console.error('[createProduct] DB insert failed, using fallback:', err.message);
-    const store = getFallbackStore();
-    const item = {
-      id: generateUUID(),
-      name,
-      slug: slug || name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
-      category,
-      description,
-      price,
-      currency,
-      image_url,
-      gallery_urls: gallery_urls || [],
-      attributes: attributes || {},
-      stock,
-      is_featured: Boolean(is_featured),
-      is_new_arrival: Boolean(is_new_arrival),
-      is_best_seller: Boolean(is_best_seller),
-      is_on_sale: Boolean(is_on_sale),
-      sale_percent_off: Number(sale_percent_off) || 0,
-      is_wholesale: Boolean(is_wholesale),
-      meta_title,
-      meta_description,
-      meta_keywords,
-      created_at: getCurrentTimestamp(),
-      updated_at: getCurrentTimestamp()
-    };
-
-    store.products.unshift(item);
-    try { saveFallbackStore(store); } catch (fsErr) {
-      console.warn('[createProduct] Could not persist fallback store:', fsErr.message);
-    }
-    return { ...item, is_featured: Boolean(item.is_featured) };
+    console.error('[createProduct] DB insert failed:', err.message);
+    throw err;
   }
 }
 
@@ -331,37 +295,8 @@ async function updateProduct(id, {
     );
     return await findProductById(id);
   } catch (err) {
-    const store = getFallbackStore();
-    const index = store.products.findIndex((product) => product.id === id);
-    if (index < 0) return null;
-    store.products[index] = {
-      ...store.products[index],
-      name,
-      slug: slug || store.products[index].slug || name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
-      category,
-      description,
-      price,
-      currency,
-      image_url,
-      gallery_urls: gallery_urls || [],
-      attributes: attributes || {},
-      stock,
-      is_featured: Boolean(is_featured),
-      is_new_arrival: Boolean(is_new_arrival),
-      is_best_seller: Boolean(is_best_seller),
-      is_on_sale: Boolean(is_on_sale),
-      sale_percent_off: Number(sale_percent_off) || 0,
-      is_wholesale: Boolean(is_wholesale),
-      meta_title,
-      meta_description,
-      meta_keywords,
-      updated_at: getCurrentTimestamp()
-    };
-
-    try { saveFallbackStore(store); } catch (fsErr) {
-      console.warn('[updateProduct] Could not persist fallback store:', fsErr.message);
-    }
-    return { ...store.products[index], is_featured: Boolean(store.products[index].is_featured) };
+    console.error('[updateProduct] DB update failed:', err.message);
+    throw err;
   }
 }
 
@@ -370,13 +305,8 @@ async function deleteProduct(id) {
     const result = await run('DELETE FROM products WHERE id = ?', [id]);
     return result.changes > 0;
   } catch (err) {
-    const store = getFallbackStore();
-    const before = store.products.length;
-    store.products = store.products.filter((product) => product.id !== id);
-    try { saveFallbackStore(store); } catch (fsErr) {
-      console.warn('[deleteProduct] Could not persist fallback store:', fsErr.message);
-    }
-    return store.products.length < before;
+    console.error('[deleteProduct] DB delete failed:', err.message);
+    throw err;
   }
 }
 

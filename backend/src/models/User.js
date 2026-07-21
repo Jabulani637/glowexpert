@@ -1,6 +1,5 @@
 const { query, run } = require('../db');
 const crypto = require('crypto');
-const { getFallbackStore, saveFallbackStore } = require('../lib/fallbackStore');
 
 function normalizeCellphone(value = '') {
   const cleaned = String(value || '')
@@ -84,8 +83,8 @@ async function findByEmail(email) {
     const { rows } = await query('SELECT * FROM users WHERE email = ? LIMIT 1', [email]);
     return rows[0] || null;
   } catch (err) {
-    const store = getFallbackStore();
-    return store.users.find((user) => user.email === email) || null;
+    console.error('[findByEmail] DB query failed:', err.message);
+    throw err;
   }
 }
 
@@ -94,8 +93,8 @@ async function findByCellphone(cellphone) {
     const { rows } = await query('SELECT * FROM users WHERE cellphone = ? LIMIT 1', [cellphone]);
     return rows[0] || null;
   } catch (err) {
-    const store = getFallbackStore();
-    return store.users.find((user) => user.cellphone === cellphone) || null;
+    console.error('[findByCellphone] DB query failed:', err.message);
+    throw err;
   }
 }
 
@@ -104,8 +103,8 @@ async function findByGoogleId(googleId) {
     const { rows } = await query('SELECT * FROM users WHERE google_id = ? LIMIT 1', [googleId]);
     return rows[0] || null;
   } catch (err) {
-    const store = getFallbackStore();
-    return store.users.find((user) => user.google_id === googleId) || null;
+    console.error('[findByGoogleId] DB query failed:', err.message);
+    throw err;
   }
 }
 
@@ -128,23 +127,8 @@ async function createUser({
     const { rows } = await query('SELECT * FROM users WHERE id = ?', [id]);
     return rows[0];
   } catch (err) {
-    const store = getFallbackStore();
-    const user = {
-      id: generateUUID(),
-      name,
-      email,
-      cellphone,
-      password_hash: passwordHash,
-      role,
-      google_id: googleId,
-      created_at: getCurrentTimestamp(),
-      updated_at: getCurrentTimestamp(),
-      failed_attempts: 0,
-      otp_attempts: 0
-    };
-    store.users.push(user);
-    saveFallbackStore(store);
-    return user;
+    console.error('[createUser] DB insert failed:', err.message);
+    throw err;
   }
 }
 
@@ -156,14 +140,8 @@ async function updateFailedLogin(id, failedAttempts, lockedUntil = null) {
       [failedAttempts, lockedUntil, now, id]
     );
   } catch (err) {
-    const store = getFallbackStore();
-    const user = store.users.find((entry) => entry.id === id);
-    if (user) {
-      user.failed_attempts = failedAttempts;
-      user.locked_until = lockedUntil;
-      user.updated_at = getCurrentTimestamp();
-      saveFallbackStore(store);
-    }
+    console.error('[updateFailedLogin] DB update failed:', err.message);
+    throw err;
   }
 }
 
@@ -175,14 +153,8 @@ async function resetFailedLogin(id) {
       [now, id]
     );
   } catch (err) {
-    const store = getFallbackStore();
-    const user = store.users.find((entry) => entry.id === id);
-    if (user) {
-      user.failed_attempts = 0;
-      user.locked_until = null;
-      user.updated_at = getCurrentTimestamp();
-      saveFallbackStore(store);
-    }
+    console.error('[resetFailedLogin] DB update failed:', err.message);
+    throw err;
   }
 }
 
@@ -191,8 +163,8 @@ async function findById(id) {
     const { rows } = await query('SELECT * FROM users WHERE id = ? LIMIT 1', [id]);
     return rows[0] || null;
   } catch (err) {
-    const store = getFallbackStore();
-    return store.users.find((user) => user.id === id) || null;
+    console.error('[findById] DB query failed:', err.message);
+    throw err;
   }
 }
 

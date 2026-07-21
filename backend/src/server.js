@@ -32,7 +32,6 @@ const { ensureBlogPostSchema } = require('./models/BlogPost');
 const { ensureInfluencerSchema } = require('./models/Influencer');
 const { ensureReviewSchema } = require('./models/Review');
 const adminInfluencerRoutes = require('./routes/adminInfluencerRoutes');
-const adminMediaRoutes = require('./routes/adminMediaRoutes');
 const helpCentreRoutes = require('./routes/helpCentreRoutes');
 
 // Create uploads directory if it doesn't exist.
@@ -159,7 +158,6 @@ app.use('/api/products', productsRoutes);
 app.use('/api/admin', adminProductRoutes);
 app.use('/api/admin', adminAuthRoutes);
 app.use('/api/admin/influencers', adminInfluencerRoutes);
-app.use('/api/admin/media', adminMediaRoutes);
 app.use('/api/influencer', influencerRoutes);
 
 app.use('/api', siteRoutes);

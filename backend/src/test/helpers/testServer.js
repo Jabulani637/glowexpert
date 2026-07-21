@@ -1,7 +1,6 @@
 const express = require('express');
 
 const adminProductRoutes = require('../../routes/adminProductRoutes');
-const adminMediaRoutes = require('../../routes/adminMediaRoutes');
 const adminInfluencerRoutes = require('../../routes/adminInfluencerRoutes');
 
 function createAppForTests() {
@@ -27,7 +26,6 @@ function createAppForTests() {
   };
 
   app.use('/api/admin', roleShim, adminProductRoutes);
-  app.use('/api/admin/media', roleShim, adminMediaRoutes);
   app.use('/api/admin/influencers', roleShim, adminInfluencerRoutes);
 
   app.use('/api', (req, res) => res.status(404).json({ message: 'Not found' }));

@@ -3,7 +3,6 @@
 
 const { query, run } = require('../db');
 const crypto = require('crypto');
-const { getFallbackStore, saveFallbackStore } = require('../lib/fallbackStore');
 
 // Helper to generate UUID
 function generateUUID() {
@@ -62,19 +61,8 @@ async function createInfluencer({ userId = null, commission_rate = 5.0 } = {}) {
     const { rows } = await query('SELECT * FROM influencers WHERE id = ?', [id]);
     return rows[0];
   } catch (err) {
-    const store = getFallbackStore();
-    const influencer = {
-      id: generateUUID(),
-      user_id: userId,
-      referral_code: generateReferralCode(),
-      commission_rate,
-      total_commission_earned: 0,
-      created_at: getCurrentTimestamp(),
-      updated_at: getCurrentTimestamp()
-    };
-    store.influencers.push(influencer);
-    saveFallbackStore(store);
-    return influencer;
+    console.error('[createInfluencer] DB insert failed:', err.message);
+    throw err;
   }
 }
 
@@ -92,8 +80,8 @@ async function findInfluencerByCode(referralCode) {
     );
     return rows[0];
   } catch (err) {
-    const store = getFallbackStore();
-    return store.influencers.find((item) => item.referral_code === referralCode) || null;
+    console.error('[findInfluencerByCode] DB query failed:', err.message);
+    throw err;
   }
 }
 
@@ -108,8 +96,8 @@ async function findInfluencerByUserId(userId) {
     `, [userId]);
     return rows[0] || null;
   } catch (err) {
-    const store = getFallbackStore();
-    return store.influencers.find((item) => item.user_id === userId) || null;
+    console.error('[findInfluencerByUserId] DB query failed:', err.message);
+    throw err;
   }
 }
 
@@ -123,8 +111,8 @@ async function listInfluencers() {
     `);
     return rows;
   } catch (err) {
-    const store = getFallbackStore();
-    return store.influencers;
+    console.error('[listInfluencers] DB query failed:', err.message);
+    throw err;
   }
 }
 

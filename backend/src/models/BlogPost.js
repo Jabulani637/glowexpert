@@ -1,6 +1,5 @@
 const { query, run } = require('../db');
 const crypto = require('crypto');
-const { getFallbackStore, saveFallbackStore } = require('../lib/fallbackStore');
 
 // Helper to generate UUID
 function generateUUID() {
@@ -77,13 +76,8 @@ async function findAll({ status = null, limit = 20, offset = 0, contentType = nu
       is_featured: !!row.is_featured
     }));
   } catch (err) {
-    const store = getFallbackStore();
-    return store.blogPosts
-      .filter((post) => (status ? post.status === status : true))
-      .filter((post) => (contentType ? post.content_type === contentType : true))
-      .filter((post) => (featured !== null ? Boolean(post.is_featured) === Boolean(featured) : true))
-      .slice(offset, offset + limit)
-      .map((post) => ({ ...post, is_featured: Boolean(post.is_featured) }));
+    console.error('[findAll] DB query failed:', err.message);
+    throw err;
   }
 }
 
@@ -100,11 +94,8 @@ async function findFeatured() {
       is_featured: !!row.is_featured
     }));
   } catch (err) {
-    const store = getFallbackStore();
-    return store.blogPosts
-      .filter((post) => post.status === 'published' && post.is_featured)
-      .slice(0, 6)
-      .map((post) => ({ ...post, is_featured: Boolean(post.is_featured) }));
+    console.error('[findFeatured] DB query failed:', err.message);
+    throw err;
   }
 }
 
@@ -121,12 +112,8 @@ async function findBySlug(slug) {
       is_featured: !!rows[0].is_featured
     };
   } catch (err) {
-    const store = getFallbackStore();
-    const post = store.blogPosts.find((item) => item.slug === slug);
-    if (!post) return null;
-    post.view_count = (post.view_count || 0) + 1;
-    saveFallbackStore(store);
-    return { ...post, is_featured: Boolean(post.is_featured) };
+    console.error('[findBySlug] DB query failed:', err.message);
+    throw err;
   }
 }
 
@@ -142,9 +129,8 @@ async function findById(id) {
       is_featured: !!rows[0].is_featured
     };
   } catch (err) {
-    const store = getFallbackStore();
-    const post = store.blogPosts.find((item) => item.id === id);
-    return post ? { ...post, is_featured: Boolean(post.is_featured) } : null;
+    console.error('[findById] DB query failed:', err.message);
+    throw err;
   }
 }
 
@@ -182,30 +168,8 @@ async function create(data) {
     );
     return findById(id);
   } catch (err) {
-    const store = getFallbackStore();
-    const post = {
-      id: generateUUID(),
-      title,
-      slug,
-      excerpt,
-      content,
-      content_type: contentType,
-      video_url: videoUrl,
-      video_thumbnail: videoThumbnail,
-      featured_image: featuredImage,
-      meta_description: metaDescription,
-      meta_keywords: metaKeywords,
-      status,
-      published_at: publishedAt,
-      sort_order: sortOrder,
-      is_featured: Boolean(isFeatured),
-      view_count: 0,
-      created_at: getCurrentTimestamp(),
-      updated_at: getCurrentTimestamp()
-    };
-    store.blogPosts.unshift(post);
-    saveFallbackStore(store);
-    return { ...post, is_featured: Boolean(post.is_featured) };
+    console.error('[create] DB insert failed:', err.message);
+    throw err;
   }
 }
 
@@ -237,12 +201,8 @@ async function update(id, data) {
     );
     return findById(id);
   } catch (err) {
-    const store = getFallbackStore();
-    const index = store.blogPosts.findIndex((post) => post.id === id);
-    if (index < 0) return null;
-    store.blogPosts[index] = { ...store.blogPosts[index], ...data, updated_at: getCurrentTimestamp() };
-    saveFallbackStore(store);
-    return { ...store.blogPosts[index], is_featured: Boolean(store.blogPosts[index].is_featured) };
+    console.error('[update] DB update failed:', err.message);
+    throw err;
   }
 }
 
@@ -251,11 +211,8 @@ async function remove(id) {
     const result = await run('DELETE FROM blog_posts WHERE id = ?', [id]);
     return result.changes > 0;
   } catch (err) {
-    const store = getFallbackStore();
-    const before = store.blogPosts.length;
-    store.blogPosts = store.blogPosts.filter((post) => post.id !== id);
-    saveFallbackStore(store);
-    return store.blogPosts.length < before;
+    console.error('[remove] DB delete failed:', err.message);
+    throw err;
   }
 }
 
