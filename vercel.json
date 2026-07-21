@@ -1,17 +1,26 @@
 {
   "version": 2,
-  "framework": "none",
+  "framework": null,
   "buildCommand": "npm --prefix frontend ci && npm --prefix frontend run build",
   "outputDirectory": "frontend/dist",
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/", "destination": "/index.html" },
-    { "source": "/admin", "destination": "/admin.html" },
-    { "source": "/blog", "destination": "/blog.html" },
-    { "source": "/login", "destination": "/login.html" },
-    { "source": "/refund", "destination": "/refund.html" },
-    { "source": "/gift-cards", "destination": "/gift-cards.html" }
+    { "source": "/", "destination": "/html/index.html" },
+    { "source": "/admin", "destination": "/html/admin.html" },
+    { "source": "/auth-callback", "destination": "/html/auth-callback.html" },
+    { "source": "/blog", "destination": "/html/blog.html" },
+    { "source": "/cookies", "destination": "/html/cookies.html" },
+    { "source": "/faq", "destination": "/html/faq.html" },
+    { "source": "/gift-cards", "destination": "/html/gift-cards.html" },
+    { "source": "/influencer", "destination": "/html/influencer.html" },
+    { "source": "/login", "destination": "/html/login.html" },
+    { "source": "/order", "destination": "/html/order.html" },
+    { "source": "/privacy", "destination": "/html/privacy.html" },
+    { "source": "/refund", "destination": "/html/refund.html" },
+    { "source": "/sitemap", "destination": "/html/sitemap.html" },
+    { "source": "/terms", "destination": "/html/terms.html" },
+    { "source": "/unsubscribe", "destination": "/html/unsubscribe.html" }
   ],
   "headers": [
     {
@@ -23,7 +32,26 @@
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
         { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
       ]
+    },
+    {
+      "source": "/assets/(.*)\\.(js|css)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" }
+      ]
+    },
+    {
+      "source": "/src/assets/logo/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=3600" }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
     }
   ]
 }
-
