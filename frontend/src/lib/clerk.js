@@ -1,5 +1,3 @@
-import { Clerk } from '@clerk/clerk-js';
-
 let clerkInstance = null;
 
 function computeClerkDomainFromPublishableKey(publishableKey) {
@@ -42,6 +40,7 @@ export async function getClerk() {
   // Each page load is isolated; inject the UI bundle once per page.
   await loadClerkUiScript(clerkDomain);
 
+  const { Clerk } = await import('@clerk/clerk-js');
   const clerk = new Clerk(publishableKey);
   await clerk.load({ ui: { ClerkUI: window.__internal_ClerkUICtor } });
 

@@ -26,6 +26,11 @@ export default defineConfig({
         refund: resolve(__dirname, 'html/refund.html'),
         giftCards: resolve(__dirname, 'html/gift-cards.html'),
       },
+      output: {
+        manualChunks: {
+          clerk: ['@clerk/clerk-js']
+        }
+      }
     },
   },
 });

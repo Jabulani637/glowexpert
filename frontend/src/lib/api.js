@@ -2,7 +2,7 @@
 // Centralizes auth header attachment, safe URL construction, timeouts,
 // and consistent JSON/error parsing.
 
-import { authHeaders, clearSession } from './auth.js';
+import { authHeaders, clearSession } from './session.js';
 import { API_BASE } from '../config.js';
 
 function isProbablyApiPath(path) {
