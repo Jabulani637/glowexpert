@@ -2,11 +2,12 @@ import { defineConfig } from 'vite';
 import { resolve } from 'path';
 
 export default defineConfig({
-  root: '.',
-  base: './',
+  root: 'html',
+  base: '/',
   build: {
     target: 'esnext',
-    outDir: 'dist',
+    outDir: '../dist',
+    emptyOutDir: true,
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'html/index.html'),
