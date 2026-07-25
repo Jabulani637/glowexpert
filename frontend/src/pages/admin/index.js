@@ -215,7 +215,9 @@ function setupTableDelegates() {
 
 // ─── Boot ───────────────────────────────────────────────────────────────────
 const clerk = await getClerk();
-if (!clerk.user || clerk.user.publicMetadata?.role !== 'admin') {
+if (!clerk.user) {
+  window.location.href = 'login.html';
+} else if (clerk.user.publicMetadata?.role !== 'admin') {
   window.location.href = 'index.html';
 } else {
   clerk.mountUserButton(document.getElementById('user-button'), {

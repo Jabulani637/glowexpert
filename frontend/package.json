@@ -12,6 +12,6 @@
     "vite": "^5.0.0"
   },
   "dependencies": {
-    "@clerk/clerk-js": "^6.25.3"
+    "@clerk/clerk-js": "^6.25.8"
   }
 }
