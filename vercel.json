@@ -23,7 +23,8 @@
     { "source": "/refund", "destination": "/refund.html" },
     { "source": "/sitemap", "destination": "/sitemap.html" },
     { "source": "/terms", "destination": "/terms.html" },
-    { "source": "/unsubscribe", "destination": "/unsubscribe.html" },
+{"source":"/unsubscribe","destination":"/unsubscribe.html"},
+{"source":"/wholesale","destination":"/wholesale.html"},
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [

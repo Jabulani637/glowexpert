@@ -27,6 +27,7 @@ export default defineConfig({
         terms: resolve(__dirname, 'html/terms.html'),
         cookies: resolve(__dirname, 'html/cookies.html'),
         refund: resolve(__dirname, 'html/refund.html'),
+        wholesale: resolve(__dirname, 'html/wholesale.html'),
       },
       output: {
         manualChunks: {
