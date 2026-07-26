@@ -10,8 +10,7 @@ jest.mock('../models/Subscriber', () => {
       name: body.name ?? null,
       email: body.email,
       created_at: new Date().toISOString()
-    })),
-    deleteSubscriberByEmail: jest.fn(async (email) => email === 'exists@example.com')
+    }))
   };
 });
 
@@ -35,18 +34,6 @@ describe('Subscriber routes', () => {
     expect(res.status).toBe(201);
     expect(res.body.message).toBe('Subscribed successfully');
     expect(res.body.data.email).toBe('jane@example.com');
-  });
-
-  test('POST /api/subscribers/unsubscribe returns 200 (even if missing) on valid payload', async () => {
-    const app = createApp();
-
-    const res = await request(app)
-      .post('/api/subscribers/unsubscribe')
-      .send({ email: 'unknown@example.com' })
-      .set('Content-Type', 'application/json');
-
-    expect(res.status).toBe(200);
-    expect(res.body).toHaveProperty('message');
   });
 
   test('POST /api/subscribers returns 422 on invalid payload', async () => {

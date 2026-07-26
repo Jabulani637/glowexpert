@@ -42,17 +42,3 @@ async function checkout(req, res) {
 }
 
 module.exports = { checkout };
-
-async function lookup(req, res) {
-  try {
-    const { reference } = req.body;
-    const order = await findOrderById(reference);
-    if (!order) return res.status(404).json({ message: 'Order not found' });
-    // Normalize response shape
-    return res.json({ message: 'Order found', data: { id: order.id, status: order.status, total_amount: order.total_amount, items: order.items_json, created_at: order.created_at } });
-  } catch (err) {
-    return res.status(400).json({ message: err.message || 'Lookup failed' });
-  }
-}
-
-module.exports.lookup = lookup;

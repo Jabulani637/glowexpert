@@ -15,6 +15,15 @@ const connectionString = process.env.DATABASE_URL || (() => {
   return `postgresql://${user}:${encodeURIComponent(password)}@${host}:${port}/${database}`;
 })();
 
+console.log('Database connection config:', {
+  connectionString: connectionString ? 'set' : 'not set',
+  DB_USER: process.env.DB_USER,
+  DB_PASSWORD: process.env.DB_PASSWORD ? 'set' : 'not set',
+  DB_HOST: process.env.DB_HOST,
+  DB_PORT: process.env.DB_PORT,
+  DB_NAME: process.env.DB_NAME
+});
+
 const pool = new Pool({
   connectionString,
   // Supabase Transaction Pooler requires SSL.

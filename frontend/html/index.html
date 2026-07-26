@@ -13,6 +13,8 @@
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
 
+  <link rel="icon" type="image/svg+xml" href="../src/assets/logo/glowexpert_logo.svg">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -21,6 +23,24 @@
 
 </head>
 <body>
+
+  <div id="stickyPromoBar" class="promo-bar">
+    <div class="promo-bar-content">
+      <div class="promo-bar-text">
+        <a href="#collections">Click it &rarr; Get 50% Off | At-Cost Deal</a>
+      </div>
+      <div class="promo-bar-right">
+        <div class="promo-currency-selector">
+          <select aria-label="Select Country/Currency">
+            <option>US (USD $)</option>
+            <option>ZA (ZAR R)</option>
+            <option>UK (GBP £)</option>
+          </select>
+        </div>
+        <button id="closePromoBar" class="promo-close-btn" aria-label="Close Promo">&times;</button>
+      </div>
+    </div>
+  </div>
 
   <div class="cart-backdrop" id="cartBackdrop"></div>
   <aside class="cart-panel" id="cartPanel" aria-label="Shopping cart">
@@ -62,13 +82,15 @@
   </div>
 
   <nav id="navbar">
-    <a href="#" class="nav-logo" id="brandName">Glow<span>Expert</span></a>
+    <a href="#" class="nav-logo" id="brandName">
+      <img src="../src/assets/logo/glowexpert_logo.svg" alt="GlowExpert" class="logo-image">
+    </a>
     <ul class="nav-links" id="navLinks">
       <li><a href="#featured" class="nav-close-mobile">Featured</a></li>
-      <li><a href="#collections" class="nav-close-mobile">Collections</a></li>
-      <li><a href="blog.html">Blog</a></li>
+      <li><a href="index.html#collections" class="nav-close-mobile">Collections</a></li>
+      <li><a href="wholesale.html" class="nav-close-mobile">Wholesale</a></li>
+      <li><a href="blog.html" class="nav-close-mobile">Blog</a></li>
       <!-- Admin link removed from storefront navigation -->
-
       <li><a href="#newsletter" class="nav-close-mobile">Newsletter</a></li>
     </ul>
     <div class="nav-actions">
@@ -104,10 +126,60 @@
 
     <div class="hero-overlay"></div>
     <div class="hero-content-luxury">
-
       <h1 class="hero-title-luxury" id="heroTitle">GlowExpert</h1>
       <p class="hero-subtitle-luxury" id="heroSubtitle"></p>
       <a href="#collections" class="btn-luxury" id="heroCta">Explore Gold Collection</a>
+    </div>
+  </section>
+
+  <section class="category-nav">
+    <div class="category-nav-scroll">
+      <a href="#collections" class="category-item">
+        <div class="category-image">
+          <img src="https://placehold.co/200x200/1c1a17/f6f3ec?text=RTW" alt="Ready to Wear" />
+        </div>
+        <span class="category-label">Ready to Wear</span>
+      </a>
+      <a href="#collections" class="category-item">
+        <div class="category-image">
+          <img src="https://placehold.co/200x200/1c1a17/f6f3ec?text=NEW" alt="New Arrivals" />
+        </div>
+        <span class="category-label">New Arrivals</span>
+      </a>
+      <a href="#collections" class="category-item">
+        <div class="category-image">
+          <img src="https://placehold.co/200x200/1c1a17/f6f3ec?text=HAIR" alt="Human Hair" />
+        </div>
+        <span class="category-label">Human Hair</span>
+      </a>
+      <a href="#collections" class="category-item">
+        <div class="category-image">
+          <img src="https://placehold.co/200x200/1c1a17/f6f3ec?text=LNGTH" alt="Wigs by Length" />
+        </div>
+        <span class="category-label">Wigs by Length</span>
+      </a>
+      <a href="#collections" class="category-item">
+        <div class="category-image">
+          <img src="https://placehold.co/200x200/1c1a17/f6f3ec?text=BEST" alt="Best Sellers" />
+        </div>
+        <span class="category-label">Best Sellers</span>
+      </a>
+      <a href="#collections" class="category-item">
+        <div class="category-image">
+          <img src="https://placehold.co/200x200/1c1a17/f6f3ec?text=2FOR1" alt="2 for 1" />
+        </div>
+        <span class="category-label">2 for 1</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="coupon-strip">
+    <div class="coupon-content">
+      <span class="coupon-text">Hot Trends Sale &mdash; Site-Wide Enjoy 15% Off</span>
+      <div class="coupon-action">
+        <span class="coupon-code">GLOW15</span>
+        <button id="copyCouponBtn" class="btn-copy-code">Copy code</button>
+      </div>
     </div>
   </section>
 
@@ -135,6 +207,38 @@
           </div>
         </div>
       </div>
+
+      <div class="trending-carousel" id="trendingCarousel">
+        <button class="trending-arrow trending-arrow--prev" id="trendingPrev" aria-label="Previous">&#60;</button>
+        <button class="trending-arrow trending-arrow--next" id="trendingNext" aria-label="Next">&#62;</button>
+        <div class="trending-track" id="trendingTrack"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="flashSale" class="flash-sale-section">
+    <div class="flash-sale-content">
+      <div class="flash-sale-header">
+        <h2 class="section-title-luxury">Today's Flash Sale</h2>
+      </div>
+      <div class="flash-sale-timer" id="countdownTimer">
+        <div class="timer-tile">
+          <span class="timer-value" id="timerDays">00</span>
+          <span class="timer-label">Days</span>
+        </div>
+        <div class="timer-tile">
+          <span class="timer-value" id="timerHours">00</span>
+          <span class="timer-label">Hours</span>
+        </div>
+        <div class="timer-tile">
+          <span class="timer-value" id="timerMins">00</span>
+          <span class="timer-label">Mins</span>
+        </div>
+        <div class="timer-tile">
+          <span class="timer-value" id="timerSecs">00</span>
+          <span class="timer-label">Secs</span>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -144,6 +248,75 @@
       <h2 class="section-title-luxury">Shop The Luxury Shelf</h2>
       <p class="section-copy">Products below are now loaded from the backend, and each listing can be created, edited, or removed from the admin dashboard.</p>
       <div class="collection-grid" id="productsGrid"></div>
+    </div>
+  </section>
+
+  <section class="trust-badges">
+    <div class="trust-badges-grid">
+      <div class="trust-badge">
+        <div class="trust-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"></path>
+            <path d="M17 18h1"></path>
+            <path d="M12 18h1"></path>
+            <path d="M7 18h1"></path>
+          </svg>
+        </div>
+        <span class="trust-label">Factory Direct Sale</span>
+      </div>
+      <div class="trust-badge">
+        <div class="trust-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            <path d="m9 12 2 2 4-4"></path>
+          </svg>
+        </div>
+        <span class="trust-label">Quality Guarantee</span>
+      </div>
+      <div class="trust-badge">
+        <div class="trust-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            <path d="M2 12h20"></path>
+          </svg>
+        </div>
+        <span class="trust-label">International Shipment</span>
+      </div>
+      <div class="trust-badge">
+        <div class="trust-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
+            <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path>
+            <path d="M21 12v4a5 5 0 0 1-10 0v-4"></path>
+          </svg>
+        </div>
+        <span class="trust-label">Professional Service</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="brand-story-section">
+    <div class="brand-story-container">
+      <div class="brand-story-grid">
+        <div class="brand-story-images">
+          <div class="image-large">
+            <img src="../src/assets/factory_process.jpg" alt="Factory Direct Process" />
+          </div>
+          <div class="image-small-top">
+            <img src="../src/assets/quality_control.jpg" alt="Quality Control" />
+          </div>
+          <div class="image-small-bottom">
+            <img src="../src/assets/team_photo.jpg" alt="Our Team" />
+          </div>
+        </div>
+        <div class="brand-story-text">
+          <span class="section-label">Behind GlowExpert</span>
+          <h2 class="section-title-luxury">Crafted With Uncompromising Excellence</h2>
+          <p class="section-copy">We partner directly with the world&rsquo;s premier hair sourcing factories to ensure that every bundle, wig, and extension meets our rigorous standards. By cutting out the middleman, we bring you unmatched quality at a fair price.</p>
+          <p class="section-copy">Our dedicated quality control team meticulously inspects each piece, guaranteeing the finest textures and longevity. With fast, secure worldwide shipping, your luxury hair experience is delivered flawlessly from our hands to yours.</p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -160,14 +333,14 @@
     <div class="newsletter-box">
       <span class="section-label">Newsletter</span>
       <h2 class="section-title-luxury" id="newsletterHeading">Join The Glow List</h2>
-      <p class="section-copy" id="newsletterCopy" style="margin: 0 auto; color: rgba(255,255,255,.74);"></p>
+      <p class="section-copy" id="newsletterCopy" style="margin: 0 auto; color: #2C1B22;"></p>
       <form class="newsletter-form" id="newsletterForm">
         <input id="subscriberName" type="text" placeholder="Your name" />
         <input id="subscriberEmail" type="email" placeholder="Your email address" required />
         <button class="btn-luxury" type="submit">Subscribe</button>
       </form>
       <div class="newsletter-message" id="newsletterMessage"></div>
-      <p style="margin-top:20px;color:rgba(255,255,255,.48);">Support: <span id="supportEmail"></span> | <span id="supportPhone"></span></p>
+      <p style="margin-top:20px;color:#2C1B22;">Support: <span id="supportEmail"></span> | <span id="supportPhone"></span></p>
     </div>
   </section>
 
@@ -175,7 +348,9 @@
   <footer>
       <div class="footer-top">
        <div class="footer-brand">
-         <a href="#" class="nav-logo" id="brandNameFooter">Glow<span>Expert</span></a>
+         <a href="#" class="nav-logo" id="brandNameFooter">
+           <img src="../src/assets/logo/glowexpert_logo.svg" alt="GlowExpert" class="logo-image">
+         </a>
          <p class="footer-tagline">Luxurious beauty, delivered.</p>
          <div class="footer-socials">
            <a href="https://wa.me/1234567890" class="social-link" target="_blank" aria-label="WhatsApp">
@@ -194,44 +369,58 @@
              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 0c-1.66 0-3 1.34-3 3v9c0 2.21 1.79 4 4 4h2c3.31 0 6-2.69 6-6V6c0-2.21-1.79-4-4-4h-5z"/></svg>
            </a>
          </div>
+         <div class="footer-payments">
+           <div class="footer-payments-icons">
+             <!-- Mastercard logo -->
+             <svg class="payment-icon payment-mastercard" viewBox="0 0 152.4 108" xmlns="http://www.w3.org/2000/svg" aria-label="Mastercard">
+               <rect y="0" fill="none" width="152.4" height="108"/>
+               <g>
+                 <rect x="60.4" y="25.7" fill="#FF5F00" width="31.5" height="56.6"/>
+                 <path fill="#EB001B" d="M62.4,54c0-11,5.1-21.5,13.7-28.3c-15.6-12.3-38.3-9.6-50.6,6.1C13.3,47.4,16,70,31.7,82.3 c13.1,10.3,31.4,10.3,44.5,0C67.5,75.5,62.4,65,62.4,54z"/>
+                 <path fill="#F79E1B" d="M134.4,54c0,19.9-16.1,36-36,36c-8.1,0-15.9-2.7-22.2-7.7c15.6-12.3,18.3-34.9,6-50.6c-1.8-2.2-3.8-4.3-6-6 c15.6-12.3,38.3-9.6,50.5,6.1C131.7,38.1,134.4,45.9,134.4,54z"/>
+               </g>
+             </svg>
+             <!-- Visa logo -->
+             <svg class="payment-icon payment-visa" viewBox="0 0 1000.046 323.653" xmlns="http://www.w3.org/2000/svg" aria-label="Visa">
+               <g transform="matrix(4.4299631,0,0,4.4299631,-81.165783,-105.04783)">
+                 <polygon points="116.145,95.719 97.858,95.719 109.296,24.995 127.582,24.995" fill="#00579f"/>
+                 <path fill="#00579f" d="m 182.437,26.724 c -3.607,-1.431 -9.328,-3.011 -16.402,-3.011 -18.059,0 -30.776,9.63 -30.854,23.398 -0.15,10.158 9.105,15.8 16.027,19.187 7.075,3.461 9.48,5.72 9.48,8.805 -0.072,4.738 -5.717,6.922 -10.982,6.922 -7.301,0 -11.213,-1.126 -17.158,-3.762 l -2.408,-1.13 -2.559,15.876 c 4.289,1.954 12.191,3.688 20.395,3.764 19.188,0 31.68,-9.481 31.828,-24.153 0.073,-8.051 -4.814,-14.22 -15.35,-19.261 -6.396,-3.236 -10.313,-5.418 -10.313,-8.729 0.075,-3.01 3.313,-6.093 10.533,-6.093 5.945,-0.151 10.313,1.278 13.622,2.708 l 1.654,0.751 2.487,-15.272 0,0 z"/>
+                 <path fill="#00579f" d="m 206.742,70.664 c 1.506,-4.063 7.301,-19.788 7.301,-19.788 -0.076,0.151 1.503,-4.138 2.406,-6.771 l 1.278,6.094 c 0,0 3.463,16.929 4.215,20.465 -2.858,0 -11.588,0 -15.2,0 l 0,0 z m 22.573,-45.669 -14.145,0 c -4.362,0 -7.676,1.278 -9.558,5.868 l -27.163,64.855 19.188,0 c 0,0 3.159,-8.729 3.838,-10.609 2.105,0 20.771,0 23.479,0 0.525,2.483 2.182,10.609 2.182,10.609 l 16.932,0 -14.753,-70.723 0,0 z"/>
+                 <path fill="#00579f" d="M 82.584,24.995 64.675,73.222 62.718,63.441 C 59.407,52.155 49.023,39.893 37.435,33.796 l 16.404,61.848 19.338,0 28.744,-70.649 -19.337,0 0,0 z"/>
+                 <path fill="#faa61a" d="m 48.045,24.995 -29.422,0 -0.301,1.429 c 22.951,5.869 38.151,20.016 44.396,37.02 L 56.322,30.94 c -1.053,-4.517 -4.289,-5.796 -8.277,-5.945 l 0,0 z"/>
+               </g>
+             </svg>
+           </div>
+         </div>
        </div>
 
        <div class="footer-col" style="min-width: 180px;">
-         <h5>My Order</h5>
+         <h5><strong>Information</strong></h5>
          <ul>
-           <li><a href="order.html">View orders</a></li>
+           <li><a href="privacy.html">Privacy Policy</a></li>
+           <li><a href="shipping.html">Shipping</a></li>
+           <li><a href="refund.html">Return Policy</a></li>
+           <li><a href="terms.html">Terms of Service</a></li>
          </ul>
        </div>
 
        <div class="footer-col" style="min-width: 180px;">
-         <h5>FAQs</h5>
+         <h5><strong>Business</strong></h5>
          <ul>
-           <li><a href="faq.html">Frequently asked questions</a></li>
-         </ul>
-       </div>
-
-       <div class="footer-col" style="min-width: 180px;">
-         <h5>Email Unsubscribe</h5>
-         <ul>
-           <li><a href="unsubscribe.html">Unsubscribe</a></li>
-         </ul>
-       </div>
-
-       <div class="footer-col" style="min-width: 180px;">
-         <h5>Sitemap</h5>
-         <ul>
-           <li><a href="sitemap.html">Site map</a></li>
+           <li><a href="wholesale.html">Wholesale</a></li>
+           <li><a href="influencer-apply.html">Influencer Program</a></li>
+           <li><a href="faq.html">Help and FAQ</a></li>
          </ul>
        </div>
 
        <div class="footer-col" style="min-width: 220px;">
-         <h5>Legal & Company</h5>
+         <h5><strong>Customer Care</strong></h5>
          <ul>
-           <li><a href="terms.html">Terms &amp; Conditions</a></li>
-           <li><a href="privacy.html">Privacy Policy</a></li>
-            <li><a href="refund.html">Refund Policy</a></li>
-            <li><a href="gift-cards.html">Gift Cards</a></li>
-           <li><a href="terms.html">About Us</a></li>
+           <li><a href="contact.html">Contact Us</a></li>
+           <li><a href="shipping.html">Delivery Info</a></li>
+           <li><a href="payment.html">Payment Options</a></li>
+           <li><a href="refund.html">Refund and Exchange</a></li>
+           <li><a href="wholesale.html">Wholesale Enquiries</a></li>
          </ul>
        </div>
      </div>

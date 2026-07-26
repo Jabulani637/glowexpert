@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
 
 const express = require('express');
 const cors = require('cors');
@@ -17,7 +17,6 @@ const adminAuthRoutes = require('./routes/adminAuthRoutes');
 const siteRoutes = require('./routes/siteRoutes');
 const subscriberRoutes = require('./routes/subscriberRoutes');
 const orderRoutes = require('./routes/orderRoutes');
-const giftCardRoutes = require('./routes/giftCardRoutes');
 const influencerRoutes = require('./routes/influencerRoutes');
 const blogRoutes = require('./routes/blogRoutes');
 const publicBlogSeoRoutes = require('./routes/publicBlogSeoRoutes');
@@ -27,7 +26,6 @@ const { ensureProductSchema } = require('./models/Product');
 const { ensureSiteSettingsSchema } = require('./models/SiteSettings');
 const { ensureSubscriberSchema } = require('./models/Subscriber');
 const { ensureOrderSchema } = require('./models/Order');
-const { ensureGiftCardSchema } = require('./models/GiftCard');
 const { ensureBlogPostSchema } = require('./models/BlogPost');
 const { ensureInfluencerSchema } = require('./models/Influencer');
 const { ensureReviewSchema } = require('./models/Review');
@@ -163,10 +161,29 @@ app.use('/api/influencer', influencerRoutes);
 app.use('/api', siteRoutes);
 app.use('/api', subscriberRoutes);
 app.use('/api', orderRoutes);
-app.use('/api', giftCardRoutes);
 app.use('/api', blogRoutes);
 app.use('/api', helpCentreRoutes);
 app.use('/api', healthRoutes);
+
+app.post('/api/wholesale-inquiry', (req, res) => {
+  console.log('Wholesale Inquiry:', req.body);
+  res.status(200).json({ success: true, message: 'Inquiry received' });
+});
+
+app.post('/api/influencer/apply', async (req, res) => {
+  try {
+    const { name, email, phone, platform, message } = req.body;
+    if (!name || !email || !message) {
+      return res.status(400).json({ success: false, message: 'Name, email, and message are required.' });
+    }
+    const { createInfluencerApplication } = require('./models/InfluencerApplication');
+    await createInfluencerApplication({ name, email, phone, platform, message });
+    res.status(200).json({ success: true });
+  } catch (err) {
+    console.error('Influencer application error:', err);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+});
 
 // SEO-friendly server-rendered blog shell (optional but improves indexing)
 app.use('/blog', publicBlogSeoRoutes);
@@ -201,16 +218,18 @@ async function start() {
   console.log('ℹ︎ FRONTEND_URL:', process.env.FRONTEND_URL);
   console.log('ℹ︎ Effective allowed origins:', getAllowedOrigins());
 
+  const { ensureInfluencerApplicationSchema } = require('./models/InfluencerApplication');
+
   const startupSteps = [
     ['products', ensureProductSchema],
     ['site settings', ensureSiteSettingsSchema],
     ['subscribers', ensureSubscriberSchema],
     ['orders', ensureOrderSchema],
-    ['gift cards', ensureGiftCardSchema],
     ['blog posts', ensureBlogPostSchema],
     ['reviews', ensureReviewSchema],
     ['users', ensureUserSchema],
-    ['influencers', ensureInfluencerSchema]
+    ['influencers', ensureInfluencerSchema],
+    ['influencer applications', ensureInfluencerApplicationSchema]
   ];
 
   for (const [label, step] of startupSteps) {

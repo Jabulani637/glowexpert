@@ -3,7 +3,6 @@ const path = require('path');
 const bcrypt = require('bcryptjs');
 const { query, run } = require('../db');
 const { findByEmail, findByCellphone, createUser, updateFailedLogin, resetFailedLogin, findByGoogleId, updateOtp, getCurrentTimestamp } = require('../models/User');
-const { evaluateAdminLoginThrottle, computeAdminLockout } = require('../auth/adminLoginThrottle');
 
 function normalizeCellphone(value = '') {
   const cleaned = String(value || '')
@@ -88,16 +87,7 @@ async function login(req, res) {
 
   const isAdmin = user.role === 'admin';
 
-  if (isAdmin) {
-    const throttle = evaluateAdminLoginThrottle(user);
-    if (!throttle.allowed) {
-      return res.status(401).json({ message: throttle.message, retry_after_ms: throttle.retryAfterMs });
-    }
-  }
-
   if (user.locked_until && new Date(user.locked_until) > new Date()) {
-    // Non-admin lockout behavior: keep existing UX-neutral response.
-    // (Admin lockout is handled above with a user-friendly message.)
     return res.status(401).json({ message: 'Invalid credentials' });
   }
 
@@ -112,31 +102,12 @@ async function login(req, res) {
     let lockedUntil = null;
     let message = 'Invalid credentials';
 
-    // Admin-only throttle: after 3 failed attempts, lock admin logins for 2 hours.
-    if (isAdmin && failedAttempts >= 3) {
-      lockedUntil = computeAdminLockout({
-        nowMs: Date.now(),
-        durationMs: 2 * 60 * 60 * 1000
-      });
-      message = 'Too many failed login attempts. Try again in 2 hours.';
-    } else if (!isAdmin) {
-      // Keep existing non-admin global behavior unchanged.
-      if (failedAttempts > 6) {
-        lockedUntil = new Date(Date.now() + 30 * 60 * 1000).toISOString();
-        message = 'Account locked after too many failed login attempts. Try again later.';
-      }
+    if (failedAttempts > 6) {
+      lockedUntil = new Date(Date.now() + 30 * 60 * 1000).toISOString();
+      message = 'Account locked after too many failed login attempts. Try again later.';
     }
 
     await updateFailedLogin(user.id, failedAttempts, lockedUntil);
-
-    // If admin was just locked, include a friendly retry-after hint.
-    if (isAdmin && lockedUntil) {
-      const retryAfterMs = new Date(lockedUntil).getTime() - Date.now();
-      return res.status(401).json({
-        message: message,
-        retry_after_ms: Math.max(0, retryAfterMs)
-      });
-    }
 
     return res.status(401).json({ message });
   }

@@ -1,15 +1,429 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Privacy Policy - GlowExpert</title>
+  <meta name="description" content="GlowExpert's Privacy Policy — how we collect, use, and protect your personal information." />
+  <link rel="canonical" href="https://glowexpert.vercel.app/privacy.html" />
+
+  <meta property="og:title" content="Privacy Policy - GlowExpert" />
+  <meta property="og:description" content="GlowExpert's Privacy Policy — how we collect, use, and protect your personal information." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary" />
+
+  <link rel="icon" type="image/svg+xml" href="../src/assets/logo/glowexpert_logo.svg">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="../src/styles/luxury.css">
+
+  <style>
+    /* ── Policy page layout ── */
+    .policy-page {
+      padding: 120px 20px 80px;
+      background: var(--bone);
+      min-height: 100vh;
+    }
+    .policy-container {
+      max-width: 820px;
+      margin: 0 auto;
+      background: var(--paper);
+      border: 1px solid var(--stone-line);
+      border-radius: var(--radius-card);
+      padding: 60px 56px;
+    }
+    .policy-eyebrow {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold-trim);
+      margin-bottom: 12px;
+    }
+    .policy-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      font-weight: 500;
+      color: var(--noir);
+      margin: 0 0 8px;
+      line-height: 1.2;
+    }
+    .policy-meta {
+      font-family: var(--font-sans);
+      font-size: 13px;
+      color: var(--stone);
+      margin-bottom: 48px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--stone-line);
+    }
+    .policy-notice {
+      background: rgba(201,161,59,0.08);
+      border: 1px solid rgba(201,161,59,0.28);
+      border-left: 4px solid var(--gold-trim);
+      border-radius: 8px;
+      padding: 18px 22px;
+      margin-bottom: 40px;
+      font-family: var(--font-sans);
+      font-size: 13.5px;
+      line-height: 1.8;
+      color: var(--noir);
+    }
+    .policy-notice strong { color: var(--gold-trim); }
+    .policy-notice ol { padding-left: 20px; margin: 10px 0 0; }
+    .policy-notice li { margin-bottom: 6px; }
+
+    /* Section headings */
+    .policy-h2 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: var(--noir);
+      margin: 56px 0 4px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--stone-line);
+    }
+    .policy-h3 {
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--noir);
+      margin: 36px 0 10px;
+    }
+    .policy-h4 {
+      font-family: var(--font-sans);
+      font-size: 0.875rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--stone);
+      margin: 28px 0 8px;
+    }
+
+    /* Body copy */
+    .policy-body {
+      font-family: var(--font-sans);
+      font-size: 14.5px;
+      line-height: 1.9;
+      color: var(--noir);
+      opacity: 0.9;
+      margin: 0 0 16px;
+    }
+    .policy-body a {
+      color: var(--gold-trim);
+      text-decoration: underline;
+    }
+    .policy-body strong { font-weight: 600; }
+
+    /* Lists */
+    .policy-list {
+      font-family: var(--font-sans);
+      font-size: 14.5px;
+      line-height: 1.9;
+      color: var(--noir);
+      opacity: 0.9;
+      padding-left: 24px;
+      margin: 0 0 16px;
+    }
+    .policy-list li { margin-bottom: 6px; }
+    .policy-list li strong { font-weight: 600; color: var(--noir); opacity: 1; }
+
+    /* Contact box */
+    .policy-contact-box {
+      margin-top: 56px;
+      background: var(--bone);
+      border: 1px solid var(--stone-line);
+      border-radius: var(--radius-card);
+      padding: 28px 32px;
+    }
+    .policy-contact-box p {
+      font-family: var(--font-sans);
+      font-size: 14px;
+      line-height: 1.8;
+      color: var(--noir);
+      margin: 4px 0;
+    }
+    .policy-contact-box a { color: var(--gold-trim); }
+
+    @media (max-width: 640px) {
+      .policy-container { padding: 32px 22px; }
+      .policy-h2 { font-size: 1.3rem; }
+    }
+  </style>
 </head>
 <body>
-  <div id="app"></div>
+  <nav id="navbar">
+    <a href="index.html" class="nav-logo">
+      <img src="../src/assets/logo/glowexpert_logo.svg" alt="GlowExpert" class="logo-image">
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html" class="nav-close-mobile">Home</a></li>
+      <li><a href="index.html#collections" class="nav-close-mobile">Collections</a></li>
+      <li><a href="blog.html" class="nav-close-mobile">Blog</a></li>
+    </ul>
+    <div class="nav-actions">
+      <span class="cart-badge" data-count="0">
+        <a href="index.html#collections" class="nav-icon" title="Shop" aria-label="Shop">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+        </a>
+      </span>
+      <button class="nav-hamburger" id="navHamburger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="policy-page">
+    <div class="policy-container">
+
+      <p class="policy-eyebrow">Legal</p>
+      <h1 class="policy-title">Privacy Policy</h1>
+      <p class="policy-meta">glowexpert.vercel.app &nbsp;·&nbsp; Last updated: July 2026</p>
+
+      <!-- ─── POPIA NOTICE ─── -->
+      <div class="policy-notice">
+        <strong>🇿🇦 Protecting Your Privacy</strong>
+        <p style="margin:6px 0 0;">GlowExpert processes your personal information in accordance with the <strong>Protection of Personal Information Act (POPIA)</strong>. See Section 4 for your rights under South African law.</p>
+      </div>
+
+      <!-- ════════════════════════════════════════════
+           PART 1 — PRIVACY POLICY
+      ════════════════════════════════════════════ -->
+      <h2 class="policy-h2">1. Privacy Policy on glowexpert.vercel.app</h2>
+
+      <!-- 1.1 -->
+      <h3 class="policy-h3">(1) Collection of Personal Data</h3>
+      <p class="policy-body">We value your privacy and the information you consent to share in relation to our email &amp; SMS marketing service. We use this information to send you order notifications (including abandoned checkout reminders), marketing offers, and transactional messages, including requests for reviews. Our website uses cookies to keep track of items you put into your shopping cart, including when you have abandoned your checkout. This information is used to determine when to send cart reminder messages via email &amp; SMS.</p>
+      <p class="policy-body">In order to provide you with personalized product recommendations, efficient customer service, and timely notifications, we record information you've given us during your visit to our site, including any registration and browsing activity.</p>
+      <p class="policy-body">This includes your name, email address, gender, IP address, device information, billing and shipping address, phone number, language preference, and merchandise category preferences.</p>
+      <p class="policy-body">At GlowExpert, we take the protection of your personal information seriously. We ensure your privacy is protected when using our services. Once we receive your data, we have technical and organizational measures in place to help protect it from loss, manipulation, or unauthorized access. We continually adapt our security measures in line with technological progress. We protect your data using Secure Sockets Layer (SSL) encryption, which encrypts information sent between you and us — including payment details — so it can't be read by external parties in transit.</p>
+
+      <!-- 1.2 -->
+      <h3 class="policy-h3">(2) Use of Personal Data</h3>
+      <p class="policy-body">We collect Personal Information that you provide to us voluntarily and process it for the following purposes:</p>
+      <ul class="policy-list">
+        <li>To create your personal account at GlowExpert</li>
+        <li>To complete transactions with you</li>
+        <li>To contact you in the event of any problem with the delivery of your items</li>
+        <li>To share the latest offers and enable you to participate in promotions, if you've subscribed</li>
+        <li>To understand your needs and preferences and recommend personalized products</li>
+        <li>To develop, enhance, market, and provide products and services that meet your needs</li>
+        <li>To process exchanges or product returns</li>
+        <li>To improve our services and respond to requests or complaints</li>
+      </ul>
+
+
+      <!-- 1.3 -->
+      <h3 class="policy-h3">(3) Content &amp; Frequency of Our Communications</h3>
+      <h4 class="policy-h4">Automatically triggered emails and app notifications</h4>
+      <p class="policy-body">Sent as needed for service-related events, e.g.:</p>
+      <ul class="policy-list">
+        <li>Order confirmation</li>
+        <li>Address change confirmation</li>
+        <li>Payment confirmation</li>
+        <li>Delivery notice</li>
+        <li>Shipping / logistics method change</li>
+      </ul>
+      <p class="policy-body">These are closely tied to your order, so we strongly recommend you don't unsubscribe from them. If you delete your account, you will stop receiving these. Frequency depends on your interaction with our site.</p>
+      <h4 class="policy-h4">Manual / marketing emails and app notifications</h4>
+      <p class="policy-body">Used to recommend personalized products, discounts, shopping tips, hair care tips, policy updates, and offers we think may interest you, sent by email. To unsubscribe, see Section (7) — Right to Opt-out.</p>
+
+      <!-- 1.4 -->
+      <h3 class="policy-h3">(4) Cookies</h3>
+      <p class="policy-body">A cookie is a small text file saved to, and retrieved from, your device on subsequent visits. GlowExpert uses cookies to simplify and enhance your visit. We don't use cookies to disclose your information to third parties. Some third-party cookies (e.g. Google Analytics) may track behavior across multiple sites in aggregate form.</p>
+      <p class="policy-body">There are two types:</p>
+      <ul class="policy-list">
+        <li><strong>Persistent cookies</strong> — stored on your device for up to 24 months. We use these to remember your shipping country and shopping bag if you're not logged in.</li>
+        <li><strong>Session cookies</strong> — temporary, deleted when you close your browser. We use these to check login status.</li>
+      </ul>
+      <p class="policy-body">You can erase cookies via your browser settings. Note that disabling cookies means you won't be able to use the shopping cart.</p>
+
+      <!-- 1.5 -->
+      <h3 class="policy-h3">(5) Children's Privacy</h3>
+      <p class="policy-body">If you are under 16, please only use glowexpert.vercel.app with permission from a parent or guardian.</p>
+      <p class="policy-body">GlowExpert does not knowingly collect, use, or transfer data from children under 13. If we learn we've collected personal data from a child under 13, we will delete it immediately. If you know of anyone under 13 registered on our site, please contact us at <a href="mailto:support@glowexpert.com">support@glowexpert.com</a>.</p>
+
+      <!-- 1.6 -->
+      <h3 class="policy-h3">(6) Processing of Information</h3>
+      <p class="policy-body">By using our site, you agree that — solely to provide you with personalized recommendations, efficient customer service, and timely notifications — we may process your personal data, including but not limited to: collecting, recording, organizing, structuring, storing, adapting, retrieving, consulting, using, disclosing, disseminating, combining, restricting, deleting, or destroying it, whether by automated means or not.</p>
+
+      <!-- 1.7 -->
+      <h3 class="policy-h3">(7) Right to Opt-out</h3>
+      <h4 class="policy-h4">Delete my account</h4>
+      <p class="policy-body">GlowExpert is committed to providing continuous, high-quality service, but if you'd like your data deleted, we'll fully cooperate. Contact our customer service and we will respond within 48 hours. All your information will be completely removed from our servers.</p>
+      <h4 class="policy-h4">No more emails or messages</h4>
+      <p class="policy-body">To stop receiving promotional communications, click "unsubscribe" at the bottom of any email at any time, or email us at <a href="mailto:support@glowexpert.com">support@glowexpert.com</a>.</p>
+
+      <!-- 1.8 -->
+      <h3 class="policy-h3">(8) GlowExpert User Content Upload Agreement</h3>
+      <p class="policy-body">By uploading photos or videos to GlowExpert (e.g. reviews, tags, or community content), you agree to the following:</p>
+      <ul class="policy-list">
+        <li><strong>Permission:</strong> you confirm you own the content or have the necessary rights to upload it and grant GlowExpert the rights described here.</li>
+        <li><strong>Compliance:</strong> your uploads must comply with GlowExpert's Community Guidelines and Terms of Use. Non-compliant content may be removed and your account may be suspended.</li>
+        <li><strong>Privacy:</strong> content you upload may be visible to the public. Make sure you have consent from anyone featured in your photos.</li>
+        <li><strong>Reporting:</strong> GlowExpert may review and remove content that's reported as inappropriate, infringing, or otherwise in violation of our policies.</li>
+        <li><strong>Indemnification:</strong> you agree to indemnify GlowExpert against claims, damages, liabilities, and expenses arising from your content or any breach of this agreement.</li>
+      </ul>
+      <p class="policy-body">By uploading, you agree to these terms and GlowExpert's full Terms of Use.</p>
+
+
+      <!-- ════════════════════════════════════════════
+           PART 2 — DATA SECURITY
+      ════════════════════════════════════════════ -->
+      <h2 class="policy-h2">2. Data Security on glowexpert.vercel.app</h2>
+
+      <!-- 2.1 -->
+      <h3 class="policy-h3">(1) How We Secure Your Information</h3>
+      <p class="policy-body">GlowExpert uses physical, electronic, and administrative safeguards to protect your personal information, including Secure Sockets Layer (SSL) encryption for all transactions on this site. Access to your personal information is restricted to employees who need it to do their job. Our data is stored and managed via <strong>Supabase</strong>, and account authentication is handled via <strong>Clerk</strong> — both of which maintain their own security and compliance standards for the infrastructure they provide us.</p>
+      <p class="policy-body">While we follow industry-standard precautions, no data transmission over the internet can be guaranteed 100% secure. We do not sell, rent, trade, or license your personal or financial information to anyone outside of the service providers described below. You're responsible for maintaining the security and confidentiality of your GlowExpert username and password.</p>
+
+      <!-- 2.2 -->
+      <h3 class="policy-h3">(2) Working with Third-Party Partners</h3>
+      <p class="policy-body">We sometimes use third-party service providers to perform specific functions on our behalf. Any information disclosed to them is solely to help provide their service, under confidentiality agreements and encrypted transmission.</p>
+      <ul class="policy-list">
+        <li><strong>Account &amp; Authentication</strong> — we use Clerk to manage account sign-up and login.</li>
+        <li><strong>Data Storage</strong> — we use Supabase to store your account, order, and product data securely.</li>
+        <li><strong>Delivery</strong> — we share your name, shipping address, email, and phone number with our courier partners to fulfil delivery of your order.</li>
+        <li><strong>Payment</strong> — we share necessary payment details with <strong>[insert your payment processor, e.g. PayFast / Yoco / Paystack / PayPal]</strong> in order to process your payment securely. We may also share information to reduce or prevent fraud.</li>
+        <li><strong>Marketing</strong> — during registration or checkout, you may consent to receive promotional notifications about new products, offers, and services via email.</li>
+      </ul>
+      <p class="policy-body">You may unsubscribe from marketing communications at any time via the "unsubscribe" link in any email, or by emailing <a href="mailto:support@glowexpert.com">support@glowexpert.com</a>.</p>
+      <p class="policy-body"><strong>Data tracking and statistics</strong> — to improve your experience, we may share non-identifying information (e.g. daily visitor counts, aggregate order sizes) with analytics partners such as Google Analytics.</p>
+
+      <!-- 2.3 -->
+      <h3 class="policy-h3">(3) Affiliate Data Sharing</h3>
+      <p class="policy-body">We may authorize affiliates to process your personal data, but only after signing a strict written data-processing agreement with them.</p>
+
+      <!-- 2.4 -->
+      <h3 class="policy-h3">(4) Corporate &amp; Business Affairs</h3>
+      <p class="policy-body">We may share personal data with affiliated companies. In the event of a merger, reorganization, acquisition, joint venture, assignment, spin-off, sale, or transfer of all or part of our business — including in connection with bankruptcy or similar proceedings — we may transfer personal data to the relevant third party.</p>
+
+
+      <!-- ════════════════════════════════════════════
+           PART 3 — UPDATES & POPIA
+      ════════════════════════════════════════════ -->
+      <h2 class="policy-h2">3. Updates to This Policy</h2>
+      <p class="policy-body">GlowExpert reserves the right to update this Privacy &amp; Security Policy. Any changes will be posted on this page.</p>
+
+      <!-- 3 POPIA -->
+      <h2 class="policy-h2">4. Your Rights Under POPIA (South Africa)</h2>
+      <p class="policy-body">GlowExpert is committed to protecting your personal information in accordance with the <strong>Protection of Personal Information Act (POPIA)</strong> of South Africa. This section explains how we comply with POPIA and what rights you have as a data subject.</p>
+
+      <h3 class="policy-h3">(1) What Personal Information We Collect</h3>
+      <p class="policy-body">We collect personal information as described in Section 1 above, including your name, email address, phone number, delivery address, and payment information — solely for the purposes of fulfilling your orders, communicating with you, and improving our services.</p>
+
+      <h3 class="policy-h3">(2) Lawful Basis for Processing</h3>
+      <p class="policy-body">Under POPIA, we process your personal information on the following lawful grounds:</p>
+      <ul class="policy-list">
+        <li><strong>Consent</strong> — where you have given us clear permission to process your data for specific purposes, such as marketing communications.</li>
+        <li><strong>Contractual necessity</strong> — to fulfil your orders, process payments, and arrange delivery of products you have purchased.</li>
+        <li><strong>Legal obligation</strong> — to comply with applicable laws and regulations.</li>
+        <li><strong>Legitimate interest</strong> — to improve our website, prevent fraud, and ensure the security of our systems.</li>
+      </ul>
+
+      <h3 class="policy-h3">(3) Your POPIA Rights</h3>
+      <p class="policy-body">As a data subject under POPIA, you have the following rights:</p>
+      <ul class="policy-list">
+        <li><strong>Right to access</strong> — you may request a copy of the personal information we hold about you.</li>
+        <li><strong>Right to correction</strong> — you may request that we correct any inaccurate or outdated information.</li>
+        <li><strong>Right to deletion</strong> — you may request that we delete your personal information, subject to legal retention requirements.</li>
+        <li><strong>Right to object</strong> — you may object to the processing of your personal information for direct marketing purposes at any time.</li>
+        <li><strong>Right to restrict processing</strong> — you may request that we limit how we use your data while a complaint or correction is being resolved.</li>
+        <li><strong>Right to data portability</strong> — you may request a copy of your data in a structured, commonly used format.</li>
+      </ul>
+      <p class="policy-body">To exercise any of these rights, please contact our Information Officer at <a href="mailto:support@glowexpert.com">support@glowexpert.com</a>. We will respond to your request within 30 days as required by POPIA.</p>
+
+      <h3 class="policy-h3">(4) Cross-Border Data Transfer</h3>
+      <p class="policy-body">Your personal information may be transferred to and processed in countries outside South Africa where our service providers (such as Supabase, Clerk, and payment processors) operate. Where such transfers occur, we ensure appropriate safeguards are in place to protect your data in accordance with POPIA requirements.</p>
+
+      <h3 class="policy-h3">(5) Complaints</h3>
+      <p class="policy-body">If you believe we have processed your personal information in a way that violates POPIA, you may lodge a complaint with the <strong>Information Regulator of South Africa</strong>:</p>
+      <ul class="policy-list">
+        <li>Website: <a href="https://www.justice.gov.za/inforeg/" target="_blank">www.justice.gov.za/inforeg/</a></li>
+        <li>Email: inforeg@justice.gov.za</li>
+        <li>Tel: +27 (0)10 023 5200</li>
+        <li>Address: 33 Hoofd Street, Forum III, 3rd Floor, Braamfontein, Johannesburg, 2001</li>
+      </ul>
+      <p class="policy-body">We encourage you to contact us first at <a href="mailto:support@glowexpert.com">support@glowexpert.com</a> so we can resolve any concerns directly.</p>
+
+
+      <!-- ─── Contact box ─── -->
+      <div class="policy-contact-box">
+        <p style="font-weight:600; font-size:15px; margin-bottom:12px;">Contact Us</p>
+        <p>Email: <a href="mailto:support@glowexpert.com">support@glowexpert.com</a></p>
+        <p>Website: <a href="index.html">GlowExpert</a></p>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo" id="brandNameFooter">Glow<span>Expert</span></a>
+        <p class="footer-tagline">Luxurious beauty, delivered.</p>
+        <div class="footer-socials">
+          <a href="https://wa.me/1234567890" class="social-link" target="_blank" aria-label="WhatsApp"></a>
+          <a href="https://facebook.com/yourpage" class="social-link" target="_blank" aria-label="Facebook">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 5 3.66 9.12 8.44 9.88v-6.99H7.9v-2.89h2.54V9.41c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.23.2 2.23.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.87h2.78l-.44 2.89h-2.34v6.99C18.34 21.12 22 17 22 12z"/></svg>
+          </a>
+          <a href="https://instagram.com/yourhandle" class="social-link" target="_blank" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.17.054 1.97.24 2.43.415a4.92 4.92 0 011.68 1.09 4.92 4.92 0 011.09 1.68c.176.46.361 1.26.415 2.43.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.054 1.17-.24 1.97-.415 2.43a4.92 4.92 0 01-1.09 1.68 4.92 4.92 0 01-1.68 1.09c-.46.176-1.26.361-2.43.415-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.17-.054-1.97-.24-2.43-.415a4.92 4.92 0 01-1.68-1.09 4.92 4.92 0 01-1.09-1.68c-.176-.46-.361-1.26-.415-2.43-.058-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.054-1.17.24-1.97.415-2.43a4.92 4.92 0 011.09-1.68 4.92 4.92 0 011.68-1.09c.46-.176 1.26-.361 2.43-.415 1.266-.058 1.646-.07 4.85-.07zm0-2.163C8.755 0 8.332.012 7.052.07 5.777.127 4.825.352 4.032.692a7.082 7.082 0 00-2.58 1.684A7.082 7.082 0 00.692 4.952c-.34.793-.565 1.745-.622 3.02C.012 8.332 0 8.755 0 12c0 3.245.012 3.668.07 4.948.057 1.275.282 2.227.622 3.02a7.082 7.082 0 001.684 2.58 7.082 7.082 0 002.58 1.684c.793.34 1.745.565 3.02.622C8.332 23.988 8.755 24 12 24s3.668-.012 4.948-.07c1.275-.057 2.227-.282 3.02-.622a7.082 7.082 0 002.58-1.684 7.082 7.082 0 001.684-2.58c.34-.793.565-1.745.622-3.02.058-1.28.07-1.703.07-4.948s-.012-3.668-.07-4.948c-.057-1.275-.282-2.227-.622-3.02a7.082 7.082 0 00-1.684-2.58 7.082 7.082 0 00-2.58-1.684c-.793-.34-1.745-.565-3.02-.622C15.668.012 15.245 0 12 0z"/><path d="M12 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zm0 10.162a3.999 3.999 0 110-7.998 3.999 3.999 0 010 7.998zM18.406 4.594a1.44 1.44 0 11-2.88 0 1.44 1.44 0 012.88 0z"/></svg>
+          </a>
+          <a href="https://tiktok.com/@yourhandle" class="social-link" target="_blank" aria-label="TikTok">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 0c-1.66 0-3 1.34-3 3v9c0 2.21 1.79 4 4 4h2c3.31 0 6-2.69 6-6V6c0-2.21-1.79-4-4-4h-5z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-col" style="min-width: 180px;">
+        <h5><strong>Information</strong></h5>
+        <ul>
+          <li><a href="privacy.html">Privacy Policy</a></li>
+          <li><a href="shipping.html">Shipping</a></li>
+          <li><a href="refund.html">Return Policy</a></li>
+          <li><a href="terms.html">Terms of Service</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col" style="min-width: 180px;">
+        <h5><strong>Business</strong></h5>
+        <ul>
+          <li><a href="wholesale.html">Wholesale</a></li>
+          <li><a href="influencer-apply.html">Influencer Program</a></li>
+          <li><a href="faq.html">Help and FAQ</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col" style="min-width: 220px;">
+        <h5><strong>Customer Care</strong></h5>
+        <ul>
+          <li><a href="contact.html">Contact Us</a></li>
+          <li><a href="shipping.html">Delivery Info</a></li>
+          <li><a href="payment.html">Payment Options</a></li>
+          <li><a href="refund.html">Refund and Exchange</a></li>
+          <li><a href="wholesale.html">Wholesale Enquiries</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2026 GlowExpert. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <a href="https://wa.me/1234567890" class="whatsapp-float" target="_blank" aria-label="WhatsApp Chat">
+    <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='UTF-8'?%3e%3csvg%20id='Layer_1'%20data-name='Layer%201'%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20720%20720'%3e%3cdefs%3e%3cstyle%3e%20.cls-1%20{%20fill:%20%2325d366;%20}%20%3c/style%3e%3c/defs%3e%3cpath%20class='cls-1'%20d='M360,0C161.18,0,0,161.18,0,360c0,65.41,17.45,126.75,47.94,179.61L0,720l187.02-44.21c51.34,28.18,110.28,44.21,172.98,44.21,198.82,0,360-161.18,360-360S558.82,0,360,0ZM360,655.52c-60.17,0-116.13-17.98-162.82-48.87l-110.49,28.14,30.99-105.61c-33.53-47.93-53.2-106.26-53.2-169.19,0-163.21,132.31-295.52,295.52-295.52s295.52,132.31,295.52,295.52-132.31,295.52-295.52,295.52Z'/%3e%3cpath%20class='cls-1'%20d='M444.35,407.52l87.1,41.06c4,1.88,6.56,5.94,6.2,10.34-.94,11.46-5.54,34.43-26.13,55.02-58.12,58.12-162.49-7.64-166.74-10.18-25.67-13.79-50.06-32.24-73.19-55.36-23.12-23.12-41.58-47.52-55.37-73.19-2.55-4.24-68.31-108.61-10.18-166.74,20.59-20.59,43.56-25.19,55.02-26.13,4.41-.36,8.46,2.2,10.34,6.2l41.07,87.1c1.94,4.12,1.09,9.02-2.13,12.24l-30.61,30.61c-6.62,6.62-8.56,16.93-4,25.11,11.17,20.03,26.19,39.32,43.59,57.07,17.75,17.4,37.04,32.43,57.07,43.59,8.18,4.56,18.48,2.62,25.11-4l30.61-30.61c3.22-3.22,8.12-4.08,12.24-2.13Z'/%3e%3c/svg%3e" alt="WhatsApp" style="width: 100%; height: 100%; display: block;" />
+    <span class="whatsapp-tooltip">Chat on WhatsApp</span>
+  </a>
+
   <script type="module" src="../src/pages/shared/navbar-scroll-init.js"></script>
-
-
 </body>
 </html>

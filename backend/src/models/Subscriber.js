@@ -63,15 +63,3 @@ module.exports = {
   createSubscriber,
   listSubscribers
 };
-
-async function deleteSubscriberByEmail(email) {
-  try {
-    const res = await query('DELETE FROM subscribers WHERE email = ? RETURNING *', [email]);
-    return res.rows && res.rows.length > 0;
-  } catch (err) {
-    console.warn('deleteSubscriberByEmail error:', err.message);
-    return false;
-  }
-}
-
-module.exports.deleteSubscriberByEmail = deleteSubscriberByEmail;

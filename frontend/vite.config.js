@@ -4,6 +4,11 @@ import { resolve } from 'path';
 export default defineConfig({
   root: 'html',
   base: '/',
+  resolve: {
+    alias: {
+      '/src': resolve(__dirname, 'src')
+    }
+  },
   build: {
     target: 'esnext',
     outDir: '../dist',
@@ -21,11 +26,7 @@ export default defineConfig({
         privacy: resolve(__dirname, 'html/privacy.html'),
         terms: resolve(__dirname, 'html/terms.html'),
         cookies: resolve(__dirname, 'html/cookies.html'),
-        sitemap: resolve(__dirname, 'html/sitemap.html'),
-        unsubscribe: resolve(__dirname, 'html/unsubscribe.html'),
-        order: resolve(__dirname, 'html/order.html'),
         refund: resolve(__dirname, 'html/refund.html'),
-        giftCards: resolve(__dirname, 'html/gift-cards.html'),
       },
       output: {
         manualChunks: {

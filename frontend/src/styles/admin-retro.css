@@ -36,9 +36,17 @@ nav {
   background: #c0c0c0;
   border: 2px solid;
   border-color: #ffffff #808080 #808080 #ffffff;
+  display: flex;
+  align-items: center;
 }
 
 .nav-logo span { color: #000080; }
+
+.nav-logo .logo-image {
+  height: 28px;
+  width: auto;
+  display: block;
+}
 
 .nav-links {
   display: flex;

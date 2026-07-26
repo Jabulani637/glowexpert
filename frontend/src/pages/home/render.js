@@ -40,12 +40,24 @@ function productCardTemplate(product) {
           ${product.is_wholesale ? '<span class="product-featured-pill product-pill-wholesale">Wholesale</span>' : ''}
           ${product.is_on_sale ? `<span class="product-featured-pill product-pill-sale">${escapeHtml(String(product.sale_percent_off ?? 0))}% OFF</span>` : ''}
         </div>
+        ${Number(product.review_count || 0) > 0 
+          ? `<div class="product-rating" aria-label="${product.rating ?? 5} out of 5 stars, ${product.review_count} reviews">
+               ${Array.from({ length: 5 }, (_, i) => i < Math.round(Number(product.rating ?? 5)) ? '<span class="product-star" aria-hidden="true">&#9733;</span>' : '<span class="product-star-empty" aria-hidden="true">&#9734;</span>').join('')}
+               <span class="product-review-count">(${escapeHtml(String(product.review_count))})</span>
+             </div>`
+          : `<div class="product-rating"><span class="product-review-count">Be the first to review</span></div>`
+        }
         <h3 class="product-name">${escapeHtml(product.name)}</h3>
         <p class="product-description">${escapeHtml(product.description || 'Luxury hair product')}</p>
         <div class="product-details">Stock ${escapeHtml(product.stock)} | ${escapeHtml(product.currency || 'ZAR')}</div>
         <div class="product-meta">
           <div>
-            <div class="product-price">${escapeHtml(money(product.price, product.currency))}</div>
+            <div class="product-price">
+              ${product.original_price && Number(product.original_price) > Number(product.price) 
+                ? `<span class="product-original-price">${escapeHtml(money(product.original_price, product.currency))}</span> ` 
+                : ''
+              }${escapeHtml(money(product.price, product.currency))}
+            </div>
             <div class="product-subprice">${Number(product.stock) > 0 ? 'Available now' : 'Out of stock'}</div>
           </div>
           <button

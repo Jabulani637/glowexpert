@@ -1,5 +1,6 @@
 import { normalizeAsset } from '../../lib/api.js';
 import { $ } from '../../lib/dom.js';
+import { restoreOriginalElements } from './local-background-rotator.js';
 
 let timer = null;
 let currentIndex = 0;
@@ -92,6 +93,9 @@ function applyTransition(transition) {
 }
 
 export function startHeroBackgroundRotator(settings) {
+  // Before taking over, restore original elements that the local rotator may have hidden
+  restoreOriginalElements();
+
   const container = $('heroBgContainer');
   if (!container) return;
 

@@ -9,16 +9,4 @@ async function subscribe(req, res) {
   });
 }
 
-async function unsubscribe(req, res) {
-  try {
-    const { email } = req.body;
-    const ok = await deleteSubscriberByEmail(email);
-    if (ok) return res.json({ message: 'Unsubscribed successfully' });
-    // Return success even if not found to avoid leaking subscriber existence
-    return res.json({ message: 'If this email existed, it has been unsubscribed' });
-  } catch (err) {
-    return res.status(400).json({ message: err.message || 'Unsubscribe failed' });
-  }
-}
-
-module.exports = { subscribe, unsubscribe };
+module.exports = { subscribe };

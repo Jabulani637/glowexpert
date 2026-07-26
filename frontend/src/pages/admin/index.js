@@ -223,16 +223,15 @@ if (!clerk.user) {
   clerk.mountUserButton(document.getElementById('user-button'), {
     afterSignOutUrl: 'index.html'
   });
+
+  setupMobileNav();
+  setupTabNavigation();
+  setupProductButtons();
+  setupBlogButtons();
+  setupGlobalButtons();
+  setupInfluencerButtons();
+
+  loadAll()
+    .then(() => loadBlogData())
+    .catch((error) => setStatus(error.message, true));
 }
-
-
-setupMobileNav();
-setupTabNavigation();
-setupProductButtons();
-setupBlogButtons();
-setupGlobalButtons();
-setupInfluencerButtons();
-
-loadAll()
-  .then(() => loadBlogData())
-  .catch((error) => setStatus(error.message, true));

@@ -22,14 +22,8 @@ const orderLookupSchema = z.object({
   reference: z.string().uuid()
 });
 
-const unsubscribeSchema = z.object({
-  email: z.string().email().max(190)
-});
-
 module.exports = {
   subscriberSchema,
   checkoutSchema,
-  checkoutItemSchema,
-  orderLookupSchema,
-  unsubscribeSchema
+  checkoutItemSchema
 };

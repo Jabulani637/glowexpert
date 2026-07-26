@@ -4,16 +4,27 @@ import { setupCartDelegates, openCart, closeCart, saveReferralCode, loadReferral
 import { submitNewsletter, submitCheckout } from './checkout.js';
 import { initializeStore } from './store.js';
 import { startHeroBackgroundRotator } from './background-rotator.js';
+import { startLocalBackgroundRotator } from './local-background-rotator.js';
+import { setupPromo } from './promo.js';
+import { setupCountdown } from './countdown.js';
+import { initTrendingCarousel } from './trending-carousel.js';
 
 setupMobileNav();
 setupScrollShadow();
 setupCartDelegates();
+setupPromo();
+setupCountdown();
 
 $('cartBtn')?.addEventListener('click', openCart);
 $('closeCartBtn')?.addEventListener('click', closeCart);
 $('cartBackdrop')?.addEventListener('click', closeCart);
 $('newsletterForm')?.addEventListener('submit', submitNewsletter);
 $('checkoutForm')?.addEventListener('submit', submitCheckout);
+
+// Start the local animated background rotator immediately.
+// This cycles through images in /assets/images/animinated-home-background-images/
+// with a smooth crossfade, independent of DB settings.
+startLocalBackgroundRotator();
 
 initializeStore()
   .then(async () => {
@@ -40,6 +51,9 @@ initializeStore()
       // no-op
     }
 
+
+    // Initialize trending carousel with products already loaded
+    initTrendingCarousel();
 
     try {
       const params = new URLSearchParams(window.location.search);
