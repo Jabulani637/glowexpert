@@ -1,30 +1,20 @@
-# Removal Progress Checklist - COMPLETED ✓
+# Responsive Design Overhaul - Progress Tracker
 
-## Phase 1: Delete Files ✓
-- [x] Delete frontend/html/sitemap.html
-- [x] Delete frontend/html/unsubscribe.html
-- [x] Delete frontend/html/order.html
-- [x] Delete frontend/html/gift-cards.html
-- [x] frontend/dist/ files (already didn't exist)
-- [x] Delete backend/src/routes/giftCardRoutes.js
-- [x] Delete backend/src/controllers/giftCardController.js
-- [x] Delete backend/src/models/GiftCard.js
-- [x] Delete backend/src/validation/giftCardSchemas.js
-- [x] Delete backend/src/test/giftCardRoutes.test.js
+## Steps
 
-## Phase 2: Edit Backend Files ✓
-- [x] Edit backend/src/server.js - remove giftCardRoutes require, usage, and ensureGiftCardSchema
-- [x] Edit backend/src/controllers/subscriberController.js - remove unsubscribe function
-- [x] Edit backend/src/routes/subscriberRoutes.js - remove unsubscribe route
-- [x] Edit backend/src/models/Subscriber.js - remove deleteSubscriberByEmail
-- [x] Edit backend/src/validation/siteSchemas.js - remove unsubscribeSchema, orderLookupSchema
-- [x] Edit backend/src/controllers/orderController.js - remove lookup function
-- [x] Edit backend/src/routes/orderRoutes.js - remove lookup route
-- [x] Edit backend/src/test/subscriberRoutes.test.js - remove unsubscribe test
+- [x] Step 0: Code Review & Analysis
+- [x] Step 1: Plan Creation & Approval
+- [x] Step 2: Refactor `frontend/src/styles/luxury.css` (mobile-first architecture)
+- [x] Step 3: Remove inline `<style>` blocks from HTML pages
+- [x] Step 4: Add container queries for reusable components
+- [x] Step 5: Enhance `frontend/src/lib/nav.js` (debounce, matchMedia)
+- [x] Step 6: Responsive image/video improvements in index.html
+- [x] Step 7: All implementation steps complete
 
-## Phase 3: Edit Frontend Config ✓
-- [x] Edit frontend/vite.config.js - remove sitemap, unsubscribe, order, giftCards entries
-
-## Phase 4: Update Footer Links ✓
-- [x] Verified: No remaining HTML pages link to sitemap, unsubscribe, order, or gift-cards pages in their footers
+## CSS Breakpoints Used:
+- Mobile: < 640px (base styles, no query needed)
+- Tablet: `min-width: 640px`
+- Laptop: `min-width: 1024px`
+- Desktop: `min-width: 1280px`
+- Large Desktop / 4K: `min-width: 1536px`
 

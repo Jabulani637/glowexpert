@@ -12,6 +12,13 @@ export function setupMobileNav() {
   const navLinks = $('navLinks');
   if (!navHamburger || !navLinks) return;
 
+  const closeMenu = () => {
+    navHamburger.classList.remove('open');
+    navLinks.classList.remove('mobile-open');
+    navHamburger.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  };
+
   navHamburger.addEventListener('click', () => {
     const isOpen = navLinks.classList.contains('mobile-open');
     navHamburger.classList.toggle('open', !isOpen);
@@ -21,24 +28,45 @@ export function setupMobileNav() {
   });
 
   document.querySelectorAll('.nav-close-mobile').forEach((link) => {
-    link.addEventListener('click', () => {
-      navHamburger.classList.remove('open');
-      navLinks.classList.remove('mobile-open');
-      navHamburger.setAttribute('aria-expanded', 'false');
-      document.body.style.overflow = '';
-    });
+    link.addEventListener('click', closeMenu);
+  });
+
+  // Auto-close mobile menu when viewport resizes to desktop width
+  const mql = window.matchMedia('(min-width: 640px)');
+  const handleViewportChange = (e) => {
+    if (e.matches && navLinks.classList.contains('mobile-open')) {
+      closeMenu();
+    }
+  };
+  mql.addEventListener('change', handleViewportChange);
+
+  // Close menu on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && navLinks.classList.contains('mobile-open')) {
+      closeMenu();
+      navHamburger.focus();
+    }
   });
 }
 
 /**
  * Toggles the `.scrolled` class on #navbar past a scroll threshold.
- * (This is the only part of the old shared-ui.js that ever had an
- * observable effect - see notes in src/pages/shared/navbar-scroll-init.js.)
+ * Uses requestAnimationFrame for debounced performance.
  */
 export function setupScrollShadow(threshold = 60) {
   const navbar = $('navbar');
   if (!navbar) return;
-  window.addEventListener('scroll', () => {
+
+  let ticking = false;
+  const update = () => {
     navbar.classList.toggle('scrolled', window.scrollY > threshold);
-  });
+    ticking = false;
+  };
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(update);
+      ticking = true;
+    }
+  }, { passive: true });
 }
