@@ -32,7 +32,9 @@ router.get('/me', async (req, res) => {
       email: influencer.user_email || influencer.email
     });
   } catch (err) {
-    console.error('Influencer /me error:', err.message);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('Influencer /me error:', err.message);
+    }
     return res.status(500).json({ message: 'Unable to load influencer profile.' });
   }
 });
@@ -47,7 +49,9 @@ router.get('/orders', async (req, res) => {
     const orders = await listOrdersByInfluencer(influencer.id);
     return res.json({ data: orders });
   } catch (err) {
-    console.error('Influencer /orders error:', err.message);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('Influencer /orders error:', err.message);
+    }
     return res.status(500).json({ message: 'Unable to load influencer orders.' });
   }
 });

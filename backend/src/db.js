@@ -15,14 +15,16 @@ const connectionString = process.env.DATABASE_URL || (() => {
   return `postgresql://${user}:${encodeURIComponent(password)}@${host}:${port}/${database}`;
 })();
 
-console.log('Database connection config:', {
-  connectionString: connectionString ? 'set' : 'not set',
-  DB_USER: process.env.DB_USER,
-  DB_PASSWORD: process.env.DB_PASSWORD ? 'set' : 'not set',
-  DB_HOST: process.env.DB_HOST,
-  DB_PORT: process.env.DB_PORT,
-  DB_NAME: process.env.DB_NAME
-});
+if (process.env.NODE_ENV !== 'production') {
+  console.log('Database connection config:', {
+    connectionString: connectionString ? 'set' : 'not set',
+    DB_USER: process.env.DB_USER,
+    DB_PASSWORD: process.env.DB_PASSWORD ? 'set' : 'not set',
+    DB_HOST: process.env.DB_HOST,
+    DB_PORT: process.env.DB_PORT,
+    DB_NAME: process.env.DB_NAME
+  });
+}
 
 const pool = new Pool({
   connectionString,
@@ -34,7 +36,9 @@ const pool = new Pool({
 });
 
 pool.on('error', (err) => {
-  console.error('Unexpected error on idle client', err);
+  if (process.env.NODE_ENV !== 'production') {
+    console.error('Unexpected error on idle client', err);
+  }
 });
 
 // Helper to convert '?' placeholders to Postgres '$1', '$2', ...

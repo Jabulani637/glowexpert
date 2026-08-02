@@ -88,8 +88,8 @@ app.use(
       // Allow requests with no origin (like mobile apps or curl requests)
       if (!origin) return cb(null, true);
 
-      // Allow localhost origins for development
-      if (origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1')) {
+      // Allow localhost origins for development only
+      if (process.env.NODE_ENV !== 'production' && (origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1'))) {
         return cb(null, true);
       }
 
@@ -135,10 +135,14 @@ app.use('/uploads', express.static(uploadsDir));
 // Serve frontend statically (assuming files like admin.html are in the frontend folder)
 const frontendDir = path.join(__dirname, '..', '..', 'frontend');
 if (fs.existsSync(frontendDir)) {
-  console.log(`✓ Serving frontend from: ${frontendDir}`);
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(`✓ Serving frontend from: ${frontendDir}`);
+  }
   app.use(express.static(frontendDir));
 } else {
-  console.warn(`! Frontend directory not found at: ${frontendDir}`);
+  if (process.env.NODE_ENV !== 'production') {
+    console.warn(`! Frontend directory not found at: ${frontendDir}`);
+  }
 }
 
 // Redirect the root path to the storefront (SEO-friendly)
@@ -169,7 +173,9 @@ app.use('/api', helpCentreRoutes);
 app.use('/api', healthRoutes);
 
 app.post('/api/wholesale-inquiry', (req, res) => {
-  console.log('Wholesale Inquiry:', req.body);
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('Wholesale Inquiry:', req.body);
+  }
   res.status(200).json({ success: true, message: 'Inquiry received' });
 });
 
@@ -183,7 +189,9 @@ app.post('/api/influencer/apply', async (req, res) => {
     await createInfluencerApplication({ name, email, phone, platform, message });
     res.status(200).json({ success: true });
   } catch (err) {
-    console.error('Influencer application error:', err);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('Influencer application error:', err);
+    }
     res.status(500).json({ success: false, message: 'Internal server error' });
   }
 });
@@ -200,7 +208,9 @@ app.use('/api', (req, res) => {
 // Global error handler - ensures unexpected errors return JSON, not an HTML stack trace
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
-  console.error(`Unhandled error on ${req.method} ${req.path}:`, err);
+  if (process.env.NODE_ENV !== 'production') {
+    console.error(`Unhandled error on ${req.method} ${req.path}:`, err);
+  }
   if (err && err.message === 'Not allowed by CORS') {
     return res.status(403).json({ message: 'Origin not allowed' });
   }
@@ -217,9 +227,11 @@ async function start() {
   await ensureHelpCentreMessageSchema();
 
   // Log effective CORS allowlist (helps confirm what the *running* server is using)
-  console.log('ℹ︎ CORS_ALLOWED_ORIGINS:', process.env.CORS_ALLOWED_ORIGINS);
-  console.log('ℹ︎ FRONTEND_URL:', process.env.FRONTEND_URL);
-  console.log('ℹ︎ Effective allowed origins:', getAllowedOrigins());
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('ℹ︎ CORS_ALLOWED_ORIGINS:', process.env.CORS_ALLOWED_ORIGINS);
+    console.log('ℹ︎ FRONTEND_URL:', process.env.FRONTEND_URL);
+    console.log('ℹ︎ Effective allowed origins:', getAllowedOrigins());
+  }
 
   const { ensureInfluencerApplicationSchema } = require('./models/InfluencerApplication');
 
@@ -239,9 +251,13 @@ async function start() {
   for (const [label, step] of startupSteps) {
     try {
       await step();
-      console.log(`✓ ${label} schema ready`);
+      if (process.env.NODE_ENV !== 'production') {
+        console.log(`✓ ${label} schema ready`);
+      }
     } catch (err) {
-      console.warn(`! ${label} schema check skipped:`, err.message);
+      if (process.env.NODE_ENV !== 'production') {
+        console.warn(`! ${label} schema check skipped:`, err.message);
+      }
     }
   }
 
@@ -251,24 +267,31 @@ async function start() {
 
   const registerShutdown = (server) => {
     const shutdown = (signal) => {
-      console.log(`\n✓ Received ${signal}. Shutting down gracefully...`);
+      if (process.env.NODE_ENV !== 'production') {
+        console.log(`\n✓ Received ${signal}. Shutting down gracefully...`);
+      }
       server.close(() => {
-        console.log('✓ HTTP server closed');
+        if (process.env.NODE_ENV !== 'production') {
+          console.log('✓ HTTP server closed');
+        }
         process.exit(0);
       });
       setTimeout(() => {
-        console.error('✗ Could not close connections in time, forcefully shutting down');
+        if (process.env.NODE_ENV !== 'production') {
+          console.error('✗ Could not close connections in time, forcefully shutting down');
+        }
         process.exit(1);
       }, 10000);
     };
-
     process.on('SIGTERM', () => shutdown('SIGTERM'));
     process.on('SIGINT', () => shutdown('SIGINT'));
   };
 
   const listenOnPort = (port, attempt = 1) => {
     const server = app.listen(port, () => {
-      console.log(`✓ API listening on http://localhost:${port}`);
+      if (process.env.NODE_ENV !== 'production') {
+        console.log(`✓ API listening on http://localhost:${port}`);
+      }
       registerShutdown(server);
     });
 
@@ -279,13 +302,17 @@ async function start() {
           console.warn(`! Port ${port} is busy. Trying ${nextPort}...`);
           server.close(() => listenOnPort(nextPort, attempt + 1));
         } else {
-          console.error(`✗ No available port found after trying ${port}`);
+          if (process.env.NODE_ENV !== 'production') {
+            console.error(`✗ No available port found after trying ${port}`);
+          }
           process.exit(1);
         }
         return;
       }
 
-      console.error('✗ Failed to start server:', err.message);
+      if (process.env.NODE_ENV !== 'production') {
+        console.error('✗ Failed to start server:', err.message);
+      }
       process.exit(1);
     });
   };

@@ -36,7 +36,9 @@ router.get('/code/:code', async (req, res) => {
     if (!influencer) return res.status(404).json({ success: false, error: 'Not found' });
     res.json({ success: true, influencer });
   } catch (err) {
-    console.error('Error finding influencer:', err);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('Error finding influencer:', err);
+    }
     res.status(500).json({ success: false, error: err.message });
   }
 });

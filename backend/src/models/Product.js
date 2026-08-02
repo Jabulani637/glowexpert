@@ -117,7 +117,9 @@ async function listProducts({ limit = 50, offset = 0, category = null, isFeature
       is_featured: !!row.is_featured
     }));
   } catch (err) {
-    console.error('[listProducts] DB query failed:', err.message);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('[listProducts] DB query failed:', err.message);
+    }
     throw err;
   }
 }
@@ -136,7 +138,9 @@ async function findProductById(id) {
       is_featured: !!rows[0].is_featured
     };
   } catch (err) {
-    console.error('[findProductById] DB query failed:', err.message);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('[findProductById] DB query failed:', err.message);
+    }
     throw err;
   }
 }
@@ -218,7 +222,9 @@ async function createProduct({
     );
     return await findProductById(id);
   } catch (err) {
-    console.error('[createProduct] DB insert failed:', err.message);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('[createProduct] DB insert failed:', err.message);
+    }
     throw err;
   }
 }
@@ -295,7 +301,9 @@ async function updateProduct(id, {
     );
     return await findProductById(id);
   } catch (err) {
-    console.error('[updateProduct] DB update failed:', err.message);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('[updateProduct] DB update failed:', err.message);
+    }
     throw err;
   }
 }
@@ -305,7 +313,9 @@ async function deleteProduct(id) {
     const result = await run('DELETE FROM products WHERE id = ?', [id]);
     return result.changes > 0;
   } catch (err) {
-    console.error('[deleteProduct] DB delete failed:', err.message);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('[deleteProduct] DB delete failed:', err.message);
+    }
     throw err;
   }
 }

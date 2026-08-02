@@ -275,7 +275,9 @@ async function updateOrderPayment(orderId, { paymentStatus, payfastMPaymentId, p
       items_json: JSON.parse(rows[0].items_json)
     };
   } catch (err) {
-    console.error('[updateOrderPayment] error:', err.message);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('[updateOrderPayment] error:', err.message);
+    }
     throw err;
   }
 }

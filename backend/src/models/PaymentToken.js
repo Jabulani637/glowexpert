@@ -68,7 +68,9 @@ async function upsertPaymentToken({ clerkUserId, token, cardBrand, cardLastFour,
       return newRows[0];
     }
   } catch (err) {
-    console.error('[upsertPaymentToken] error:', err.message);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('[upsertPaymentToken] error:', err.message);
+    }
     throw err;
   }
 }
@@ -84,7 +86,9 @@ async function findDefaultTokenByClerkUserId(clerkUserId) {
     );
     return rows[0] || null;
   } catch (err) {
-    console.error('[findDefaultTokenByClerkUserId] error:', err.message);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('[findDefaultTokenByClerkUserId] error:', err.message);
+    }
     throw err;
   }
 }
@@ -100,7 +104,9 @@ async function findTokensByClerkUserId(clerkUserId) {
     );
     return rows;
   } catch (err) {
-    console.error('[findTokensByClerkUserId] error:', err.message);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('[findTokensByClerkUserId] error:', err.message);
+    }
     throw err;
   }
 }

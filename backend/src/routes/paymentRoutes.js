@@ -40,7 +40,9 @@ router.get('/payments/tokens/:clerk_user_id', async (req, res) => {
       data: tokens,
     });
   } catch (error) {
-    console.error('[get tokens] error:', error);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('[get tokens] error:', error);
+    }
     return res.status(500).json({ message: error.message || 'Failed to retrieve tokens' });
   }
 });
@@ -84,7 +86,9 @@ router.post('/payments/payfast/initiate', async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('[initiate] error:', error);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('[initiate] error:', error);
+    }
     return res.status(500).json({ message: error.message || 'Failed to initiate payment' });
   }
 });
@@ -102,13 +106,17 @@ router.post('/payments/payfast/notify', async (req, res) => {
     // Extract order ID from m_payment_id (format: ORD-{order_id}-{timestamp})
     const mPaymentId = payload.m_payment_id;
     if (!mPaymentId) {
-      console.error('[notify] Missing m_payment_id in payload');
+      if (process.env.NODE_ENV !== 'production') {
+        console.error('[notify] Missing m_payment_id in payload');
+      }
       return res.status(400).send('BAD');
     }
 
     const orderIdMatch = mPaymentId.match(/^ORD-([a-f0-9-]+)-\d+$/);
     if (!orderIdMatch) {
-      console.error('[notify] Invalid m_payment_id format:', mPaymentId);
+      if (process.env.NODE_ENV !== 'production') {
+        console.error('[notify] Invalid m_payment_id format:', mPaymentId);
+      }
       return res.status(400).send('BAD');
     }
 
@@ -117,21 +125,27 @@ router.post('/payments/payfast/notify', async (req, res) => {
     // Load the order
     const order = await findOrderById(orderId);
     if (!order) {
-      console.error('[notify] Order not found:', orderId);
+      if (process.env.NODE_ENV !== 'production') {
+        console.error('[notify] Order not found:', orderId);
+      }
       return res.status(404).send('BAD');
     }
 
     // Verify the ITN (all four checks)
     const verification = await verifyItn(payload, ip, order);
     if (!verification.valid) {
-      console.error('[notify] Verification failed:', verification.errors);
+      if (process.env.NODE_ENV !== 'production') {
+        console.error('[notify] Verification failed:', verification.errors);
+      }
       return res.status(400).send('BAD');
     }
 
     // Check payment status from PayFast
     const paymentStatus = payload.payment_status;
     if (paymentStatus !== 'COMPLETE') {
-      console.log('[notify] Payment not complete:', paymentStatus);
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('[notify] Payment not complete:', paymentStatus);
+      }
       return res.status(200).send('OK'); // Still acknowledge, but don't mark as paid
     }
 
@@ -160,7 +174,9 @@ router.post('/payments/payfast/notify', async (req, res) => {
 
     return res.status(200).send('OK');
   } catch (error) {
-    console.error('[notify] error:', error);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('[notify] error:', error);
+    }
     return res.status(500).send('BAD');
   }
 });
@@ -218,7 +234,9 @@ router.post('/payments/payfast/charge-token', async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('[charge-token] error:', error);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('[charge-token] error:', error);
+    }
     return res.status(500).json({ message: error.message || 'Failed to charge token' });
   }
 });

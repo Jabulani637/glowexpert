@@ -27,6 +27,7 @@ backend/src/**/*.log
 .env
 .env.*
 !.env.production
+!.env.example
 
 # OS / editor files
 

@@ -61,7 +61,9 @@ async function createInfluencer({ userId = null, commission_rate = 5.0 } = {}) {
     const { rows } = await query('SELECT * FROM influencers WHERE id = ?', [id]);
     return rows[0];
   } catch (err) {
-    console.error('[createInfluencer] DB insert failed:', err.message);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('[createInfluencer] DB insert failed:', err.message);
+    }
     throw err;
   }
 }
@@ -80,7 +82,9 @@ async function findInfluencerByCode(referralCode) {
     );
     return rows[0];
   } catch (err) {
-    console.error('[findInfluencerByCode] DB query failed:', err.message);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('[findInfluencerByCode] DB query failed:', err.message);
+    }
     throw err;
   }
 }
@@ -96,7 +100,9 @@ async function findInfluencerByUserId(userId) {
     `, [userId]);
     return rows[0] || null;
   } catch (err) {
-    console.error('[findInfluencerByUserId] DB query failed:', err.message);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('[findInfluencerByUserId] DB query failed:', err.message);
+    }
     throw err;
   }
 }
@@ -111,7 +117,9 @@ async function listInfluencers() {
     `);
     return rows;
   } catch (err) {
-    console.error('[listInfluencers] DB query failed:', err.message);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('[listInfluencers] DB query failed:', err.message);
+    }
     throw err;
   }
 }

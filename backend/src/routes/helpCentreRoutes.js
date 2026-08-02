@@ -24,7 +24,9 @@ router.post('/help-centre/messages', async (req, res) => {
     const data = await createHelpCentreMessage(parsed.data);
     return res.status(201).json({ data });
   } catch (err) {
-    console.error('help-centre/messages create error:', err?.message || err);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('help-centre/messages create error:', err?.message || err);
+    }
     return res.status(500).json({ message: 'Internal server error' });
   }
 });
@@ -40,7 +42,9 @@ router.get(
       const data = await listHelpCentreMessages({ limit });
       return res.json({ data });
     } catch (err) {
-      console.error('help-centre/messages list error:', err?.message || err);
+      if (process.env.NODE_ENV !== 'production') {
+        console.error('help-centre/messages list error:', err?.message || err);
+      }
       return res.status(500).json({ message: 'Internal server error' });
     }
   }
@@ -60,7 +64,9 @@ router.put(
 
       return res.json({ data });
     } catch (err) {
-      console.error('help-centre/messages handled error:', err?.message || err);
+      if (process.env.NODE_ENV !== 'production') {
+        console.error('help-centre/messages handled error:', err?.message || err);
+      }
       return res.status(500).json({ message: 'Internal server error' });
     }
   }

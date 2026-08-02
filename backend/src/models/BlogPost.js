@@ -76,7 +76,9 @@ async function findAll({ status = null, limit = 20, offset = 0, contentType = nu
       is_featured: !!row.is_featured
     }));
   } catch (err) {
-    console.error('[findAll] DB query failed:', err.message);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('[findAll] DB query failed:', err.message);
+    }
     throw err;
   }
 }
@@ -94,7 +96,9 @@ async function findFeatured() {
       is_featured: !!row.is_featured
     }));
   } catch (err) {
-    console.error('[findFeatured] DB query failed:', err.message);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('[findFeatured] DB query failed:', err.message);
+    }
     throw err;
   }
 }
@@ -112,7 +116,9 @@ async function findBySlug(slug) {
       is_featured: !!rows[0].is_featured
     };
   } catch (err) {
-    console.error('[findBySlug] DB query failed:', err.message);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('[findBySlug] DB query failed:', err.message);
+    }
     throw err;
   }
 }
@@ -129,7 +135,9 @@ async function findById(id) {
       is_featured: !!rows[0].is_featured
     };
   } catch (err) {
-    console.error('[findById] DB query failed:', err.message);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('[findById] DB query failed:', err.message);
+    }
     throw err;
   }
 }
@@ -168,7 +176,9 @@ async function create(data) {
     );
     return findById(id);
   } catch (err) {
-    console.error('[create] DB insert failed:', err.message);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('[create] DB insert failed:', err.message);
+    }
     throw err;
   }
 }
@@ -201,7 +211,9 @@ async function update(id, data) {
     );
     return findById(id);
   } catch (err) {
-    console.error('[update] DB update failed:', err.message);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('[update] DB update failed:', err.message);
+    }
     throw err;
   }
 }
@@ -211,7 +223,9 @@ async function remove(id) {
     const result = await run('DELETE FROM blog_posts WHERE id = ?', [id]);
     return result.changes > 0;
   } catch (err) {
-    console.error('[remove] DB delete failed:', err.message);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('[remove] DB delete failed:', err.message);
+    }
     throw err;
   }
 }

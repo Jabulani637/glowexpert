@@ -83,7 +83,9 @@ async function findByEmail(email) {
     const { rows } = await query('SELECT * FROM users WHERE email = ? LIMIT 1', [email]);
     return rows[0] || null;
   } catch (err) {
-    console.error('[findByEmail] DB query failed:', err.message);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('[findByEmail] DB query failed:', err.message);
+    }
     throw err;
   }
 }
@@ -93,7 +95,9 @@ async function findByCellphone(cellphone) {
     const { rows } = await query('SELECT * FROM users WHERE cellphone = ? LIMIT 1', [cellphone]);
     return rows[0] || null;
   } catch (err) {
-    console.error('[findByCellphone] DB query failed:', err.message);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('[findByCellphone] DB query failed:', err.message);
+    }
     throw err;
   }
 }
@@ -103,7 +107,9 @@ async function findByGoogleId(googleId) {
     const { rows } = await query('SELECT * FROM users WHERE google_id = ? LIMIT 1', [googleId]);
     return rows[0] || null;
   } catch (err) {
-    console.error('[findByGoogleId] DB query failed:', err.message);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('[findByGoogleId] DB query failed:', err.message);
+    }
     throw err;
   }
 }
@@ -127,7 +133,9 @@ async function createUser({
     const { rows } = await query('SELECT * FROM users WHERE id = ?', [id]);
     return rows[0];
   } catch (err) {
-    console.error('[createUser] DB insert failed:', err.message);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('[createUser] DB insert failed:', err.message);
+    }
     throw err;
   }
 }
@@ -140,7 +148,9 @@ async function updateFailedLogin(id, failedAttempts, lockedUntil = null) {
       [failedAttempts, lockedUntil, now, id]
     );
   } catch (err) {
-    console.error('[updateFailedLogin] DB update failed:', err.message);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('[updateFailedLogin] DB update failed:', err.message);
+    }
     throw err;
   }
 }
@@ -153,7 +163,9 @@ async function resetFailedLogin(id) {
       [now, id]
     );
   } catch (err) {
-    console.error('[resetFailedLogin] DB update failed:', err.message);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('[resetFailedLogin] DB update failed:', err.message);
+    }
     throw err;
   }
 }
@@ -163,7 +175,9 @@ async function findById(id) {
     const { rows } = await query('SELECT * FROM users WHERE id = ? LIMIT 1', [id]);
     return rows[0] || null;
   } catch (err) {
-    console.error('[findById] DB query failed:', err.message);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('[findById] DB query failed:', err.message);
+    }
     throw err;
   }
 }
