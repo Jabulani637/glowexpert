@@ -61,9 +61,30 @@ async function ensureOrderSchema() {
   } catch (err) {
     // ignore
   }
+  // Migrate: add payment tracking columns if missing
+  try {
+    await run(`ALTER TABLE orders ADD COLUMN IF NOT EXISTS payment_status TEXT NOT NULL DEFAULT 'pending'`);
+  } catch (err) {
+    // ignore
+  }
+  try {
+    await run(`ALTER TABLE orders ADD COLUMN IF NOT EXISTS payfast_m_payment_id TEXT UNIQUE`);
+  } catch (err) {
+    // ignore
+  }
+  try {
+    await run(`ALTER TABLE orders ADD COLUMN IF NOT EXISTS paid_at TIMESTAMP`);
+  } catch (err) {
+    // ignore
+  }
+  try {
+    await run(`ALTER TABLE orders ADD COLUMN IF NOT EXISTS clerk_user_id TEXT`);
+  } catch (err) {
+    // ignore
+  }
 }
 
-async function createOrder({ customerName, customerEmail, customerPhone, items, referralCode = null, influencerId = null } = {}) {
+async function createOrder({ customerName, customerEmail, customerPhone, items, referralCode = null, influencerId = null, clerkUserId = null } = {}) {
   return serializeTransaction(async (client) => {
     const normalizedItems = [];
     let total = 0;
@@ -108,9 +129,9 @@ async function createOrder({ customerName, customerEmail, customerPhone, items, 
 
     const id = generateUUID();
     await client.queryTx(
-      `INSERT INTO orders (id, customer_name, customer_email, customer_phone, status, currency, total_amount, items_json, referral_code, influencer_id, created_at, updated_at)
-       VALUES ($1, $2, $3, $4, 'pending', $5, $6, $7, $8, $9, $10, $11)`,
-      [id, customerName, customerEmail, customerPhone, currency, total, JSON.stringify(normalizedItems), referralCode, influencerId, getCurrentTimestamp(), getCurrentTimestamp()]
+      `INSERT INTO orders (id, customer_name, customer_email, customer_phone, status, currency, total_amount, items_json, referral_code, influencer_id, clerk_user_id, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, 'pending', $5, $6, $7, $8, $9, $10, $11, $12)`,
+      [id, customerName, customerEmail, customerPhone, currency, total, JSON.stringify(normalizedItems), referralCode, influencerId, clerkUserId, getCurrentTimestamp(), getCurrentTimestamp()]
     );
 
     const result = await client.queryTx('SELECT * FROM orders WHERE id = $1', [id]);
@@ -215,3 +236,48 @@ async function findOrderById(id) {
 }
 
 module.exports.findOrderById = findOrderById;
+
+// Update order payment status and related fields
+async function updateOrderPayment(orderId, { paymentStatus, payfastMPaymentId, paidAt } = {}) {
+  try {
+    const updates = [];
+    const values = [];
+    let paramIndex = 1;
+
+    if (paymentStatus !== undefined) {
+      updates.push(`payment_status = $${paramIndex++}`);
+      values.push(paymentStatus);
+    }
+    if (payfastMPaymentId !== undefined) {
+      updates.push(`payfast_m_payment_id = $${paramIndex++}`);
+      values.push(payfastMPaymentId);
+    }
+    if (paidAt !== undefined) {
+      updates.push(`paid_at = $${paramIndex++}`);
+      values.push(paidAt);
+    }
+
+    if (updates.length === 0) {
+      throw new Error('No fields to update');
+    }
+
+    updates.push(`updated_at = $${paramIndex++}`);
+    values.push(getCurrentTimestamp());
+    values.push(orderId);
+
+    const sql = `UPDATE orders SET ${updates.join(', ')} WHERE id = $${paramIndex}`;
+    await run(sql, values);
+
+    const { rows } = await query('SELECT * FROM orders WHERE id = $1 LIMIT 1', [orderId]);
+    if (!rows || rows.length === 0) return null;
+    return {
+      ...rows[0],
+      items_json: JSON.parse(rows[0].items_json)
+    };
+  } catch (err) {
+    console.error('[updateOrderPayment] error:', err.message);
+    throw err;
+  }
+}
+
+module.exports.updateOrderPayment = updateOrderPayment;

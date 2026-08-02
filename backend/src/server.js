@@ -29,8 +29,10 @@ const { ensureOrderSchema } = require('./models/Order');
 const { ensureBlogPostSchema } = require('./models/BlogPost');
 const { ensureInfluencerSchema } = require('./models/Influencer');
 const { ensureReviewSchema } = require('./models/Review');
+const { ensurePaymentTokenSchema } = require('./models/PaymentToken');
 const adminInfluencerRoutes = require('./routes/adminInfluencerRoutes');
 const helpCentreRoutes = require('./routes/helpCentreRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
 
 // Create uploads directory if it doesn't exist.
 // On some platforms (e.g., Vercel), the filesystem may be read-only or disallow writes.
@@ -161,6 +163,7 @@ app.use('/api/influencer', influencerRoutes);
 app.use('/api', siteRoutes);
 app.use('/api', subscriberRoutes);
 app.use('/api', orderRoutes);
+app.use('/api', paymentRoutes);
 app.use('/api', blogRoutes);
 app.use('/api', helpCentreRoutes);
 app.use('/api', healthRoutes);
@@ -229,7 +232,8 @@ async function start() {
     ['reviews', ensureReviewSchema],
     ['users', ensureUserSchema],
     ['influencers', ensureInfluencerSchema],
-    ['influencer applications', ensureInfluencerApplicationSchema]
+    ['influencer applications', ensureInfluencerApplicationSchema],
+    ['payment tokens', ensurePaymentTokenSchema]
   ];
 
   for (const [label, step] of startupSteps) {

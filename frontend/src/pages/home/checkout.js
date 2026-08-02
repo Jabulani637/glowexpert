@@ -36,7 +36,7 @@ export async function submitCheckout(event) {
   }
 
   try {
-    await api('/api/orders/checkout', {
+    const orderResponse = await api('/api/orders/checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -48,14 +48,33 @@ export async function submitCheckout(event) {
       })
     });
 
-    state.cart = [];
-    saveCart();
-    clearReferralCode();
-    if ($('checkoutReferral')) $('checkoutReferral').value = '';
-    $('checkoutForm').reset();
-    messageEl.textContent = 'Order placed successfully.';
-    messageEl.style.color = '#2b7a0b';
-    await initializeStore();
+    const order = orderResponse.data;
+
+    // Initiate PayFast payment
+    const paymentResponse = await api('/api/payments/payfast/initiate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ order_id: order.id })
+    });
+
+    const { fields, payfastUrl } = paymentResponse.data;
+
+    // Create and submit hidden form to PayFast
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = payfastUrl;
+
+    Object.entries(fields).forEach(([key, value]) => {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = key;
+      input.value = value;
+      form.appendChild(input);
+    });
+
+    document.body.appendChild(form);
+    form.submit();
+
   } catch (error) {
     messageEl.textContent = error.message;
     messageEl.style.color = '#b00020';
