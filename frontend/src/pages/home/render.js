@@ -29,7 +29,10 @@ function productCardTemplate(product) {
   return `
     <article class="product-card" data-product-id="${product.id}">
       <div class="product-image">
-        ${product.image_url ? `<img src="${escapeHtml(normalizeAsset(product.image_url))}" alt="${escapeHtml(product.name)}" />` : ''}
+        ${product.image_url 
+          ? `<img src="${escapeHtml(normalizeAsset(product.image_url))}" alt="${escapeHtml(product.name)}" />` 
+          : `<img src="/src/assets/images/placeholder-product.jpg" alt="${escapeHtml(product.name)}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22400%22 viewBox=%220 0 300 400%22%3E%3Crect fill=%22%23f5f0eb%22 width=%22300%22 height=%22400%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-size=%2214%22 fill=%22%23999%22%3ENo Image%3C/text%3E%3C/svg%3E'" />`
+        }
       </div>
       <div class="product-info">
         <div class="product-meta-row">
