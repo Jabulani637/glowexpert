@@ -1,3 +1,5 @@
+import { API_BASE } from '../../config.js';
+
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('influencerApplyForm');
   const responseDiv = document.getElementById('applyResponse');
@@ -34,14 +36,14 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     try {
-      const res = await fetch('/api/influencer/apply', {
+      const res = await fetch(`${API_BASE}/api/influencer/apply`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
-      
+
       const data = await res.json();
-      
+
       if (res.ok && data.success) {
         responseDiv.textContent = "Thanks — we'll be in touch within 3 business days.";
         responseDiv.style.color = 'var(--success-whatsapp, #25d366)';
