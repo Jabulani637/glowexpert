@@ -590,6 +590,26 @@ nav {
   gap: 8px;
 }
 
+.influencers-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.influencers-layout .admin-card {
+  padding: 12px;
+}
+
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-scroll table {
+  min-width: 700px;
+  white-space: nowrap;
+}
+
 /* ── RETRO BUTTONS ── */
 .btn {
   display: inline-flex;

@@ -437,7 +437,7 @@
 
     <!-- Influencers Tab -->
     <div class="tab-content" id="tab-influencers">
-      <section class="dashboard-grid">
+      <section class="influencers-layout">
         <div class="admin-card">
           <span class="section-label">Influencer Applications</span>
           <h2 class="section-title">Review &amp; Manage Applications</h2>
@@ -451,6 +451,7 @@
               <button class="btn secondary" id="closeApplicationBanner" type="button">Dismiss</button>
             </div>
           </div>
+          <div class="table-scroll">
           <table>
             <thead>
               <tr>
@@ -467,10 +468,12 @@
             </thead>
             <tbody id="applicationsTbody"><tr><td colspan="9" class="muted">Loading applications...</td></tr></tbody>
           </table>
+          </div>
         </div>
 
         <div class="admin-card">
           <span class="section-label">Influencer Performance</span>
+          <div class="table-scroll">
           <table>
             <thead>
               <tr>
@@ -485,6 +488,7 @@
             </thead>
             <tbody id="influencersTbody"><tr><td colspan="7" class="muted">Loading influencers...</td></tr></tbody>
           </table>
+          </div>
         </div>
       </section>
     </div>
