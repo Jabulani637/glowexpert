@@ -35,7 +35,7 @@ async function parseBody(res) {
  *   on 401/403.
  */
 export async function api(path, options = {}) {
-  const { requireAuth = false, headers = {}, timeoutMs = 15000, ...rest } = options;
+  const { requireAuth = false, headers = {}, timeoutMs = 15000, loginRedirect = 'login.html', ...rest } = options;
 
   if (!isProbablyApiPath(path)) {
     throw new Error('Invalid API path');
@@ -59,7 +59,7 @@ export async function api(path, options = {}) {
     if (!res.ok) {
       if (requireAuth && (res.status === 401 || res.status === 403)) {
         clearSession();
-        window.location.href = 'login.html';
+        window.location.href = loginRedirect;
       }
       // Avoid reflecting unexpected server messages that might not be user-safe.
       let message = typeof payload?.message === 'string' ? payload.message : 'Request failed';

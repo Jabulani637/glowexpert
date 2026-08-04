@@ -12,5 +12,5 @@ export function setStatus(message, isError = false) {
 /** Every admin API call requires auth by default (matching the previous
  * behavior); pass { requireAuth: false } to opt out if ever needed. */
 export function api(path, options = {}) {
-  return sharedApi(path, { requireAuth: true, ...options });
+  return sharedApi(path, { requireAuth: true, loginRedirect: 'admin-login.html', ...options });
 }

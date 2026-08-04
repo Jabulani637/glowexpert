@@ -13,6 +13,7 @@ const healthRoutes = require('./routes/healthRoutes');
 const productsRoutes = require('./routes/productsRoutes');
 const adminProductRoutes = require('./routes/adminProductRoutes');
 const adminAuthRoutes = require('./routes/adminAuthRoutes');
+const adminOtpAuthRoutes = require('./routes/adminOtpAuthRoutes');
 
 const siteRoutes = require('./routes/siteRoutes');
 const subscriberRoutes = require('./routes/subscriberRoutes');
@@ -162,6 +163,7 @@ app.use('/api', clerkMiddleware());
 app.use('/api/products', productsRoutes);
 app.use('/api/admin', adminProductRoutes);
 app.use('/api/admin', adminAuthRoutes);
+app.use('/api/admin/auth', adminOtpAuthRoutes);
 app.use('/api/admin/influencers', adminInfluencerRoutes);
 app.use('/api/admin/influencer-applications', adminInfluencerApplicationRoutes);
 app.use('/api/influencer', influencerRoutes);
