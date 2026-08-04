@@ -6,7 +6,6 @@ const USER_KEY = 'admin_user';
 const TOKEN_KEY = 'admin_token';
 const INFLUENCER_TOKEN_KEY = 'influencer_token';
 const AUTH_MODE_KEY = 'auth_mode';
-const ADMIN_OTP_TOKEN_KEY = 'glowexpert_admin_token';
 
 function safeParseJson(value) {
   if (!value) return null;
@@ -18,22 +17,6 @@ function safeParseJson(value) {
 }
 
 export async function getToken() {
-  // Check for custom OTP JWT token first
-  const otpToken = localStorage.getItem(ADMIN_OTP_TOKEN_KEY);
-  if (otpToken) {
-    try {
-      const payload = JSON.parse(atob(otpToken.split('.')[1]));
-      if (payload.role === 'admin' && payload.exp * 1000 > Date.now()) {
-        return otpToken;
-      } else {
-        localStorage.removeItem(ADMIN_OTP_TOKEN_KEY);
-      }
-    } catch {
-      localStorage.removeItem(ADMIN_OTP_TOKEN_KEY);
-    }
-  }
-
-  // Fall back to Clerk session token
   const clerk = await getClerk();
   if (clerk.session) {
     return await clerk.session.getToken();
@@ -59,7 +42,6 @@ export function clearSession() {
   localStorage.removeItem(TOKEN_KEY);
   localStorage.removeItem(INFLUENCER_TOKEN_KEY);
   localStorage.removeItem(AUTH_MODE_KEY);
-  localStorage.removeItem(ADMIN_OTP_TOKEN_KEY);
 }
 
 export async function authHeaders(extra = {}) {

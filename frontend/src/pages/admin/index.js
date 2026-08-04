@@ -176,12 +176,11 @@ function setupGlobalButtons() {
   });
 
   $('logoutBtn')?.addEventListener('click', async () => {
-    localStorage.removeItem('glowexpert_admin_token');
     try {
       const clerk = await getClerk();
-      await clerk.signOut({ redirectUrl: 'admin-login.html' });
+      await clerk.signOut({ redirectUrl: 'index.html' });
     } catch (error) {
-      window.location.href = 'admin-login.html';
+      setStatus(error.message, true);
     }
   });
 }
@@ -239,40 +238,9 @@ function setupTableDelegates() {
 }
 
 // ─── Boot ───────────────────────────────────────────────────────────────────
-const ADMIN_OTP_TOKEN_KEY = 'glowexpert_admin_token';
-
-function getAdminJwtUser() {
-  const token = localStorage.getItem(ADMIN_OTP_TOKEN_KEY);
-  if (!token) return null;
-  try {
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    if (payload.role === 'admin' && payload.exp * 1000 > Date.now()) {
-      return payload;
-    }
-    localStorage.removeItem(ADMIN_OTP_TOKEN_KEY);
-  } catch {
-    localStorage.removeItem(ADMIN_OTP_TOKEN_KEY);
-  }
-  return null;
-}
-
 const clerk = await getClerk();
-const jwtUser = getAdminJwtUser();
-
-if (jwtUser) {
-  // Logged in via OTP — skip Clerk checks
-  setupMobileNav();
-  setupTabNavigation();
-  setupProductButtons();
-  setupBlogButtons();
-  setupGlobalButtons();
-  setupInfluencerButtons();
-
-  loadAll()
-    .then(() => loadBlogData())
-    .catch((error) => setStatus(error.message, true));
-} else if (!clerk.user) {
-  window.location.href = 'admin-login.html';
+if (!clerk.user) {
+  window.location.href = 'login.html';
 } else if (clerk.user.publicMetadata?.role !== 'admin') {
   window.location.href = 'index.html';
 } else {
