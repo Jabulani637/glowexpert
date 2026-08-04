@@ -20,7 +20,6 @@ export function setSelectedBlogPost(post) {
   $('blogStatus').value = post.status || 'draft';
   $('blogExcerpt').value = post.excerpt || '';
   $('blogContent').value = post.content || '';
-  $('blogFeaturedImage').value = post.featured_image || '';
   $('blogVideoUrl').value = post.video_url || '';
   $('blogMetaDesc').value = post.meta_description || '';
   $('blogMetaKeywords').value = post.meta_keywords || '';
@@ -39,7 +38,6 @@ export function clearBlogForm() {
   $('blogStatus').value = 'draft';
   $('blogExcerpt').value = '';
   $('blogContent').value = '';
-  $('blogFeaturedImage').value = '';
   $('blogVideoUrl').value = '';
   $('blogMetaDesc').value = '';
   $('blogMetaKeywords').value = '';
@@ -97,7 +95,6 @@ function collectBlogBody() {
     content: $('blogContent').value.trim(),
     contentType: $('blogContentType').value,
     status: $('blogStatus').value,
-    featuredImage: $('blogFeaturedImage').value.trim() || null,
     videoUrl: $('blogVideoUrl').value.trim() || null,
     metaDescription: $('blogMetaDesc').value.trim() || null,
     metaKeywords: $('blogMetaKeywords').value.trim() || null,

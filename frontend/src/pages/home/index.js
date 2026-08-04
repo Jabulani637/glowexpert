@@ -9,11 +9,41 @@ import { setupPromo } from './promo.js';
 import { setupCountdown } from './countdown.js';
 import { initTrendingCarousel } from './trending-carousel.js';
 
+function setupSoundToggles() {
+  const pairs = [
+    { video: 'featuredVideoOne', btn: 'featuredVideoOneSound' },
+    { video: 'featuredVideoTwo', btn: 'featuredVideoTwoSound' }
+  ];
+
+  for (const { video, btn } of pairs) {
+    const videoEl = $(video);
+    const btnEl = $(btn);
+    if (!videoEl || !btnEl) continue;
+
+    // Start muted by default — user opts in to sound
+    videoEl.muted = true;
+
+    btnEl.addEventListener('click', () => {
+      videoEl.muted = !videoEl.muted;
+      const soundOn = btnEl.querySelector('.sound-on-icon');
+      const soundOff = btnEl.querySelector('.sound-off-icon');
+      if (videoEl.muted) {
+        soundOn.style.display = '';
+        soundOff.style.display = 'none';
+      } else {
+        soundOn.style.display = 'none';
+        soundOff.style.display = '';
+      }
+    });
+  }
+}
+
 setupMobileNav();
 setupScrollShadow();
 setupCartDelegates();
 setupPromo();
 setupCountdown();
+setupSoundToggles();
 
 $('cartBtn')?.addEventListener('click', openCart);
 $('closeCartBtn')?.addEventListener('click', closeCart);
@@ -39,7 +69,6 @@ initializeStore()
     }
 
     // Ensure featured video sources reflect latest /api/settings values.
-    // (Useful when returning from admin after saving updates.)
     try {
       if ($('featuredVideoOne') && $('featuredVideoOneSource')?.src) {
         $('featuredVideoOne').load();

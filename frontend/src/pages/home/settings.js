@@ -42,9 +42,6 @@ function setSourceAndForceLoad(videoEl, sourceEl, src) {
 }
 
 function applyVideoSettings(settings) {
-  const heroVideoEl = $('heroVideo');
-  const heroVideoSourceEl = $('heroVideoSource');
-
   const featuredOneVideoEl = $('featuredVideoOne');
   const featuredOneSourceEl = $('featuredVideoOneSource');
 
@@ -52,29 +49,14 @@ function applyVideoSettings(settings) {
   const featuredTwoSourceEl = $('featuredVideoTwoSource');
 
   Promise.all([
-    resolveVideoSrc('hero', normalizeAsset(settings.hero_video_url || '')),
     resolveVideoSrc('featured_one', normalizeAsset(settings.featured_video_one_url || '')),
     resolveVideoSrc('featured_two', normalizeAsset(settings.featured_video_two_url || ''))
   ])
-    .then(([heroSrc, featOneSrc, featTwoSrc]) => {
-      // Debug guard: helps confirm backend is returning values.
-      // (Visible in console; remove later if desired.)
-      if (!heroSrc && !featOneSrc && !featTwoSrc) {
-        console.warn('[home/settings] Video URLs are empty after resolve:', {
-          hero: settings.hero_video_url,
-          featuredOne: settings.featured_video_one_url,
-          featuredTwo: settings.featured_video_two_url
-        });
-      }
-
-      setSourceAndForceLoad(heroVideoEl, heroVideoSourceEl, heroSrc);
+    .then(([featOneSrc, featTwoSrc]) => {
       setSourceAndForceLoad(featuredOneVideoEl, featuredOneSourceEl, featOneSrc);
       setSourceAndForceLoad(featuredTwoVideoEl, featuredTwoSourceEl, featTwoSrc);
 
-      // Retry once shortly after: some browsers ignore immediate load()
-      // if called back-to-back during initial render.
       setTimeout(() => {
-        setSourceAndForceLoad(heroVideoEl, heroVideoSourceEl, heroSrc);
         setSourceAndForceLoad(featuredOneVideoEl, featuredOneSourceEl, featOneSrc);
         setSourceAndForceLoad(featuredTwoVideoEl, featuredTwoSourceEl, featTwoSrc);
       }, 500);
@@ -82,12 +64,6 @@ function applyVideoSettings(settings) {
     .catch((err) => {
       console.warn('[home/settings] Failed to resolve video src:', err?.message || err);
 
-      // Fallback: still try raw URLs from settings if IndexedDB fails.
-      setSourceAndForceLoad(
-        heroVideoEl,
-        heroVideoSourceEl,
-        normalizeAsset(settings.hero_video_url || '')
-      );
       setSourceAndForceLoad(
         featuredOneVideoEl,
         featuredOneSourceEl,

@@ -6,7 +6,6 @@ const SETTINGS_FIELDS = [
   'hero_cta_label',
   'hero_title',
   'hero_subtitle',
-  'hero_video_url',
   'support_email',
   'newsletter_heading',
   'support_phone',

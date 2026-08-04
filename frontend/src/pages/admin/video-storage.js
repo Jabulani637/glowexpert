@@ -5,19 +5,17 @@ import { api, setStatus } from './status.js';
 const MAX_VIDEO_SIZE = 200 * 1024 * 1024; // 200MB
 
 const VIDEO_KEYS = {
-  heroVideoUpload: 'hero',
   featuredVideoOneUpload: 'featured_one',
   featuredVideoTwoUpload: 'featured_two'
 };
 
-const STATUS_LABELS = { hero: 'Hero', featured_one: 'Featured 1', featured_two: 'Featured 2' };
+const STATUS_LABELS = { featured_one: 'Featured 1', featured_two: 'Featured 2' };
 
 // "storedXStatus" elements show the current saved state on page load;
 // "XVideoStatus" elements show live feedback during/after an upload or
 // delete action. These are two distinct sets of elements in admin.html,
 // not duplicates of each other.
 const STORED_STATUS_IDS = {
-  hero: 'storedHeroStatus',
   featured_one: 'storedFeaturedOneStatus',
   featured_two: 'storedFeaturedTwoStatus'
 };
@@ -181,13 +179,6 @@ async function deleteIndividualVideo(key, inputId, statusId) {
 }
 
 export function setupVideoButtons() {
-  // Save videos to IndexedDB only (server upload disabled in scalability refactor)
-  // This allows local browser-specific overrides for testing/preview
-  $('saveHeroBtn')?.addEventListener('click', () =>
-    uploadVideoToSupabaseAndIDB('heroVideoUpload', 'heroVideoStatus')
-  );
-  $('deleteHeroBtn')?.addEventListener('click', () => deleteIndividualVideo('hero', 'heroVideoUpload', 'heroVideoStatus'));
-
   $('saveFeaturedOneBtn')?.addEventListener('click', () =>
     uploadVideoToSupabaseAndIDB(
       'featuredVideoOneUpload',
@@ -212,11 +203,9 @@ export function setupVideoButtons() {
   $('clearVideosBtn')?.addEventListener('click', async () => {
     if (!confirm('Remove all locally stored videos?')) return;
     try {
-      await Promise.all([deleteVideoBlob('hero'), deleteVideoBlob('featured_one'), deleteVideoBlob('featured_two')]);
-      if ($('heroVideoUpload')) $('heroVideoUpload').value = '';
+      await Promise.all([deleteVideoBlob('featured_one'), deleteVideoBlob('featured_two')]);
       if ($('featuredVideoOneUpload')) $('featuredVideoOneUpload').value = '';
       if ($('featuredVideoTwoUpload')) $('featuredVideoTwoUpload').value = '';
-      if ($('heroVideoStatus')) $('heroVideoStatus').textContent = '';
       if ($('featuredVideoOneStatus')) $('featuredVideoOneStatus').textContent = '';
       if ($('featuredVideoTwoStatus')) $('featuredVideoTwoStatus').textContent = '';
       await refreshVideoStorageStatus();

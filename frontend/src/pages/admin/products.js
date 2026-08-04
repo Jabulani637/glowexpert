@@ -19,7 +19,6 @@ export function setSelected(product) {
   $('price').value = product.price ?? '';
   $('currency').value = product.currency || 'ZAR';
   $('stock').value = product.stock ?? 0;
-  $('image_url').value = product.image_url || '';
   $('meta_title').value = product.meta_title || '';
   $('meta_description').value = product.meta_description || '';
   $('meta_keywords').value = product.meta_keywords || '';
@@ -44,7 +43,6 @@ export function clearProductForm() {
   $('price').value = '';
   $('currency').value = 'ZAR';
   $('stock').value = '';
-  $('image_url').value = '';
   $('meta_title').value = '';
   $('meta_description').value = '';
   $('meta_keywords').value = '';
@@ -122,7 +120,6 @@ export function collectProductBody() {
       is_wholesale: $('is_wholesale')?.checked ?? false,
       price: Number($('price').value),
       currency: $('currency').value.trim() || 'ZAR',
-      image_url: $('image_url').value.trim() || null,
       stock: Number($('stock').value),
       meta_title: $('meta_title').value.trim() || null,
       meta_description: $('meta_description').value.trim() || null,

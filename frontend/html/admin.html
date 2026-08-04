@@ -167,8 +167,6 @@
               <input id="image_file" type="file" accept="image/*" />
             </div>
           </div>
-          <label for="image_url">Image URL</label>
-          <input id="image_url" />
           <div class="row">
             <div>
               <label for="meta_title">Meta Title</label>
@@ -241,23 +239,20 @@
           <textarea id="blogContent" class="large-textarea" placeholder="Write your full article, tutorial, or video description here..."></textarea>
           <div class="row">
             <div>
-              <label for="blogFeaturedImage">Featured Image URL</label>
-              <input id="blogFeaturedImage" placeholder="https://example.com/image.jpg" />
-            </div>
-            <div>
               <label for="blogVideoUrl">Video URL (for video posts)</label>
               <input id="blogVideoUrl" placeholder="https://youtube.com/watch?v=..." />
             </div>
-          </div>
-          <div class="row">
             <div>
               <label for="blogMetaDesc">Meta Description (SEO)</label>
               <input id="blogMetaDesc" />
             </div>
+          </div>
+          <div class="row">
             <div>
               <label for="blogMetaKeywords">Meta Keywords (SEO)</label>
               <input id="blogMetaKeywords" />
             </div>
+            <div></div>
           </div>
           <div class="row">
             <div>
@@ -311,28 +306,18 @@
           </div>
           <div class="card-body">
             <div class="retro-panel">
-              <h3>Upload Hero & Featured Videos</h3>
+              <h3>Upload Featured Videos</h3>
               <p class="retro-notice">Upload videos securely to local browser storage (IndexedDB). These will seamlessly override the API settings on the home page.</p>
 
               <div id="videoStorageStatus" class="status-panel">
                 <div class="status-title">Stored Videos</div>
                 <div class="status-grid">
-                  <div id="storedHeroStatus" class="status-item"><span class="muted">Hero</span> <span class="status-item-value">None</span></div>
                   <div id="storedFeaturedOneStatus" class="status-item"><span class="muted">Featured 1</span> <span class="status-item-value">None</span></div>
                   <div id="storedFeaturedTwoStatus" class="status-item"><span class="muted">Featured 2</span> <span class="status-item-value">None</span></div>
                 </div>
               </div>
 
               <div class="upload-grid">
-                <div class="upload-panel">
-                  <label for="heroVideoUpload">Hero Video (Background)</label>
-                  <input id="heroVideoUpload" type="file" accept="video/*" />
-                  <div class="button-row">
-                    <button class="btn" id="saveHeroBtn" type="button">Save</button>
-                    <button class="btn danger" id="deleteHeroBtn" type="button">Delete</button>
-                  </div>
-                  <div id="heroVideoStatus" class="status-text"></div>
-                </div>
                 <div class="upload-panel">
                   <label for="featuredVideoOneUpload">Featured Video 1</label>
                   <input id="featuredVideoOneUpload" type="file" accept="video/*" />
@@ -393,8 +378,6 @@
                   <textarea id="hero_subtitle"></textarea>
                   <label for="hero_cta_label">Hero Button Label</label>
                   <input id="hero_cta_label" />
-                  <label for="hero_video_url">Default API Video URL</label>
-                  <input id="hero_video_url" />
                 </div>
 
                 <div class="panel-card">

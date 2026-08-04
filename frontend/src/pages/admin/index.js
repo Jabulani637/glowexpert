@@ -70,6 +70,11 @@ async function loadBlogData() {
 
 function setupProductButtons() {
   $('createBtn')?.addEventListener('click', async () => {
+    const btn = $('createBtn');
+    const originalText = btn.textContent;
+    btn.classList.add('loading');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="btn-spinner"></span>Creating...';
     try {
       await createProduct();
       clearProductForm();
@@ -78,6 +83,10 @@ function setupProductButtons() {
       setStatus('Product created');
     } catch (error) {
       setStatus(error.message, true);
+    } finally {
+      btn.classList.remove('loading');
+      btn.disabled = false;
+      btn.textContent = originalText;
     }
   });
 
@@ -108,6 +117,11 @@ function setupBlogButtons() {
   });
 
   $('createBlogBtn')?.addEventListener('click', async () => {
+    const btn = $('createBlogBtn');
+    const originalText = btn.textContent;
+    btn.classList.add('loading');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="btn-spinner"></span>Creating...';
     try {
       await createBlogPost();
       clearBlogForm();
@@ -115,6 +129,10 @@ function setupBlogButtons() {
       setStatus('Blog post created');
     } catch (error) {
       setStatus(error.message, true);
+    } finally {
+      btn.classList.remove('loading');
+      btn.disabled = false;
+      btn.textContent = originalText;
     }
   });
 
@@ -136,11 +154,20 @@ function setupBlogButtons() {
 
 function setupGlobalButtons() {
   $('saveSettingsBtn')?.addEventListener('click', async () => {
+    const btn = $('saveSettingsBtn');
+    const originalText = btn.textContent;
+    btn.classList.add('loading');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="btn-spinner"></span>Saving...';
     try {
       await saveSettings();
       setStatus('Website settings updated');
     } catch (error) {
       setStatus(error.message, true);
+    } finally {
+      btn.classList.remove('loading');
+      btn.disabled = false;
+      btn.textContent = originalText;
     }
   });
 

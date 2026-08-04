@@ -15,7 +15,7 @@ function parseItems(json, fallbackSingleVideoUrl) {
     }
   })();
 
-  const items = (base && Array.isArray(base) ? base : []).filter((it) => it && it.url);
+  const items = (base && Array.isArray(base) ? base : []).filter((it) => it && it.url && it.type !== 'video');
 
   if (!items.length && fallbackSingleVideoUrl) {
     return [
@@ -44,42 +44,10 @@ function stop() {
 
 function setActiveLayer({ type, src, alt }) {
   const imgEl = $('heroBgImage');
-  const vidEl = $('heroBgVideo');
-  const vidSrcEl = $('heroBgVideoSource');
 
-  if (type === 'image') {
-    if (vidEl && vidSrcEl) {
-      vidSrcEl.src = '';
-      vidEl.src = '';
-    }
-    if (imgEl) {
-      imgEl.src = src;
-      imgEl.alt = alt || 'Hero background';
-    }
-  } else {
-    if (imgEl) {
-      imgEl.src = '';
-      imgEl.removeAttribute('alt');
-    }
-    if (vidSrcEl) {
-      vidSrcEl.src = src || '';
-    }
-    if (vidEl) {
-      vidEl.src = src || '';
-    }
-
-    try {
-      vidEl?.load?.();
-    } catch {
-      // no-op
-    }
-
-    // Best-effort autoplay (muted in markup)
-    try {
-      vidEl?.play?.();
-    } catch {
-      // no-op
-    }
+  if (imgEl) {
+    imgEl.src = src;
+    imgEl.alt = alt || 'Hero background';
   }
 }
 
