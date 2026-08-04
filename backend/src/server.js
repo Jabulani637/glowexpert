@@ -164,23 +164,8 @@ app.use('/api/admin', adminProductRoutes);
 app.use('/api/admin', adminAuthRoutes);
 app.use('/api/admin/influencers', adminInfluencerRoutes);
 app.use('/api/admin/influencer-applications', adminInfluencerApplicationRoutes);
-app.use('/api/influencer', influencerRoutes);
 
-app.use('/api', siteRoutes);
-app.use('/api', subscriberRoutes);
-app.use('/api', orderRoutes);
-app.use('/api', paymentRoutes);
-app.use('/api', blogRoutes);
-app.use('/api', helpCentreRoutes);
-app.use('/api', healthRoutes);
-
-app.post('/api/wholesale-inquiry', (req, res) => {
-  if (process.env.NODE_ENV !== 'production') {
-    console.log('Wholesale Inquiry:', req.body);
-  }
-  res.status(200).json({ success: true, message: 'Inquiry received' });
-});
-
+// Public apply endpoint — must be BEFORE influencerRoutes (which requires auth)
 app.post('/api/influencer/apply', async (req, res) => {
   try {
     const { name, email, phone, platform, message, social_links } = req.body;
@@ -202,6 +187,23 @@ app.post('/api/influencer/apply', async (req, res) => {
     }
     res.status(500).json({ success: false, message: 'Internal server error' });
   }
+});
+
+app.use('/api/influencer', influencerRoutes);
+
+app.use('/api', siteRoutes);
+app.use('/api', subscriberRoutes);
+app.use('/api', orderRoutes);
+app.use('/api', paymentRoutes);
+app.use('/api', blogRoutes);
+app.use('/api', helpCentreRoutes);
+app.use('/api', healthRoutes);
+
+app.post('/api/wholesale-inquiry', (req, res) => {
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('Wholesale Inquiry:', req.body);
+  }
+  res.status(200).json({ success: true, message: 'Inquiry received' });
 });
 
 // SEO-friendly server-rendered blog shell (optional but improves indexing)
