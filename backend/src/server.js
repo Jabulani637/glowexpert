@@ -183,7 +183,7 @@ app.post('/api/wholesale-inquiry', (req, res) => {
 
 app.post('/api/influencer/apply', async (req, res) => {
   try {
-    const { name, email, phone, platform, message } = req.body;
+    const { name, email, phone, platform, message, social_links } = req.body;
     if (!name || !email || !message) {
       return res.status(400).json({ success: false, message: 'Name, email, and message are required.' });
     }
@@ -194,7 +194,7 @@ app.post('/api/influencer/apply', async (req, res) => {
       return res.status(409).json({ success: false, message: 'You already have a pending application. We will be in touch soon.' });
     }
 
-    await createInfluencerApplication({ name, email, phone, platform, message });
+    await createInfluencerApplication({ name, email, phone, platform, message, social_links });
     res.status(200).json({ success: true });
   } catch (err) {
     if (process.env.NODE_ENV !== 'production') {

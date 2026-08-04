@@ -10,6 +10,7 @@ async function ensureInfluencerApplicationSchema() {
       phone TEXT,
       platform TEXT,
       message TEXT,
+      social_links TEXT,
       status TEXT NOT NULL DEFAULT 'pending',
       created_at TEXT NOT NULL,
       reviewed_at TEXT
@@ -22,15 +23,19 @@ async function ensureInfluencerApplicationSchema() {
   try {
     await run(`ALTER TABLE influencer_applications ADD COLUMN reviewed_at TEXT`);
   } catch (_) {}
+  try {
+    await run(`ALTER TABLE influencer_applications ADD COLUMN social_links TEXT`);
+  } catch (_) {}
 }
 
-async function createInfluencerApplication({ name, email, phone, platform, message }) {
+async function createInfluencerApplication({ name, email, phone, platform, message, social_links }) {
   const id = crypto.randomUUID();
   const created_at = new Date().toISOString();
+  const socialLinksJson = social_links ? JSON.stringify(social_links) : null;
   await run(
-    `INSERT INTO influencer_applications (id, name, email, phone, platform, message, status, created_at)
-     VALUES (?, ?, ?, ?, ?, ?, 'pending', ?)`,
-    [id, name, email, phone, platform, message, created_at]
+    `INSERT INTO influencer_applications (id, name, email, phone, platform, message, social_links, status, created_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', ?)`,
+    [id, name, email, phone, platform, message, socialLinksJson, created_at]
   );
   return id;
 }

@@ -35,6 +35,34 @@ const statusBadge = (status) => {
   return `<span style="display:inline-block;padding:2px 10px;border-radius:12px;font-size:12px;font-weight:600;background:${color}20;color:${color};text-transform:capitalize;">${escapeHtml(status)}</span>`;
 };
 
+const socialIcons = {
+  instagram: { label: 'IG', color: '#E1306C' },
+  tiktok: { label: 'TT', color: '#000' },
+  youtube: { label: 'YT', color: '#FF0000' },
+  facebook: { label: 'FB', color: '#1877F2' },
+  twitter: { label: 'X', color: '#1DA1F2' }
+};
+
+const renderSocialLinks = (socialLinksRaw) => {
+  let links;
+  try {
+    links = typeof socialLinksRaw === 'string' ? JSON.parse(socialLinksRaw) : socialLinksRaw;
+  } catch (_) {
+    links = null;
+  }
+  if (!links || typeof links !== 'object') return '<span class="muted">—</span>';
+
+  const badges = Object.entries(links)
+    .filter(([, url]) => url)
+    .map(([platform, url]) => {
+      const icon = socialIcons[platform] || { label: platform[0]?.toUpperCase() || '?', color: '#888' };
+      return `<a href="${escapeHtml(url)}" target="_blank" rel="noopener" title="${escapeHtml(platform)}: ${escapeHtml(url)}" style="display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:${icon.color};color:#fff;font-size:10px;font-weight:700;text-decoration:none;margin-right:4px;">${icon.label}</a>`;
+    })
+    .join('');
+
+  return badges || '<span class="muted">—</span>';
+};
+
 const applicationRowTemplate = (app) => {
   const appliedDate = app.created_at ? new Date(app.created_at).toLocaleDateString() : '-';
   const message = app.message
@@ -54,6 +82,7 @@ const applicationRowTemplate = (app) => {
       <td>${escapeHtml(app.email || '-')}</td>
       <td>${escapeHtml(app.phone || '-')}</td>
       <td>${escapeHtml(app.platform || '-')}</td>
+      <td>${renderSocialLinks(app.social_links)}</td>
       <td title="${escapeHtml(app.message || '')}">${escapeHtml(message)}</td>
       <td>${statusBadge(app.status)}</td>
       <td>${appliedDate}</td>
@@ -73,7 +102,7 @@ export function renderApplications(items) {
   const tbody = $('applicationsTbody');
   tbody.innerHTML = items.length
     ? items.map(applicationRowTemplate).join('')
-    : '<tr><td colspan="8" class="muted">No applications yet.</td></tr>';
+    : '<tr><td colspan="9" class="muted">No applications yet.</td></tr>';
 }
 
 export async function loadInfluencers() {

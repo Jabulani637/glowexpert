@@ -12,12 +12,25 @@ document.addEventListener('DOMContentLoaded', () => {
     responseDiv.textContent = '';
     responseDiv.style.color = '';
 
+    const social_links = {};
+    const instagram = document.getElementById('applyInstagram')?.value.trim();
+    const tiktok = document.getElementById('applyTiktok')?.value.trim();
+    const youtube = document.getElementById('applyYoutube')?.value.trim();
+    const facebook = document.getElementById('applyFacebook')?.value.trim();
+    const twitter = document.getElementById('applyTwitter')?.value.trim();
+    if (instagram) social_links.instagram = instagram;
+    if (tiktok) social_links.tiktok = tiktok;
+    if (youtube) social_links.youtube = youtube;
+    if (facebook) social_links.facebook = facebook;
+    if (twitter) social_links.twitter = twitter;
+
     const payload = {
       name: document.getElementById('applyName').value,
       email: document.getElementById('applyEmail').value,
       phone: document.getElementById('applyPhone').value,
       platform: document.getElementById('applyPlatform').value,
       message: document.getElementById('applyMessage').value,
+      social_links
     };
 
     try {
