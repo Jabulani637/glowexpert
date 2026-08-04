@@ -29,7 +29,7 @@ import {
   deleteBlogPost,
   findBlogPostById
 } from './blog.js';
-import { renderInfluencers, setupInfluencerButtons } from './influencers.js';
+import { renderInfluencers, setupInfluencerButtons, loadApplications } from './influencers.js';
 import { setupVideoButtons, refreshVideoStorageStatus } from './video-storage.js';
 import { setupTabNavigation } from './tabs.js';
 
@@ -50,6 +50,8 @@ async function loadAll() {
   renderCustomers(customersRes.data || []);
   renderOrders(ordersRes.data || []);
   renderInfluencers(influencersRes.data || []);
+
+  await loadApplications();
 
   const sessionInfo = $('sessionInfo');
   if (sessionInfo) sessionInfo.textContent = 'Authenticated admin session';

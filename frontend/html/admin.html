@@ -456,41 +456,33 @@
     <div class="tab-content" id="tab-influencers">
       <section class="dashboard-grid">
         <div class="admin-card">
-          <span class="section-label">Register Influencer</span>
-          <h2 class="section-title">Create New Affiliate</h2>
-          <div id="influencerBanner" hidden class="informational-banner">
+          <span class="section-label">Influencer Applications</span>
+          <h2 class="section-title">Review &amp; Manage Applications</h2>
+          <div id="applicationBanner" hidden class="informational-banner">
             <div class="banner-row">
               <div>
-                <strong>Influencer registered successfully.</strong>
-                <p class="banner-copy">Referral code: <code id="influencerBannerCode"></code></p>
-                <p class="banner-copy">Temporary password: <code id="influencerBannerPassword"></code></p>
+                <strong id="applicationBannerTitle">Influencer approved successfully.</strong>
+                <p class="banner-copy">Referral code: <code id="applicationBannerCode"></code></p>
+                <p class="banner-copy">Temporary password: <code id="applicationBannerPassword"></code></p>
               </div>
-              <button class="btn secondary" id="closeInfluencerBanner" type="button">Dismiss</button>
+              <button class="btn secondary" id="closeApplicationBanner" type="button">Dismiss</button>
             </div>
           </div>
-          <div class="row">
-            <div>
-              <label for="influencerName">Name</label>
-              <input id="influencerName" placeholder="Jane Doe" />
-            </div>
-            <div>
-              <label for="influencerEmail">Email</label>
-              <input id="influencerEmail" type="email" placeholder="jane@example.com" />
-            </div>
-          </div>
-          <div class="row">
-            <div>
-              <label for="influencerCellphone">Cellphone</label>
-              <input id="influencerCellphone" placeholder="+1234567890" />
-            </div>
-            <div>
-              <label for="influencerCommissionRate">Commission Rate (%)</label>
-              <input id="influencerCommissionRate" type="number" min="0" max="100" step="0.1" value="5" />
-            </div>
-          </div>
-          <div class="actions actions--spaced">
-            <button class="btn" id="registerInfluencerBtn" type="button">Register Influencer</button>
-          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Platform</th>
+                <th>Message</th>
+                <th>Status</th>
+                <th>Applied</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="applicationsTbody"><tr><td colspan="8" class="muted">Loading applications...</td></tr></tbody>
+          </table>
         </div>
 
         <div class="admin-card">

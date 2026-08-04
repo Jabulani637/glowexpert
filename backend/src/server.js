@@ -31,6 +31,7 @@ const { ensureInfluencerSchema } = require('./models/Influencer');
 const { ensureReviewSchema } = require('./models/Review');
 const { ensurePaymentTokenSchema } = require('./models/PaymentToken');
 const adminInfluencerRoutes = require('./routes/adminInfluencerRoutes');
+const adminInfluencerApplicationRoutes = require('./routes/adminInfluencerApplicationRoutes');
 const helpCentreRoutes = require('./routes/helpCentreRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
 
@@ -162,6 +163,7 @@ app.use('/api/products', productsRoutes);
 app.use('/api/admin', adminProductRoutes);
 app.use('/api/admin', adminAuthRoutes);
 app.use('/api/admin/influencers', adminInfluencerRoutes);
+app.use('/api/admin/influencer-applications', adminInfluencerApplicationRoutes);
 app.use('/api/influencer', influencerRoutes);
 
 app.use('/api', siteRoutes);
@@ -185,7 +187,13 @@ app.post('/api/influencer/apply', async (req, res) => {
     if (!name || !email || !message) {
       return res.status(400).json({ success: false, message: 'Name, email, and message are required.' });
     }
-    const { createInfluencerApplication } = require('./models/InfluencerApplication');
+    const { createInfluencerApplication, findApplicationByEmail } = require('./models/InfluencerApplication');
+
+    const existing = await findApplicationByEmail(email.toLowerCase());
+    if (existing) {
+      return res.status(409).json({ success: false, message: 'You already have a pending application. We will be in touch soon.' });
+    }
+
     await createInfluencerApplication({ name, email, phone, platform, message });
     res.status(200).json({ success: true });
   } catch (err) {

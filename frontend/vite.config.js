@@ -22,6 +22,7 @@ export default defineConfig({
 
         authCallback: resolve(__dirname, 'html/auth-callback.html'),
         influencer: resolve(__dirname, 'html/influencer.html'),
+        influencerApply: resolve(__dirname, 'html/influencer-apply.html'),
         faq: resolve(__dirname, 'html/faq.html'),
         privacy: resolve(__dirname, 'html/privacy.html'),
         terms: resolve(__dirname, 'html/terms.html'),
