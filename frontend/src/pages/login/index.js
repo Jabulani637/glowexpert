@@ -13,8 +13,8 @@ if (clerk.user) {
   }
 } else {
   clerk.mountSignIn(document.getElementById('sign-in'), {
-    fallbackRedirectUrl: '/auth-callback.html',
-    forceRedirectUrl: '/auth-callback.html'
+    fallbackRedirectUrl: '/admin.html',
+    forceRedirectUrl: '/admin.html'
   });
 }
 
