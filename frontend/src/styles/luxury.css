@@ -664,7 +664,17 @@ button { font-family: inherit; cursor: pointer; }
 }
 .newsletter-panel .btn-luxury:hover { background: #1A1A1A; color: #C97C82; }
 
-.newsletter-message { margin-top: 18px; font-size: 12px; color: #2C1B22; }
+.newsletter-message {
+  margin-top: 18px;
+  font-size: 14px;
+  font-weight: 500;
+  min-height: 20px;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.newsletter-message.visible {
+  opacity: 1;
+}
 
 /* ══════════════════════════════════════════════════════════════════════
    CART PANEL

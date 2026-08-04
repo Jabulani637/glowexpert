@@ -17,11 +17,13 @@ export async function submitNewsletter(event) {
       })
     });
     $('newsletterForm').reset();
-    messageEl.textContent = 'Subscribed successfully.';
-    messageEl.style.color = '#c9a84c';
+    messageEl.textContent = '✓ You have been subscribed successfully!';
+    messageEl.style.color = '#1a7a3a';
+    messageEl.classList.add('visible');
   } catch (error) {
     messageEl.textContent = error.message;
-    messageEl.style.color = '#ffb4b4';
+    messageEl.style.color = '#b00020';
+    messageEl.classList.add('visible');
   }
 }
 

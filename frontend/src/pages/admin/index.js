@@ -171,13 +171,8 @@ function setupGlobalButtons() {
     }
   });
 
-  $('refreshBtn')?.addEventListener('click', async () => {
-    try {
-      await loadAll();
-      await loadBlogData();
-    } catch (error) {
-      setStatus(error.message, true);
-    }
+  $('refreshBtn')?.addEventListener('click', () => {
+    location.reload();
   });
 
   $('logoutBtn')?.addEventListener('click', async () => {
