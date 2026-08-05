@@ -133,12 +133,6 @@ app.use(
 // Serve uploaded images statically
 app.use('/uploads', express.static(uploadsDir));
 
-// Serve advert-media videos statically if the directory exists
-const advertMediaDir = path.join(__dirname, '..', '..', 'advert-media');
-if (fs.existsSync(advertMediaDir)) {
-  app.use('/advert-media', express.static(advertMediaDir));
-}
-
 // Serve frontend statically (assuming files like admin.html are in the frontend folder)
 const frontendDir = path.join(__dirname, '..', '..', 'frontend');
 if (fs.existsSync(frontendDir)) {

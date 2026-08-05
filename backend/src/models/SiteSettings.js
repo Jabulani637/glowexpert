@@ -10,11 +10,11 @@ const DEFAULT_SETTINGS = {
   hero_title: 'GlowExpert',
   hero_subtitle: 'Where luxury hair meets timeless elegance—now in golden glow. Discover our collection of handcrafted wigs and extensions made from the finest virgin human hair.',
   hero_cta_label: 'Explore Gold Collection',
-  hero_video_url: './advert-media/Hair%20tea%20%20Hair%2030%E2%80%9D%20Black%20Curly%2013x4%20HD%20lace%20100%25%20Virgin%20human%20hair%20%20link%20in%20bio.mp4',
-  featured_video_one_url: './advert-media/Hair%20tea%20%20Hair%2030%E2%80%9D%20Black%20Curly%2013x4%20HD%20lace%20100%25%20Virgin%20human%20hair%20%20link%20in%20bio.mp4',
+  hero_video_url: '',
+  featured_video_one_url: '',
   featured_video_one_title: 'Virgin Hair Collection',
   featured_video_one_description: '30" Black Curly HD Lace Wig - 100% Virgin Human Hair',
-  featured_video_two_url: './advert-media/Slay%20every%20day%20with%20a%20wig%20that%20matches%20your%20energyHair%20info-%20%20Glueless%20butterfly%20cut%20wig%206x5%20lace%2024inch%20in%20my%20bio.%20Excl%20discount%20code%20%EF%AC%93%EF%AC%8B%EF%AC%B2%EF%AC%B0%20for%2020%25%20off.mp4',
+  featured_video_two_url: '',
   featured_video_two_title: 'Butterfly Cut Collection',
   featured_video_two_description: 'Glueless 6x5 Lace Wig - 24" Length - Use code TK20 for 20% off',
   newsletter_heading: 'Join The Glow List',
@@ -56,12 +56,14 @@ async function getAllSettings() {
   const data = { ...DEFAULT_SETTINGS };
 
   for (const row of rows) {
-    // If a row exists but the value is empty (''/whitespace), treat it as unset
-    // and keep the DEFAULT_SETTINGS value.
     const raw = row.value;
     const val = typeof raw === 'string' ? raw.trim() : raw;
 
+    // Skip empty values
     if (val === '' || val === null || val === undefined) continue;
+
+    // Skip legacy advert-media paths (files no longer exist)
+    if (typeof val === 'string' && val.includes('advert-media')) continue;
 
     data[row.key] = String(raw);
   }

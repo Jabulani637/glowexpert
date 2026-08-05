@@ -82,9 +82,6 @@ export async function api(path, options = {}) {
 /** Resolves an /uploads/... relative path against the API host. */
 export function normalizeAsset(url) {
   if (!url) return '';
-  if (url.startsWith('/uploads/') || url.startsWith('./advert-media/') || url.startsWith('advert-media/')) {
-    return `${API_BASE}/${url.replace(/^\.\//, '')}`;
-  }
-  return url;
+  return url.startsWith('/uploads/') ? `${API_BASE}${url}` : url;
 }
 
