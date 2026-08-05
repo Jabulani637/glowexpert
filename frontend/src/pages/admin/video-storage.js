@@ -1,5 +1,7 @@
 import { $ } from '../../lib/dom.js';
 import { api, setStatus } from './status.js';
+import { API_BASE } from '../../config.js';
+import { authHeaders } from '../../lib/session.js';
 
 const MAX_VIDEO_SIZE = 200 * 1024 * 1024; // 200MB
 
@@ -61,13 +63,12 @@ async function uploadVideoToServer(inputId) {
     const formData = new FormData();
     formData.append('video', file);
 
-    const res = await fetch(`${window.__API_BASE || ''}/api/admin/videos/${slot}`, {
+    const headers = await authHeaders();
+
+    const res = await fetch(`${API_BASE}/api/admin/videos/${slot}`, {
       method: 'POST',
       body: formData,
-      headers: await (async () => {
-        const { authHeaders } = await import('../../lib/session.js');
-        return authHeaders();
-      })()
+      headers
     });
 
     const data = await res.json();
