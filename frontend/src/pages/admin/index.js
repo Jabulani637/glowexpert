@@ -30,7 +30,7 @@ import {
   findBlogPostById
 } from './blog.js';
 import { renderInfluencers, setupInfluencerButtons, loadApplications } from './influencers.js';
-import { setupVideoButtons, refreshVideoStorageStatus } from './video-storage.js';
+import { setupVideoButtons } from './video-storage.js';
 import { setupTabNavigation } from './tabs.js';
 
 async function loadAll() {

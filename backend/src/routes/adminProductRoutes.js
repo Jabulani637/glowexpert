@@ -4,6 +4,7 @@ const path    = require('path');
 const { clerkMiddleware, requireAdminRole } = require('../auth/clerkMiddleware');
 const controller      = require('../controllers/adminProductController');
 const adminController = require('../controllers/adminController');
+const videoController = require('../controllers/adminVideoController');
 const router = express.Router();
 // Clerk-first admin guarding.
 // Tests can inject a role via Authorization header (see backend/src/test/helpers/testServer.js).
@@ -48,4 +49,21 @@ router.get('/customers',       adminController.getCustomers);
 router.get('/reviews',         adminController.getReviews);
 router.post('/reviews',        adminController.addReview);
 router.delete('/reviews/:id',  adminController.removeReview);
+
+// Video upload – separate multer instance with higher size limit for video files
+const videoUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 200 * 1024 * 1024 }, // 200MB
+  fileFilter: (_req, file, cb) => {
+    if (file.mimetype.startsWith('video/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only video files are allowed'), false);
+    }
+  }
+});
+
+router.post('/videos/:slot',  videoUpload.single('video'), videoController.uploadVideo);
+router.delete('/videos/:slot', videoController.deleteVideo);
+
 module.exports = router;
